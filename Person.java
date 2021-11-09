@@ -1,3 +1,8 @@
+/**
+ * A Person Class
+ * @author Kris Leungwattanakij
+ * @version November 8, 2021
+ **/
 public class Person {
 
     private String firstName;
