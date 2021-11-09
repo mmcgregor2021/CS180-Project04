@@ -3,9 +3,9 @@ public class Person {
     private String firstName;
     private String lastName;
     private String password;
-    private String id;
+    private int id;
 
-    public Person(String firstName, String lastName, String password, String id) {
+    public Person(String firstName, String lastName, String password, int id) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
@@ -36,7 +36,7 @@ public class Person {
         this.password = password;
     }
 
-    public String getID() {
+    public int getID() {
         return id;
     }
 
