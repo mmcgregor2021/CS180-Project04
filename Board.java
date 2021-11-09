@@ -1,4 +1,5 @@
 import java.lang.reflect.Array;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 /**
@@ -12,17 +13,22 @@ public class Board {
     private String owner;
     private String topic;
     private String boardID;
+    private LocalTime timeStamp;
     private ArrayList<Comment> comments;
 
-    public Board(String course, String owner, String topic) {
+    public Board(String course, String owner, String topic, LocalTime timeStamp) {
         this.course = course;
         this.owner = owner;
         this.topic = topic;
+        //TODO generate boardID
+        this.boardID = "0";
+        this.timeStamp = timeStamp;
+        this.comments = new ArrayList<Comment>();
     }
 
     //this creates a comment on the board itself
-    public void createComment(int ownerID, String content) {
-        comments.add(new Comment(this.boardID, ownerID, content));
+    public void createComment(int ownerID, String content, LocalTime theTimeStamp) {
+        comments.add(new Comment(this.boardID, ownerID, content, theTimeStamp));
     }
 
     public void deleteComment(String commentID) {
