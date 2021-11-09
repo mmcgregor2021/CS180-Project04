@@ -78,9 +78,17 @@ public class dataPersistenceMethods {
         return arr;
     }
 
+    //saves all three counters to one line separated by ';' to a txt file
+    public static void saveCounters(int personCounter, int boardCounter, int commentCounter, String fileName) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(fileName))) {
+            pw.println(personCounter + ";" + boardCounter + ";" + commentCounter);
+        } catch (Exception e) {
+            System.out.println("Failed to save counter!");
+        }
+    }
 
     //Main method for testing purposes
     public static void main(String[] args) {
-        
+
     }
 }
