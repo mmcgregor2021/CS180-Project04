@@ -57,4 +57,24 @@ public class LogInTest {
             teachers.add( new Teacher(firstName, lastName, password, id));
         }
     }
+
+    /**
+    * Creates a new teacher of student object based on sign in options and adds it to the arraylist
+    * @param  id         id for new user
+    * @return      boolean prompting user successful or failure of login
+    */
+    public void delete(int id) {
+
+        for (int i = 0; i < students.size(); i++) {
+            if (students.get(i).getID() == id) {
+                students.remove(i);
+            }
+        }
+
+        for (int j = 0; j <teachers.size(); j++) {
+            if (teachers.get(j).getID() == id) {
+                teachers.remove(j);
+            }
+        }
+    }
 }
