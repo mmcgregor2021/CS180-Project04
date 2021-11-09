@@ -5,7 +5,7 @@ public class Student extends Person {
     }
 
     //students don't have the authority to perform certain actions
-    public getAuthority() {
+    public boolean getAuthority() {
         return false;
     }
 

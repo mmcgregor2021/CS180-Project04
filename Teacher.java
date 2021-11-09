@@ -4,7 +4,7 @@ public class Teacher extends Person {
         super(firstName, lastName, password, id);
     }
 
-    public getAuthority() {
+    public boolean getAuthority() {
         return true;
     }
 
