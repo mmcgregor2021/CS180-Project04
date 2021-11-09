@@ -15,14 +15,14 @@ public class Comment {
     private LocalTime timeStamp;
     private ArrayList<Person> usersWhoLiked;
 
-    public Comment(String parentID, int ownerID, String content) {
+    public Comment(String parentID, int ownerID, String content, LocalTime timeStamp) {
         this.parentID = parentID;
         //TODO: generate comment ID
         this.commentID = "0";
         this.ownerID = ownerID;
         this.content = content;
         this.likes = 0;
-        this.timeStamp = java.time.LocalTime.now();
+        this.timeStamp = timeStamp;
         this.usersWhoLiked = new ArrayList<Person>();
     }
 
