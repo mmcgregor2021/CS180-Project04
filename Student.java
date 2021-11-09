@@ -1,3 +1,8 @@
+/**
+ * A Student Class that extends the Person Class
+ * @author Kris Leungwattanakij
+ * @version November 8, 2021
+ **/
 public class Student extends Person {
 
     public Student(String firstName, String lastName, String password, int id) {
