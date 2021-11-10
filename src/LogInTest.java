@@ -22,23 +22,33 @@ public class LogInTest {
     * based on wether or not a matching id and password was found within known accounts
     * @param  id  integer to identify the account
     * @param  password password to verify correct user entry
-    * @return      boolean prompting user successful or failure of login
+    * @return      return 1 if id incorrect, return 2 if pass is incorrect, return 3 if it all is correct
     */
-    public boolean logIn(int id, String password) {
+    public int logIn(int id, String password) {
 
         for (int i = 0; i < students.size(); i++) {
             if (students.get(i).getID() == id) {
-                return true;
+                if (students.get(i).getPassword().equals(password)) {
+                    return 3;
+                }
+
+                return 2;
             }
+           
         }
 
         for (int j = 0; j <teachers.size(); j++) {
             if (teachers.get(j).getID() == id) {
-                return true;
+                if (teachers.get(j).getPassword().equals(password)) {
+                    return 3;
+                }
+
+                return 2;
             }
+
         }
 
-        return false;
+        return 1;
     }
     /**
     * Creates a new teacher of student object based on sign in options and adds it to the arraylist
