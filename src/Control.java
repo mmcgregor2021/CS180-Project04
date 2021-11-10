@@ -137,15 +137,6 @@ public class Control {
         } while (true);
         //sets up the account
         if (input == 1) {
-            // System.out.println("Please enter your ID number");
-            // do {
-            //     try {
-            //         id = Integer.parseInt(scan.nextLine());
-            //         break;
-            //     } catch (NumberFormatException e) {
-            //         System.out.println("Please enter a valid ID number");
-            //     }
-            // } while (true);
             id = personCounter + 1;
             personCounter++;
             System.out.println("Your UserID is " + id);
@@ -271,9 +262,10 @@ public class Control {
                     //remove the account
                 }
             } else if (input == 3) {
-                //view all of the stuff
+                //view all of the discussions
             }
         } while (input != 4);
         System.out.println("Goodbye! Have a nice day!");
+        //implement storing of variables and stuff
     }
 }
