@@ -1,6 +1,7 @@
 import java.lang.reflect.Array;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Defines a discussion board.
@@ -13,22 +14,23 @@ public class Board {
     private String owner;
     private String topic;
     private String boardID;
-    private LocalTime timeStamp;
+    private Date dateAndTime;
     private ArrayList<Comment> comments;
 
-    public Board(String course, String owner, String topic, LocalTime timeStamp) {
+    public Board(String course, String owner, String topic, String boardID, Date dateAndTime, ArrayList<Comment> comments) {
         this.course = course;
         this.owner = owner;
         this.topic = topic;
-        //TODO generate boardID
-        this.boardID = "0";
-        this.timeStamp = timeStamp;
-        this.comments = new ArrayList<Comment>();
+        this.boardID = boardID;
+        this.dateAndTime = dateAndTime;
+        this.comments = comments;
     }
 
-    //this creates a comment on the board itself
-    public void createComment(int ownerID, String content, LocalTime theTimeStamp) {
-        comments.add(new Comment(this.boardID, ownerID, content, theTimeStamp));
+    //this creates a comment on the board itself (first level comment)
+    public void createComment(int ownerID, String commentID, String content, int likes, Date theDateAndTime,
+                              ArrayList<Person> usersWhoLiked, ArrayList<Comment> repliesToComment) {
+        comments.add(new Comment(this.boardID, commentID, ownerID, content, likes, theDateAndTime,
+                usersWhoLiked, repliesToComment));
     }
 
     public void deleteComment(String commentID) {
@@ -41,9 +43,13 @@ public class Board {
 
     public String toString() {
         String toReturn = "";
-        //start by printing the board topic
+        toReturn += "\n" + topic + " | " + dateAndTime;
         //then print each comment in the array that has a board ID as parent
         //below each comment, print the replies to that comment
+        //TODO
+        for (int i = 0; i < comments.size(); i++) {
+
+        }
 
         return toReturn;
     }
@@ -86,5 +92,13 @@ public class Board {
 
     public void setComments(ArrayList<Comment> comments) {
         this.comments = comments;
+    }
+
+    public Date getDateAndTime() {
+        return dateAndTime;
+    }
+
+    public void setDateAndTime(Date dateAndTime) {
+        this.dateAndTime = dateAndTime;
     }
 }
