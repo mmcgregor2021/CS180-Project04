@@ -87,6 +87,24 @@ public class dataPersistenceMethods {
         }
     }
 
+    //reads all three counters from the txt file to an Integer array
+    //Integer Array Format: [personCounter, boardCounter, commentCounter]
+    public static int[] readCounters(String fileName) {
+        int[] arr = new int[3];
+        try (BufferedReader bfr = new BufferedReader(new FileReader(fileName))) {
+            String[] lineArr = bfr.readLine().split(";");
+            int personCounter = Integer.parseInt(lineArr[0]);
+            int boardCounter = Integer.parseInt(lineArr[1]);
+            int commentCounter = Integer.parseInt(lineArr[2]);
+            arr[0] = personCounter;
+            arr[1] = boardCounter;
+            arr[2] = commentCounter;
+        } catch (Exception e) {
+            System.out.println("Failed to parse text file!");
+        }
+        return arr;
+    }
+
     //Main method for testing purposes
     public static void main(String[] args) {
 
