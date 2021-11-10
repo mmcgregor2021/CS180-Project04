@@ -11,15 +11,13 @@ import java.util.Date;
 
 public class Board {
     private String course;
-    private String owner;
     private String topic;
     private String boardID;
     private Date dateAndTime;
     private ArrayList<Comment> comments;
 
-    public Board(String course, String owner, String topic, String boardID, Date dateAndTime, ArrayList<Comment> comments) {
+    public Board(String course, String topic, String boardID, Date dateAndTime, ArrayList<Comment> comments) {
         this.course = course;
-        this.owner = owner;
         this.topic = topic;
         this.boardID = boardID;
         this.dateAndTime = dateAndTime;
@@ -66,14 +64,6 @@ public class Board {
 
     public void setCourse(String course) {
         this.course = course;
-    }
-
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
     }
 
     public String getTopic() {
