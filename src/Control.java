@@ -107,9 +107,9 @@ public class Control {
 
     public static void main(String[] args) {
 
-        ArrayList<Student> students = readStudents(students.txt);
-        ArrayList<Teacher> teachers = readTeachers(teachers.txt);
-        int[] counterArray = readCounters(counters.txt);
+        ArrayList<Student> students = readStudents("students.txt");
+        ArrayList<Teacher> teachers = readTeachers("teachers.txt");
+        int[] counterArray = readCounters("counters.txt");
         int personCounter = counterArray[0];
         int boardCounter = counterArray[1];
         int commentCounter = counterArray[2];
