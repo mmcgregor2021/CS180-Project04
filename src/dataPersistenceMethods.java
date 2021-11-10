@@ -16,7 +16,7 @@ public class dataPersistenceMethods {
                 pw.println(line);
             }
         } catch (Exception e) {
-            System.out.println("Failed to students to file!");
+            System.out.println("Failed to save students to file!");
         }
     }
 
