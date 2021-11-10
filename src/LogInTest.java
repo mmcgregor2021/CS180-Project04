@@ -1,5 +1,9 @@
 import java.util.ArrayList;
-
+/**
+ * LogIn class that deals with log in info and changing of those settings
+ * @author Jainam Doshi
+ * @version November 9, 2021
+ **/
 public class LogInTest {
     
     ArrayList<Student> students = new ArrayList<Student>();
