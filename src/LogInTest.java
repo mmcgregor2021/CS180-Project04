@@ -92,5 +92,29 @@ public class LogInTest {
         }
     }
 
-    
+    /**
+     * Given an new first name, last name, pass, and id the information is changed
+     * @param firstName desired first name
+     * @param lastName  desired last name
+     * @param password  desired pass
+     * @param id        id associated with current student
+     */
+    public void change(String firstName, String lastName, String password, int id) {
+        for (int i = 0; i < students.size(); i++) {
+            if (students.get(i).getID() == id) {
+                students.get(i).setFirstName(firstName);
+                students.get(i).setLastName(lastName);
+                students.get(i).setPassword(password);
+            }
+        }
+
+        for (int i = 0; i < teachers.size(); i++) {
+            if (teachers.get(i).getID() == id) {
+                teachers.get(i).setFirstName(firstName);
+                teachers.get(i).setLastName(lastName);
+                teachers.get(i).setPassword(password);
+            }
+        }
+    }
+
 }
