@@ -2,6 +2,7 @@ import java.util.*;
 import java.io.*;
 public class Control {
     public static void main(String[] args) {
+
         Scanner scan = new Scanner(System.in);
         int input;
         int id;
@@ -25,15 +26,17 @@ public class Control {
         } while (true);
         //sets up the account
         if (input == 1) {
-            System.out.println("Please enter your ID number");
-            do {
-                try {
-                    id = Integer.parseInt(scan.nextLine());
-                    break;
-                } catch (NumberFormatException e) {
-                    System.out.println("Please enter a valid ID number");
-                }
-            } while (true);
+            // System.out.println("Please enter your ID number");
+            // do {
+            //     try {
+            //         id = Integer.parseInt(scan.nextLine());
+            //         break;
+            //     } catch (NumberFormatException e) {
+            //         System.out.println("Please enter a valid ID number");
+            //     }
+            // } while (true);
+            System.out.println("Your UserID is ");
+            //add userID generator
             System.out.println("Please enter your password.");
             do {
                 password = scan.nextLine();
@@ -87,10 +90,10 @@ public class Control {
                     System.out.println("Please enter a valid password.");
                 }
             } while (true);
-            //implement sign in stuff later
+            //implement sign in stuff
         }
         System.out.println("What would you like to do?");
-        //main method once logged in
+        //main loop once logged in
         do {
             System.out.println("1. Edit account\n2. Delete account\n3. View courses\n4. Logout");
             do {
@@ -106,6 +109,7 @@ public class Control {
                 }
             } while (true);
             if (input == 1) {
+                //edit account
                 do {
                     try {
                         id = Integer.parseInt(scan.nextLine());
@@ -147,8 +151,8 @@ public class Control {
                 } else {
                     person = new Student(first, last, password, id);
                 }
-                
             } else if (input == 2) {
+                //delete account
                 System.out.println("Are you sure you would like to delete your account? (y for yes, anything else for no)");
                 if (scan.nextLine().equals("y")) {
                     //remove the account
