@@ -25,7 +25,7 @@ public class Board {
     }
 
     //this creates a comment on the board itself (first level comment)
-    public void createComment(int ownerID, String commentID, String content, int likes, Date theDateAndTime,
+    public void createComment(String commentID, int ownerID, String content, int likes, Date theDateAndTime,
                               ArrayList<Person> usersWhoLiked, ArrayList<Comment> repliesToComment) {
         comments.add(new Comment(this.boardID, commentID, ownerID, content, likes, theDateAndTime,
                 usersWhoLiked, repliesToComment));
