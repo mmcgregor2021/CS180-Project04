@@ -1,5 +1,6 @@
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Defines a comment on a discussion board.
@@ -12,18 +13,20 @@ public class Comment {
     private int ownerID;
     private String content;
     private int likes;
-    private LocalTime timeStamp;
+    private Date dateAndTime;
     private ArrayList<Person> usersWhoLiked;
+    private ArrayList<Comment> repliesToComment;
 
-    public Comment(String parentID, int ownerID, String content, LocalTime timeStamp) {
+    public Comment(String parentID, String commentID, int ownerID, String content, int likes, Date dateAndTime,
+                   ArrayList<Person> usersWhoLiked, ArrayList<Comment> repliesToComment) {
         this.parentID = parentID;
-        //TODO: generate comment ID
-        this.commentID = "0";
+        this.commentID = commentID;
         this.ownerID = ownerID;
         this.content = content;
-        this.likes = 0;
-        this.timeStamp = timeStamp;
-        this.usersWhoLiked = new ArrayList<Person>();
+        this.likes = likes;
+        this.dateAndTime = dateAndTime;
+        this.usersWhoLiked = usersWhoLiked;
+        this.repliesToComment = repliesToComment;
     }
 
     //returns true if the like was added successfully, and false if the
@@ -35,6 +38,20 @@ public class Comment {
             likes++;
             usersWhoLiked.add(user);
             return true;
+        }
+    }
+
+    public void createReplyToComment(String theCommentID, int theOwnerID, String theContent,
+                                     int theLikes, Date theDateAndTime, ArrayList<Person> theUsersWhoLiked) {
+        repliesToComment.add(new Comment(this.commentID, theCommentID, theOwnerID, theContent, theLikes,
+                theDateAndTime, theUsersWhoLiked, null));
+    }
+
+    public void deleteReplyToComment(String commentID) {
+        for (Comment c: repliesToComment) {
+            if(c.getCommentID().equals(commentID)) {
+                repliesToComment.remove(c);
+            }
         }
     }
 
@@ -79,12 +96,12 @@ public class Comment {
         this.likes = likes;
     }
 
-    public LocalTime getTimeStamp() {
-        return timeStamp;
+    public Date getDateAndTime() {
+        return dateAndTime;
     }
 
-    public void setTimeStamp(LocalTime timeStamp) {
-        this.timeStamp = timeStamp;
+    public void setDateAndTime(Date dateAndTime) {
+        this.dateAndTime = dateAndTime;
     }
 
     public ArrayList<Person> getUsersWhoLiked() {
@@ -93,5 +110,13 @@ public class Comment {
 
     public void setUsersWhoLiked(ArrayList<Person> usersWhoLiked) {
         this.usersWhoLiked = usersWhoLiked;
+    }
+
+    public ArrayList<Comment> getRepliesToComment() {
+        return repliesToComment;
+    }
+
+    public void setRepliesToComment(ArrayList<Comment> repliesToComment) {
+        this.repliesToComment = repliesToComment;
     }
 }
