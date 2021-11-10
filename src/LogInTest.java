@@ -85,10 +85,12 @@ public class LogInTest {
             }
         }
 
-        for (int j = 0; j <teachers.size(); j++) {
+        for (int j = 0; j < teachers.size(); j++) {
             if (teachers.get(j).getID() == id) {
                 teachers.remove(j);
             }
         }
     }
+
+    
 }
