@@ -146,8 +146,8 @@ public class Control {
             //         System.out.println("Please enter a valid ID number");
             //     }
             // } while (true);
-            id = counter + 1;
-            counter++;
+            id = personCounter + 1;
+            personCounter++;
             System.out.println("Your UserID is " + id);
             //add userID generator
             System.out.println("Please enter your password.");
