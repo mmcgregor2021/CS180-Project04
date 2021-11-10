@@ -166,7 +166,7 @@ public class Control {
                     System.out.println("You must have a first name.");
                 }
             } while (true);
-            System.out.println("Please enter your last name.")
+            System.out.println("Please enter your last name.");
             do {
                 last = scan.nextLine();
                 if (last.length() != 0) {
@@ -247,7 +247,7 @@ public class Control {
                         System.out.println("You must have a first name.");
                     }
                 } while (true);
-                System.out.println("Please enter your last name.")
+                System.out.println("Please enter your last name.");
                 do {
                     last = scan.nextLine();
                     if (last.length() != 0) {
