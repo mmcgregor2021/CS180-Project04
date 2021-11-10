@@ -155,10 +155,8 @@ public class Control {
                 }
             } else if (input == 3) {
                 //view all of the stuff
-            } else if (input == 4) {
-                System.out.println("Goodbye! Have a nice day!");
-                break;
             }
-        }
+        } while (input != 4);
+        System.out.println("Goodbye! Have a nice day!");
     }
 }
