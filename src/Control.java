@@ -253,7 +253,7 @@ public class Control {
                     access = false;
                     break;
                 case 3:
-                    System.out.println("successfully Logged in");
+                    System.out.println("Successfully Logged in");
                     access = true;
                     sessionID = id;
                     break;
@@ -261,7 +261,11 @@ public class Control {
             //LOGIN
         }
 
-        if (access) {
+        boolean sessionAuthority = false;
+        for(int i = 0; i < teachers.size(); i++) {
+            if (sessionID == teachers.get(i).getID)
+                sessionAuthority = true;
+        }
 
             //main loop once logged in
             mainLoop:
@@ -381,8 +385,67 @@ public class Control {
                         }
                     }
                 } else if (input == 3) {
-                    //view all of the discussions
-                }
+                    //Display all courses.
+                    boolean again;
+                    int courseSelection = 0;
+                    do {
+                        System.out.println("Select one of the following options")
+                        again = false;
+                        for (int i = 0; i < courses.size(); i++) {
+                            System.out.println(i + ". " + courses.get(i));
+                        }
+                        if (sessionAuthority)
+                            System.out.println((courses.size()) + ". Add a course.");
+                        try {
+                            courseSelection = Integer.parseInt(scan.nextLine());
+                        } catch (Exception e) {
+                            System.out.println("Invalid entry, please try again.");
+                            again = true;
+                        }
+                        if (courseSelection > courses.size() && sessionAuthority) {
+                            System.out.println("Invalid entry, please try again.");
+                            again = true;
+                        } else if (courseSelection > courses.size() - 1 && !sessionAuthority) {
+                            System.out.println("Invalid entry, please try again.");
+                            again = true;
+                        }
+                    } while (again);
+
+                    int boardSelection = 0;
+                    int counter = 0;
+                    String selectedCourse = null;
+                    //Display the boards for the selected course.
+                    do {
+                        again = false;
+                        if (courseSelection < courses.size()) {
+                            System.out.println("Select one of the following options");
+                            selectedCourse = courses.get(courseSelection);
+                            for (int i = 0; i < boards.length; i++) {
+                                if (boards.get(i).getCourse.equals(selectedCourse)) {
+                                    System.out.println(counter + ". " + boards.get(i).getTopic());
+                                    counter++;
+                                }
+                            }
+                            if (sessionAuthority)
+                                System.out.println((counter + 1) + ". Add a board");
+                            try {
+                                boardSelection = Integer.parseInt(scan.nextLine());
+                            } catch (Exception e) {
+                                System.out.println("Invalid entry, please try again.");
+                                again = true;
+                            }
+                        }
+                        if (courseSelection == courses.size()) {
+                            String course;
+                            String boardID = String.valueOf(boardCounter + 1);
+                            boardCounter++;
+                            System.out.println("What is the topic of this board?");
+                            String topic = scan.nextLine();
+                            ArrayList<Comment> comments = new ArrayList<Comment>();
+                            Date date = new Date();
+                            boards.add(new Board(selectedCourse, topic, boardID, date, comments));
+                        }
+                    } while(again);
             } while (input != 4);
             System.out.println("Goodbye! Have a nice day!");
             logOut(students, teachers, personCounter, boardCounter, commentCounter);
