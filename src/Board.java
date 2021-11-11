@@ -41,19 +41,21 @@ public class Board {
 
     public String toString() {
         String toReturn = "";
-        toReturn += "\n" + topic + " | " + dateAndTime;
+        toReturn += "\n" + topic + " | " + dateAndTime + "\n";
         //then print each comment in the array that has a board ID as parent
         //below each comment, print the replies to that comment
         for (int i = comments.size() - 1; i >= 0; i--) {
             Comment c = comments.get(i);
             //indent
-            toReturn += "\n\t";
-            toReturn += c.getContent() + " | " + c.getDateAndTime();
+            toReturn += "\n\t" + c.getContent() + " | " + c.getDateAndTime();
+            toReturn += "\n" + c.getLikes() + " likes";
             for (int j = c.getRepliesToComment().size() - 1; j >= 0; j--) {
                 Comment r = c.getRepliesToComment().get(j);
                 toReturn += "\n\t\t";
                 toReturn += r.getContent() + " | " + r.getDateAndTime();
+                toReturn += "\n" + r.getLikes() + " likes";
             }
+            toReturn += "\n";
         }
         return toReturn;
     }

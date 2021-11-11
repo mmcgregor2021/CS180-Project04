@@ -2,6 +2,42 @@ import java.util.*;
 import java.io.*;
 public class Control {
 
+    //saves everything to txt files (STILL NEEDS TO SAVE COURSES, BOARDS, and COMMENTS)
+    public static void logOut(ArrayList<Student> students, ArrayList<Teacher> teachers, int personCounter, int boardCounter, int commentCounter) {
+
+        saveStudents(students, "students.txt");
+        saveTeachers(teachers, "teachers.txt");
+        saveCounters(personCounter, boardCounter, commentCounter, "counters.txt");
+
+    }
+
+    public static int logIn(int id, String password, ArrayList<Student> students, ArrayList<Teacher> teachers) {
+        for (int i = 0; i < students.size(); i++) {
+            if (students.get(i).getID() == id) {
+                if (students.get(i).getPassword().equals(password)) {
+                    return 3; //correct login
+                }
+
+                return 2; //wrong password
+            }
+
+        }
+
+        for (int j = 0; j <teachers.size(); j++) {
+            if (teachers.get(j).getID() == id) {
+                if (teachers.get(j).getPassword().equals(password)) {
+                    return 3; //correct login
+                }
+
+                return 2; //wrong password
+            }
+
+        }
+
+        return 1; //id does not exist
+    }
+
+
     //stores each student object as a line in a txt file in format:
     //firstName;lastName;password;id
     public static void saveStudents(ArrayList<Student> arr, String fileName) {
@@ -115,14 +151,16 @@ public class Control {
         int commentCounter = counterArray[2];
 
         Scanner scan = new Scanner(System.in);
+        int sessionID = 0; // ID number of the current logged in user
         int input;
         int id;
-        String password;
-        String first;
-        String last;
-        Person person;
+        String password = "";
+        String first = "";
+        String last = "";
+        boolean access = false;
         System.out.println("Welcome to the Discussion Board! What would you like to do?");
         System.out.println("1. Sign up\n2. Log in");
+
         do {
             try {
                 input = Integer.parseInt(scan.nextLine());
@@ -130,16 +168,20 @@ public class Control {
                     break;
                 } else {
                     System.out.println("Please enter a valid number");
+                    System.out.println("1. Sign up\n2. Log in");
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Please enter a valid number");
+                System.out.println("1. Sign up\n2. Log in");
             }
         } while (true);
+
         //sets up the account
         if (input == 1) {
             id = personCounter + 1;
             personCounter++;
             System.out.println("Your UserID is " + id);
+
             //add userID generator
             System.out.println("Please enter your password.");
             do {
@@ -147,9 +189,10 @@ public class Control {
                 if (password.length() != 0) {
                     break;
                 } else {
-                    System.out.println("Please enter a valid password.");
+                    System.out.println("Please enter a non-blank password.");
                 }
             } while (true);
+
             System.out.println("Please enter your first name.");
             do {
                 first = scan.nextLine();
@@ -168,12 +211,18 @@ public class Control {
                     System.out.println("You must have a last name.");
                 }
             } while (true);
+
             System.out.println("Are you a teacher? (y for yes, anything else for no)");
             if (scan.nextLine().equals("y")) {
-                person = new Teacher(first, last, password, id);
+                teachers.add(new Teacher(first, last, password, id));
             } else {
-                person = new Student(first, last, password, id);
+                students.add(new Student(first, last, password, id));
             }
+            System.out.println("Successfully Logged in");
+            access = true;
+            sessionID = id;
+            //End of Signup Route
+
         } else if (input == 2) {
             //checks login info
             System.out.println("Please enter your ID number");
@@ -194,78 +243,149 @@ public class Control {
                     System.out.println("Please enter a valid password.");
                 }
             } while (true);
-            //implement sign in stuff
+            switch (logIn(id, password, students, teachers)) {
+                case 1:
+                    System.out.println("The account with this ID does not exist");
+                    access = false;
+                    break;
+                case 2:
+                    System.out.println("The entered password is incorrect");
+                    access = false;
+                    break;
+                case 3:
+                    System.out.println("successfully Logged in");
+                    access = true;
+                    sessionID = id;
+                    break;
+            }
+            //LOGIN
         }
-        System.out.println("What would you like to do?");
-        //main loop once logged in
-        do {
-            System.out.println("1. Edit account\n2. Delete account\n3. View courses\n4. Logout");
+
+        if (access) {
+
+            //main loop once logged in
+            mainLoop:
             do {
-                try {
-                    input = Integer.parseInt(scan.nextLine());
-                    if (input >= 1 && input <= 4) {
-                        break;
-                    } else {
-                        System.out.println("Please enter a valid number");
-                    }
-                } catch (NumberFormatException e) {
-                    System.out.println("Please enter a valid number");
-                }
-            } while (true);
-            if (input == 1) {
-                //edit account
+                System.out.println("What would you like to do?");
+                System.out.println("1. Edit account\n2. Delete account\n3. View courses\n4. Logout");
                 do {
                     try {
-                        id = Integer.parseInt(scan.nextLine());
-                        break;
+                        input = Integer.parseInt(scan.nextLine());
+                        if (input >= 1 && input <= 4) {
+                            break;
+                        } else {
+                            System.out.println("Please enter a valid number");
+                            System.out.println("1. Edit account\n2. Delete account\n3. View courses\n4. Logout");
+                        }
                     } catch (NumberFormatException e) {
-                        System.out.println("Please enter a valid ID number");
+                        System.out.println("Please enter a valid number");
+                        System.out.println("1. Edit account\n2. Delete account\n3. View courses\n4. Logout");
                     }
                 } while (true);
-                System.out.println("Please enter your password.");
-                do {
-                    password = scan.nextLine();
-                    if (password.length() != 0) {
-                        break;
-                    } else {
-                        System.out.println("Please enter a valid password.");
+                if (input == 1) {
+                    //edit account
+                    editLoop:
+                    do {
+                        System.out.println("Which field would you like to modify?");
+                        System.out.println("1. password\n2. first name\n3. last name\n4. go back");
+                        int editChoice = Integer.parseInt(scan.nextLine());
+                        switch (editChoice) {
+                            case 1:
+                                System.out.println("Please enter your password.");
+                                do {
+                                    password = scan.nextLine();
+                                    if (password.length() != 0) {
+                                        for (int i = 0; i < students.size(); i++) {
+                                            if (students.get(i).getID() == sessionID) {
+                                                students.get(i).setPassword(password);
+                                            }
+                                        }
+                                        for (int i = 0; i < teachers.size(); i++) {
+                                            if (teachers.get(i).getID() == sessionID) {
+                                                teachers.get(i).setPassword(password);
+                                            }
+                                        }
+                                        System.out.println("Your password has been changed.");
+                                        break;
+                                    } else {
+                                        System.out.println("Please enter a non-blank password.");
+                                    }
+                                } while (true);
+                                break;
+                            case 2:
+                                System.out.println("Please enter your first name.");
+                                do {
+                                    first = scan.nextLine();
+                                    if (first.length() != 0) {
+                                        for (int i = 0; i < students.size(); i++) {
+                                            if (students.get(i).getID() == sessionID) {
+                                                students.get(i).setFirstName(first);
+                                            }
+                                        }
+                                        for (int i = 0; i < teachers.size(); i++) {
+                                            if (teachers.get(i).getID() == sessionID) {
+                                                teachers.get(i).setFirstName(first);
+                                            }
+                                        }
+                                        System.out.println("Your first name has been changed.");
+                                        break;
+                                    } else {
+                                        System.out.println("Please enter a valid last name.");
+                                    }
+                                } while (true);
+                                break;
+                            case 3:
+                                System.out.println("Please enter your last name.");
+                                do {
+                                    last = scan.nextLine();
+                                    if (first.length() != 0) {
+                                        for (int i = 0; i < students.size(); i++) {
+                                            if (students.get(i).getID() == sessionID) {
+                                                students.get(i).setLastName(password);
+                                            }
+                                        }
+                                        for (int i = 0; i < teachers.size(); i++) {
+                                            if (teachers.get(i).getID() == sessionID) {
+                                                teachers.get(i).setLastName(password);
+                                            }
+                                        }
+                                        System.out.println("Your last name has been changed.");
+                                        break;
+                                    } else {
+                                        System.out.println("Please enter a valid last name.");
+                                    }
+                                } while (true);
+                                break;
+                            case 4:
+                                break editLoop;
+                            case 5:
+                                System.out.println("Please enter a valid number");
+                                break;
+                        }
+                    } while (true);
+                } else if (input == 2) {
+                    //delete account
+                    System.out.println("Are you sure you would like to delete your account? (y for yes, anything else for no)");
+                    if (scan.nextLine().equals("y")) {
+                        for (int i = 0; i < students.size(); i++) {
+                            if (students.get(i).getID() == sessionID) {
+                                students.remove(i);
+                                break mainLoop; //logs user out after deleting their account
+                            }
+                        }
+                        for (int i = 0; i < teachers.size(); i++) {
+                            if (teachers.get(i).getID() == sessionID) {
+                                students.remove(i);
+                                break mainLoop; //logs user out after deleting their account
+                            }
+                        }
                     }
-                } while (true);
-                System.out.println("Please enter your first name.");
-                do {
-                    first = scan.nextLine();
-                    if (first.length() != 0) {
-                        break;
-                    } else {
-                        System.out.println("You must have a first name.");
-                    }
-                } while (true);
-                System.out.println("Please enter your last name.");
-                do {
-                    last = scan.nextLine();
-                    if (last.length() != 0) {
-                        break;
-                    } else {
-                        System.out.println("You must have a last name.");
-                    }
-                } while (true);
-                System.out.println("Are you a teacher? (y for yes, anything else for no)");
-                if (scan.nextLine().equals("y")) {
-                    person = new Teacher(first, last, password, id);
-                } else {
-                    person = new Student(first, last, password, id);
+                } else if (input == 3) {
+                    //view all of the discussions
                 }
-            } else if (input == 2) {
-                //delete account
-                System.out.println("Are you sure you would like to delete your account? (y for yes, anything else for no)");
-                if (scan.nextLine().equals("y")) {
-                    //remove the account
-                }
-            } else if (input == 3) {
-                //view all of the discussions
-            }
-        } while (input != 4);
-        System.out.println("Goodbye! Have a nice day!");
-        //implement storing of variables and stuff
+            } while (input != 4);
+            System.out.println("Goodbye! Have a nice day!");
+            logOut(students, teachers, personCounter, boardCounter, commentCounter);
+        }
     }
 }

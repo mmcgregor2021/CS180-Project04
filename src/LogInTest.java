@@ -1,11 +1,11 @@
 import java.util.ArrayList;
 /**
- * LogIn class that deals with log in info and changing of those settings
- * @author Jainam Doshi
- * @version November 9, 2021
- **/
+* LogIn class that deals with log in info and changing of those settings
+* @author Jainam Doshi
+* @version November 9, 2021
+**/
 public class LogInTest {
-    
+
     ArrayList<Student> students = new ArrayList<Student>();
     ArrayList<Teacher> teachers = new ArrayList<Teacher>();
 
@@ -18,7 +18,7 @@ public class LogInTest {
     }
 
     public void run() {
-        
+
     }
 
     /**
@@ -38,7 +38,7 @@ public class LogInTest {
 
                 return 2;
             }
-           
+
         }
 
         for (int j = 0; j <teachers.size(); j++) {
@@ -54,6 +54,7 @@ public class LogInTest {
 
         return 1;
     }
+
     /**
     * Creates a new teacher of student object based on sign in options and adds it to the arraylist
     * @param  firstName  first name of user
@@ -75,9 +76,11 @@ public class LogInTest {
     /**
     * Creates a new teacher of student object based on sign in options and adds it to the arraylist
     * @param  id         id for new user
+    * @param  students   arraylist of students
+    * @param  teachers   arraylist of teachers
     * @return      boolean prompting user successful or failure of login
     */
-    public void delete(int id) {
+    public void delete(int id, ArrayList<Student> students, ArrayList<Teacher> teachers) {
 
         for (int i = 0; i < students.size(); i++) {
             if (students.get(i).getID() == id) {
@@ -93,12 +96,12 @@ public class LogInTest {
     }
 
     /**
-     * Given an new first name, last name, pass, and id the information is changed
-     * @param firstName desired first name
-     * @param lastName  desired last name
-     * @param password  desired pass
-     * @param id        id associated with current student
-     */
+    * Given an new first name, last name, pass, and id the information is changed
+    * @param firstName desired first name
+    * @param lastName  desired last name
+    * @param password  desired pass
+    * @param id        id associated with current student
+    */
     public void change(String firstName, String lastName, String password, int id) {
         for (int i = 0; i < students.size(); i++) {
             if (students.get(i).getID() == id) {
