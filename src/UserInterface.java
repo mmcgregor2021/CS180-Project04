@@ -36,15 +36,18 @@ public class UserInterface {
             }
         } while(!success);
 
+
+
     }
 
+    //Make sure the user is using a valid login
     public void login(Scanner sc) {
         int id;
         String password;
         boolean found = false;
 
         do {
-            System.out.print("Username: ");
+            System.out.print("ID: ");
             id = sc.nextInt();
             sc.nextLine();
             System.out.print("Password: ");
@@ -67,10 +70,13 @@ public class UserInterface {
                 }
 
             }
+            if (!found)
+                System.out.println("Invalid username or password. Please try again.");
         } while (!found);
 
     }
 
+    //Craeates a new student or teacher based on user input.
     public void createNewUser(Scanner sc) {
         System.out.println("Are you a teacher or a student?");
         String personType = sc.nextLine();
@@ -88,6 +94,8 @@ public class UserInterface {
             teachers.add( new Teacher(firstName, lastName, password, id));
         else if (personType.equals("student"))
             students.add( new Student(firstName, lastName, password, id));
+
+
     }
 }
 
