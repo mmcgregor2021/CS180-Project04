@@ -11,6 +11,21 @@ public class Control {
 
     }
 
+    public void delete(int id, ArrayList<Student> students, ArrayList<Teacher> teachers) {
+
+        for (int i = 0; i < students.size(); i++) {
+            if (students.get(i).getID() == id) {
+                students.remove(i);
+            }
+        }
+
+        for (int j = 0; j < teachers.size(); j++) {
+            if (teachers.get(j).getID() == id) {
+                teachers.remove(j);
+            }
+        }
+    }
+
     public static int logIn(int id, String password, ArrayList<Student> students, ArrayList<Teacher> teachers) {
         for (int i = 0; i < students.size(); i++) {
             if (students.get(i).getID() == id) {
@@ -151,6 +166,7 @@ public class Control {
         int commentCounter = counterArray[2];
 
         Scanner scan = new Scanner(System.in);
+        int sessionID = 0; // ID number of the current logged in user
         int input;
         int id;
         String password;
@@ -167,9 +183,11 @@ public class Control {
                     break;
                 } else {
                     System.out.println("Please enter a valid number");
+                    System.out.println("1. Sign up\n2. Log in");
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Please enter a valid number");
+                System.out.println("1. Sign up\n2. Log in");
             }
         } while (true);
 
@@ -215,6 +233,9 @@ public class Control {
             } else {
                 students.add(new Student(first, last, password, id));
             }
+            System.out.println("Successfully Logged in");
+            access = true;
+            sessionID = id;
             //End of Signup Route
 
         } else if (input == 2) {
@@ -249,6 +270,7 @@ public class Control {
                 case 3:
                     System.out.println("successfully Logged in");
                     access = true;
+                    sessionID = id;
                     break;
             }
             //LOGIN
@@ -256,9 +278,10 @@ public class Control {
 
         if (access) {
 
-            System.out.println("What would you like to do?");
             //main loop once logged in
+            mainLoop:
             do {
+                System.out.println("What would you like to do?");
                 System.out.println("1. Edit account\n2. Delete account\n3. View courses\n4. Logout");
                 do {
                     try {
@@ -267,9 +290,11 @@ public class Control {
                             break;
                         } else {
                             System.out.println("Please enter a valid number");
+                            System.out.println("1. Edit account\n2. Delete account\n3. View courses\n4. Logout");
                         }
                     } catch (NumberFormatException e) {
                         System.out.println("Please enter a valid number");
+                        System.out.println("1. Edit account\n2. Delete account\n3. View courses\n4. Logout");
                     }
                 } while (true);
                 if (input == 1) {
@@ -313,7 +338,18 @@ public class Control {
                     //delete account
                     System.out.println("Are you sure you would like to delete your account? (y for yes, anything else for no)");
                     if (scan.nextLine().equals("y")) {
-                        //remove the account
+                        for (int i = 0; i < students.size(); i++) {
+                            if (students.get(i).getID() == sessionID) {
+                                students.remove(i);
+                                break mainLoop; //logs user out after deleting their account
+                            }
+                        }
+                        for (int i = 0; i < teachers.size(); i++) {
+                            if (teachers.get(i).getID() == sessionID) {
+                                students.remove(i);
+                                break mainLoop; //logs user out after deleting their account
+                            }
+                        }
                     }
                 } else if (input == 3) {
                     //view all of the discussions

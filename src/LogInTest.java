@@ -76,9 +76,11 @@ public class LogInTest {
     /**
     * Creates a new teacher of student object based on sign in options and adds it to the arraylist
     * @param  id         id for new user
+    * @param  students   arraylist of students
+    * @param  teachers   arraylist of teachers
     * @return      boolean prompting user successful or failure of login
     */
-    public void delete(int id) {
+    public void delete(int id, ArrayList<Student> students, ArrayList<Teacher> teachers) {
 
         for (int i = 0; i < students.size(); i++) {
             if (students.get(i).getID() == id) {
