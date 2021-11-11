@@ -11,21 +11,6 @@ public class Control {
 
     }
 
-    public void delete(int id, ArrayList<Student> students, ArrayList<Teacher> teachers) {
-
-        for (int i = 0; i < students.size(); i++) {
-            if (students.get(i).getID() == id) {
-                students.remove(i);
-            }
-        }
-
-        for (int j = 0; j < teachers.size(); j++) {
-            if (teachers.get(j).getID() == id) {
-                teachers.remove(j);
-            }
-        }
-    }
-
     public static int logIn(int id, String password, ArrayList<Student> students, ArrayList<Teacher> teachers) {
         for (int i = 0; i < students.size(); i++) {
             if (students.get(i).getID() == id) {
@@ -169,9 +154,9 @@ public class Control {
         int sessionID = 0; // ID number of the current logged in user
         int input;
         int id;
-        String password;
-        String first;
-        String last;
+        String password = "";
+        String first = "";
+        String last = "";
         boolean access = false;
         System.out.println("Welcome to the Discussion Board! What would you like to do?");
         System.out.println("1. Sign up\n2. Log in");
@@ -299,39 +284,83 @@ public class Control {
                 } while (true);
                 if (input == 1) {
                     //edit account
+                    editLoop:
                     do {
-                        try {
-                            id = Integer.parseInt(scan.nextLine());
-                            break;
-                        } catch (NumberFormatException e) {
-                            System.out.println("Please enter a valid ID number");
-                        }
-                    } while (true);
-                    System.out.println("Please enter your password.");
-                    do {
-                        password = scan.nextLine();
-                        if (password.length() != 0) {
-                            break;
-                        } else {
-                            System.out.println("Please enter a valid password.");
-                        }
-                    } while (true);
-                    System.out.println("Please enter your first name.");
-                    do {
-                        first = scan.nextLine();
-                        if (first.length() != 0) {
-                            break;
-                        } else {
-                            System.out.println("You must have a first name.");
-                        }
-                    } while (true);
-                    System.out.println("Please enter your last name.");
-                    do {
-                        last = scan.nextLine();
-                        if (last.length() != 0) {
-                            break;
-                        } else {
-                            System.out.println("You must have a last name.");
+                        System.out.println("Which field would you like to modify?");
+                        System.out.println("1. password\n2. first name\n3. last name\n4. go back");
+                        int editChoice = Integer.parseInt(scan.nextLine());
+                        switch (editChoice) {
+                            case 1:
+                                System.out.println("Please enter your password.");
+                                do {
+                                    password = scan.nextLine();
+                                    if (password.length() != 0) {
+                                        for (int i = 0; i < students.size(); i++) {
+                                            if (students.get(i).getID() == sessionID) {
+                                                students.get(i).setPassword(password);
+                                            }
+                                        }
+                                        for (int i = 0; i < teachers.size(); i++) {
+                                            if (teachers.get(i).getID() == sessionID) {
+                                                teachers.get(i).setPassword(password);
+                                            }
+                                        }
+                                        System.out.println("Your password has been changed.");
+                                        break;
+                                    } else {
+                                        System.out.println("Please enter a non-blank password.");
+                                    }
+                                } while (true);
+                                break;
+                            case 2:
+                                System.out.println("Please enter your first name.");
+                                do {
+                                    first = scan.nextLine();
+                                    if (first.length() != 0) {
+                                        for (int i = 0; i < students.size(); i++) {
+                                            if (students.get(i).getID() == sessionID) {
+                                                students.get(i).setFirstName(first);
+                                            }
+                                        }
+                                        for (int i = 0; i < teachers.size(); i++) {
+                                            if (teachers.get(i).getID() == sessionID) {
+                                                teachers.get(i).setFirstName(first);
+                                            }
+                                        }
+                                        System.out.println("Your first name has been changed.");
+                                        break;
+                                    } else {
+                                        System.out.println("Please enter a valid last name.");
+                                    }
+                                } while (true);
+                                break;
+                            case 3:
+                                System.out.println("Please enter your last name.");
+                                do {
+                                    last = scan.nextLine();
+                                    if (first.length() != 0) {
+                                        for (int i = 0; i < students.size(); i++) {
+                                            if (students.get(i).getID() == sessionID) {
+                                                students.get(i).setLastName(password);
+                                            }
+                                        }
+                                        for (int i = 0; i < teachers.size(); i++) {
+                                            if (teachers.get(i).getID() == sessionID) {
+                                                teachers.get(i).setLastName(password);
+                                            }
+                                        }
+                                        System.out.println("Your last name has been changed.");
+                                        break;
+                                    } else {
+                                        System.out.println("Please enter a valid last name.");
+                                    }
+                                } while (true);
+                                break;
+                            case 4:
+                                break editLoop;
+                            case 5:
+                                System.out.println("Please enter a valid number");
+                                break;
                         }
                     } while (true);
                 } else if (input == 2) {
