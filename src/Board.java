@@ -24,7 +24,7 @@ public class Board {
     }
 
     //overloaded constructor for when a new board is created and does not have comments yet
-    public Board(Stirng course, String topic, String boardID, String dateAndTime) {
+    public Board(String course, String topic, String boardID, String dateAndTime) {
         this.course = course;
         this.topic = topic;
         this.boardID = boardID;
