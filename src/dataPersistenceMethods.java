@@ -2,6 +2,17 @@ import java.io.*;
 import java.util.*;
 public class dataPersistenceMethods {
 
+	//serializes the comment objects and stores them in a txt file
+    public static void saveComments(ArrayList<Comment> comments, String fileName) {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
+            for (int i = 0; i < comments.size(); i++) {
+                out.writeObject(comments.get(i));
+            }
+        } catch (Exception e) {
+            System.out.println("Failed to save comments to file!");
+        }
+    }
+
     //serializes the board objects and stores them in a txt file
     public static void saveBoards(ArrayList<Board> boards, String fileName) {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
@@ -35,8 +46,22 @@ public class dataPersistenceMethods {
         }
     }
 
+	//deserializes comment objects from the txt file and returns an arraylist of the board objects
+	public static ArrayList<Comment> readComments(String fileName) {
+		ArrayList<Comment> comments = new ArrayList<>();
+		try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
+			while (true) {
+				Comment comment = (Comment) in.readObject();
+				comments.add(comment);
+			}
+		} catch (Exception e) {
+			System.out.println("Failed to parse text file!");
+		}
+		return comments;
+	}
+
     //deserializes board objects from the txt file and returns an arraylist of the board objects
-    public static ArrayList<Board> readBoard(String fileName) {
+    public static ArrayList<Board> readBoards(String fileName) {
         ArrayList<Board> boards = new ArrayList<>();
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
             while (true) {

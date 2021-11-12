@@ -7,7 +7,7 @@ import java.util.Date;
  * @author Astrid Popovici
  * @version November 8, 2021
  */
-public class Comment {
+public class Comment implements java.io.Serializable {
     private String parentID;
     private String commentID;
     private int ownerID;
