@@ -2,8 +2,61 @@ import java.io.*;
 import java.util.*;
 public class dataPersistenceMethods {
 
+    //reads board objects from txt file and returns and ArrayList with all of them
+    //Important: This method can only be called after readComments() as the comments ArrayList is a required parameter
+    public static ArrayList<Board> readBoards(String fileName, ArrayList<Comment> comments) {
+        ArrayList<Board> arr = new ArrayList<>();
+        ArrayList<String> sArr = new ArrayList<>();
+        try (BufferedReader bfr = new BufferedReader(new FileReader(fileName))) {
+            String line = bfr.readLine();
+            while(line != null) {
+                sArr.add(line);
+                line = bfr.readLine();
+            }
+
+            String boardFields = "";
+            String commentIDs = "";
+            ArrayList<Comment> boardComments = new ArrayList<>();
+            for (int i = 0; i < sArr.size(); i++) {
+                if ((i + 1) % 2 == 0) {
+                    commentIDs = sArr.get(i);
+                    String[] fieldsArr = boardFields.split(";");
+                    String[] commentIDArr = commentIDs.split("|");
+
+                    String course = fieldsArr[0];
+                    String topic = fieldsArr[1];
+                    String boardID = fieldsArr[2];
+                    String dateAndTime = fieldsArr[3];
+
+                    //puts all the comments that belong to the board in boardComments
+                    for (int x = 0; x < commentIDArr.length; x++) {
+                        String currentID = commentIDArr[x];
+                        for (int y = 0; y < comments.size(); y++) {
+                            if (currentID.equals(comments.get(i).getCommentID())) {
+                                Comment matchedComment = comments.get(i);
+                                boardComments.add(matchedComment);
+                                comments.remove(i);
+                                break;
+                            }
+                        }
+                    }
+                    //end of comment matching proccess
+
+                    Board board = new Board(course, topic, boardID, dateAndTime, boardComments);
+                    arr.add(board);
+
+                } else {
+                    boardFields = sArr.get(i);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Failed to parse text file!");
+        }
+        return arr;
+    }
+
     //stores each board object as two lines in atxt file in format:
-    //course;topic;boardID;dataAndTime
+    //course;topic;boardID;dateAndTime
     //commentID1|commentID2|commentID3...
     public static void saveBoards(ArrayList<Board> arr, String fileName) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(fileName))) {
@@ -65,7 +118,7 @@ public class dataPersistenceMethods {
                 pw.println(line);
             }
         } catch (Exception e) {
-            System.out.println("Failed to students to file!");
+            System.out.println("Failed to save teachers to file!");
         }
     }
 
@@ -138,6 +191,5 @@ public class dataPersistenceMethods {
 
     //Main method for testing purposes
     public static void main(String[] args) {
-
     }
 }
