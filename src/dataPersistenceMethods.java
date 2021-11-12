@@ -2,8 +2,42 @@ import java.io.*;
 import java.util.*;
 public class dataPersistenceMethods {
 
+    //serializes the board objects and stores them in a txt file
+    public static void saveBoards(ArrayList<Board> boards, String fileName) {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
+            for (int i = 0; i < boards.size(); i++) {
+                out.writeObject(boards.get(i));
+            }
+        } catch (Exception e) {
+            System.out.println("Failed to save boards to file!");
+        }
+    }
+
+    //serializes the student objects and stores them in a txt file
+    public static void saveStudents(ArrayList<Student> students, String fileName) {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
+            for (int i = 0; i < students.size(); i++) {
+                out.writeObject(students.get(i));
+            }
+        } catch (Exception e) {
+            System.out.println("Failed to save students to file!");
+        }
+    }
+
+
+    //serializes the teacher objects and stores them in a txt file
+    public static void saveTeachers(ArrayList<Teacher> teachers, String fileName) {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
+            for (int i = 0; i < teachers.size(); i++) {
+                out.writeObject(teachers.get(i));
+            }
+        } catch (Exception e) {
+            System.out.println("Failed to save teachers to file!");
+        }
+    }
+
     //deserializes board objects from the txt file and returns an arraylist of the board objects
-    public static ArrayList<Board> readBoards(String fileName) {
+    public static ArrayList<Board> readBoard(String fileName) {
         ArrayList<Board> boards = new ArrayList<>();
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
             while (true) {
@@ -16,92 +50,34 @@ public class dataPersistenceMethods {
         return boards;
     }
 
-    //serializes the board objects and stores them in a txt file
-    public static void saveBoards(ArrayList<Board> boards, String fileName) {
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
-            for (int i = 0; i < boards.size(); i++) {
-                out.writeObject(boards.get(i));
-            }
-        } catch (Exception e) {
-            System.out.println("Failed to save boards to file!");
-        }
-    }
-
-    //stores each student object as a line in a txt file in format:
-    //firstName;lastName;password;id
-    public static void saveStudents(ArrayList<Student> arr, String fileName) {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(fileName))) {
-            for (int i = 0; i < arr.size(); i++) {
-                Student student = arr.get(i);
-                String firstName = student.getFirstName();
-                String lastName = student.getLastName();
-                String password = student.getPassword();
-                int id = student.getID();
-                String line = firstName + ";" + lastName + ";" + password + ";" + id;
-                pw.println(line);
-            }
-        } catch (Exception e) {
-            System.out.println("Failed to save students to file!");
-        }
-    }
-
-    //stores each teacher object as a line in a txt file in format:
-    //firstName;lastName;password;id
-    public static void saveTeachers(ArrayList<Teacher> arr, String fileName) {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(fileName))) {
-            for (int i = 0; i < arr.size(); i++) {
-                Teacher teacher = arr.get(i);
-                String firstName = teacher.getFirstName();
-                String lastName = teacher.getLastName();
-                String password = teacher.getPassword();
-                int id = teacher.getID();
-                String line = firstName + ";" + lastName + ";" + password + ";" + id;
-                pw.println(line);
-            }
-        } catch (Exception e) {
-            System.out.println("Failed to save teachers to file!");
-        }
-    }
-
-    //reads student objects from the txt file created by saveStudents() and returns and ArrayList of students
+    //deserializes student objects from the txt file and returns an arraylist of the student objects
     public static ArrayList<Student> readStudents(String fileName) {
-        ArrayList<Student> arr = new ArrayList<>();
-        try (BufferedReader bfr = new BufferedReader(new FileReader(fileName))) {
-            String line = bfr.readLine();
-            while (line != null) {
-                String[] lineArr = line.split(";");
-                String firstName = lineArr[0];
-                String lastName = lineArr[1];
-                String password = lineArr[2];
-                int id = Integer.parseInt(lineArr[3]);
-                arr.add(new Student(firstName, lastName, password, id));
-                line = bfr.readLine();
+        ArrayList<Student> students = new ArrayList<>();
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
+            while (true) {
+                Student student = (Student) in.readObject();
+                students.add(student);
             }
         } catch (Exception e) {
-            System.out.println("Failed to parse text file!");
+            System.out.println("Failed to parse text file!")
         }
-        return arr;
+        return students;
     }
 
-    //reads teacher objects from the txt file created by saveTeachers() and returns and ArrayList of teachers
+    //deserializes teacher objects from the txt file and returns an arraylist of the teacher objects
     public static ArrayList<Teacher> readTeachers(String fileName) {
-        ArrayList<Teacher> arr = new ArrayList<>();
-        try (BufferedReader bfr = new BufferedReader(new FileReader(fileName))) {
-            String line = bfr.readLine();
-            while (line != null) {
-                String[] lineArr = line.split(";");
-                String firstName = lineArr[0];
-                String lastName = lineArr[1];
-                String password = lineArr[2];
-                int id = Integer.parseInt(lineArr[3]);
-                arr.add(new Teacher(firstName, lastName, password, id));
-                line = bfr.readLine();
+        ArrayList<Teacher> teachers = new ArrayList<>();
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
+            while (true) {
+                Teacher teacher = (Teacher) in.readObject();
+                teachers.add(teacher);
             }
         } catch (Exception e) {
-            System.out.println("Failed to parse text file!");
+            System.out.println("Failed to parse text file!")
         }
-        return arr;
+        return teachers;
     }
+
 
     //saves all three counters to one line separated by ';' to a txt file
     public static void saveCounters(int personCounter, int boardCounter, int commentCounter, String fileName) {
