@@ -23,6 +23,17 @@ public class Board {
         this.comments = comments;
     }
 
+    //overloaded constructor for when a new board is created and does not have comments yet
+    public Board(Stirng course, String topic, String boardID, String dateAndTime) {
+        this.course = course;
+        this.topic = topic;
+        this.boardID = boardID;
+        this.dateAndTime = dateAndTime;
+        //creating an empty ArrayList of comment objects
+        ArrayList<Comment> listOfComments = new ArrayList<>();
+        this.comments = listOfComments;
+    }
+
     //this creates a comment on the board itself (first level comment)
     public void createComment(String commentID, int ownerID, String content, int likes, String theDateAndTime,
                               ArrayList<Person> usersWhoLiked, ArrayList<Comment> repliesToComment) {
