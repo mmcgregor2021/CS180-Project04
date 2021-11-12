@@ -389,7 +389,7 @@ public class Control {
                     boolean again;
                     int courseSelection = 0;
                     do {
-                        System.out.println("Select one of the following options")
+                        System.out.println("Select one of the following options");
                         again = false;
                         for (int i = 0; i < courses.size(); i++) {
                             System.out.println(i + ". " + courses.get(i));
@@ -407,7 +407,7 @@ public class Control {
                             again = true;
                         } else if (courseSelection > courses.size() - 1 && !sessionAuthority) {
                             System.out.println("Invalid entry, please try again.");
-                            again = true;
+                        again = true;
                         }
                     } while (again);
 
@@ -418,7 +418,7 @@ public class Control {
                     do {
                         again = false;
                         if (courseSelection < courses.size()) {
-                            System.out.println("Select one of the following options");
+                            System.out.println("Select one of the following options: ");
                             selectedCourse = courses.get(courseSelection);
                             for (int i = 0; i < boards.length; i++) {
                                 if (boards.get(i).getCourse.equals(selectedCourse)) {
@@ -426,16 +426,31 @@ public class Control {
                                     counter++;
                                 }
                             }
-                            if (sessionAuthority)
-                                System.out.println((counter + 1) + ". Add a board");
-                            try {
-                                boardSelection = Integer.parseInt(scan.nextLine());
-                            } catch (Exception e) {
-                                System.out.println("Invalid entry, please try again.");
-                                again = true;
-                            }
                         }
-                        if (courseSelection == courses.size()) {
+
+                        if (sessionAuthority) {
+                            System.out.println((counter + 1) + ". Add a board");
+                            System.out.println((counter + 2) + ". View all comments from a specific student");
+                        }
+
+                        try {
+                            boardSelection = Integer.parseInt(scan.nextLine());
+                        } catch (Exception e) {
+                            System.out.println("Invalid entry, please try again.");
+                            again = true;
+                        }
+
+                        if (boardSelection > boards.size() + 2 && sessionAuthority) {
+                            System.out.println("Invalid entry, please try again.");
+                            again = true;
+                        } else if (boardSelection > boards.size() && !sessionAuthority) {
+                            System.out.println("Invalid entry, please try again.");
+                            again = true;
+                        }
+                    } while (again);
+
+                        if (boardSelection == boards.size()) {
+                            System.out.println("Creating a new board: ");
                             String course;
                             String boardID = String.valueOf(boardCounter + 1);
                             boardCounter++;
@@ -445,10 +460,36 @@ public class Control {
                             Date date = new Date();
                             boards.add(new Board(selectedCourse, topic, boardID, date, comments));
                         }
-                    } while(again);
+                        int studentID = 0;
+                        if(boardSelection == boards.size() + 1) {
+                            do {
+                                System.out.println("Enter the student ID of the student comments you want to see");
+                                try {
+                                    again = false;
+                                    studentID = Integer.parseInt(scan.nextLine());
+                                    for (int i = 0; i < students.size(); i++) {
+                                        if (students.get(i).getID() == studentID) {
+                                            again = true;
+                                        }
+                                    }
+                                    if (again)
+                                        System.out.println("Invalid ID, please try again");
+                                } catch (Exception e) {
+                                    System.out.println("Invalid ID, please try again.");
+                                }
+                            } while(again);
+
+                            for (int i = 0; i < comments.size(); i++) {
+                                if(comments.get(i).getCommentID() == studentID) {
+                                    comments.get(i).toString();
+                                }
+                            }
+                        }
+
+                }
             } while (input != 4);
             System.out.println("Goodbye! Have a nice day!");
             logOut(students, teachers, personCounter, boardCounter, commentCounter);
         }
     }
-}
+
