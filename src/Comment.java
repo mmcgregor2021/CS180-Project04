@@ -1,5 +1,6 @@
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Defines a comment on a discussion board.
@@ -13,22 +14,33 @@ public class Comment {
     private String content;
     private int likes;
     private String dateAndTime;
+    private ArrayList<Person> usersWhoLiked;
+    private ArrayList<Comment> repliesToComment;
 
-    public Comment(String parentID, String commentID, int ownerID, String content, int likes, String dateAndTime) {
+    public Comment(String parentID, String commentID, int ownerID, String content, int likes, String dateAndTime,
+                   ArrayList<Person> usersWhoLiked, ArrayList<Comment> repliesToComment) {
         this.parentID = parentID;
         this.commentID = commentID;
         this.ownerID = ownerID;
         this.content = content;
         this.likes = likes;
         this.dateAndTime = dateAndTime;
+        this.usersWhoLiked = usersWhoLiked;
+        this.repliesToComment = repliesToComment;
     }
 
-    public void addLike() {
-        likes++;
+    //returns true if the like was added successfully, and false if the
+    //passed in user has already liked the comment
+    public boolean addLike(Person user) {
+        if (usersWhoLiked.contains(user)) {
+            return false;
+        } else {
+            likes++;
+            usersWhoLiked.add(user);
+            return true;
+        }
     }
 
-//commented out for now
-/**
     public void createReplyToComment(String theCommentID, int theOwnerID, String theContent,
                                      int theLikes, String theDateAndTime, ArrayList<Person> theUsersWhoLiked) {
         repliesToComment.add(new Comment(this.commentID, theCommentID, theOwnerID, theContent, theLikes,
@@ -42,7 +54,6 @@ public class Comment {
             }
         }
     }
-**/
 
     //getters and setters
     public String getParentID() {
@@ -91,5 +102,21 @@ public class Comment {
 
     public void setDateAndTime(String dateAndTime) {
         this.dateAndTime = dateAndTime;
+    }
+
+    public ArrayList<Person> getUsersWhoLiked() {
+        return usersWhoLiked;
+    }
+
+    public void setUsersWhoLiked(ArrayList<Person> usersWhoLiked) {
+        this.usersWhoLiked = usersWhoLiked;
+    }
+
+    public ArrayList<Comment> getRepliesToComment() {
+        return repliesToComment;
+    }
+
+    public void setRepliesToComment(ArrayList<Comment> repliesToComment) {
+        this.repliesToComment = repliesToComment;
     }
 }

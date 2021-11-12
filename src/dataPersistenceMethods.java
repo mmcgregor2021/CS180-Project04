@@ -24,7 +24,6 @@ public class dataPersistenceMethods {
         }
     }
 
-
     //serializes the teacher objects and stores them in a txt file
     public static void saveTeachers(ArrayList<Teacher> teachers, String fileName) {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
@@ -45,7 +44,7 @@ public class dataPersistenceMethods {
                 boards.add(board);
             }
         } catch (Exception e) {
-            System.out.println("Failed to parse text file!")
+            System.out.println("Failed to parse text file!");
         }
         return boards;
     }
@@ -59,7 +58,7 @@ public class dataPersistenceMethods {
                 students.add(student);
             }
         } catch (Exception e) {
-            System.out.println("Failed to parse text file!")
+            System.out.println("Failed to parse text file!");
         }
         return students;
     }
@@ -73,7 +72,7 @@ public class dataPersistenceMethods {
                 teachers.add(teacher);
             }
         } catch (Exception e) {
-            System.out.println("Failed to parse text file!")
+            System.out.println("Failed to parse text file!");
         }
         return teachers;
     }
