@@ -1,6 +1,5 @@
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Defines a comment on a discussion board.
@@ -13,11 +12,11 @@ public class Comment {
     private int ownerID;
     private String content;
     private int likes;
-    private Date dateAndTime;
+    private String dateAndTime;
     private ArrayList<Person> usersWhoLiked;
     private ArrayList<Comment> repliesToComment;
 
-    public Comment(String parentID, String commentID, int ownerID, String content, int likes, Date dateAndTime,
+    public Comment(String parentID, String commentID, int ownerID, String content, int likes, String dateAndTime,
                    ArrayList<Person> usersWhoLiked, ArrayList<Comment> repliesToComment) {
         this.parentID = parentID;
         this.commentID = commentID;
@@ -42,7 +41,7 @@ public class Comment {
     }
 
     public void createReplyToComment(String theCommentID, int theOwnerID, String theContent,
-                                     int theLikes, Date theDateAndTime, ArrayList<Person> theUsersWhoLiked) {
+                                     int theLikes, String theDateAndTime, ArrayList<Person> theUsersWhoLiked) {
         repliesToComment.add(new Comment(this.commentID, theCommentID, theOwnerID, theContent, theLikes,
                 theDateAndTime, theUsersWhoLiked, null));
     }
@@ -96,11 +95,11 @@ public class Comment {
         this.likes = likes;
     }
 
-    public Date getDateAndTime() {
+    public String getDateAndTime() {
         return dateAndTime;
     }
 
-    public void setDateAndTime(Date dateAndTime) {
+    public void setDateAndTime(String dateAndTime) {
         this.dateAndTime = dateAndTime;
     }
 
