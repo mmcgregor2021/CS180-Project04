@@ -2,84 +2,25 @@ import java.io.*;
 import java.util.*;
 public class dataPersistenceMethods {
 
-    //reads board objects from txt file and returns and ArrayList with all of them
-    //Important: This method can only be called after readComments() as the comments ArrayList is a required parameter
-    public static ArrayList<Board> readBoards(String fileName, ArrayList<Comment> comments) {
-        ArrayList<Board> arr = new ArrayList<>();
-        ArrayList<String> sArr = new ArrayList<>();
-        try (BufferedReader bfr = new BufferedReader(new FileReader(fileName))) {
-            String line = bfr.readLine();
-            while(line != null) {
-                sArr.add(line);
-                line = bfr.readLine();
-            }
-
-            String boardFields = "";
-            String commentIDs = "";
-            ArrayList<Comment> boardComments = new ArrayList<>();
-            for (int i = 0; i < sArr.size(); i++) {
-                if ((i + 1) % 2 == 0) {
-                    commentIDs = sArr.get(i);
-                    String[] fieldsArr = boardFields.split(";");
-                    String[] commentIDArr = commentIDs.split("|");
-
-                    String course = fieldsArr[0];
-                    String topic = fieldsArr[1];
-                    String boardID = fieldsArr[2];
-                    String dateAndTime = fieldsArr[3];
-
-                    //puts all the comments that belong to the board in boardComments
-                    for (int x = 0; x < commentIDArr.length; x++) {
-                        String currentID = commentIDArr[x];
-                        for (int y = 0; y < comments.size(); y++) {
-                            if (currentID.equals(comments.get(i).getCommentID())) {
-                                Comment matchedComment = comments.get(i);
-                                boardComments.add(matchedComment);
-                                comments.remove(i);
-                                break;
-                            }
-                        }
-                    }
-                    //end of comment matching proccess
-
-                    Board board = new Board(course, topic, boardID, dateAndTime, boardComments);
-                    arr.add(board);
-
-                } else {
-                    boardFields = sArr.get(i);
-                }
+    //deserializes board objects from the txt file and returns an arraylist of the board objects
+    public static ArrayList<Board> readBoards(String fileName) {
+        ArrayList<Board> boards = new ArrayList<>();
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
+            while (true) {
+                Board board = (Board) in.readObject();
+                boards.add(board);
             }
         } catch (Exception e) {
-            System.out.println("Failed to parse text file!");
+            System.out.println("Failed to parse text file!")
         }
-        return arr;
+        return boards;
     }
 
-    //stores each board object as two lines in atxt file in format:
-    //course;topic;boardID;dateAndTime
-    //commentID1|commentID2|commentID3...
-    public static void saveBoards(ArrayList<Board> arr, String fileName) {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(fileName))) {
-            for (int i = 0; i < arr.size(); i++) {
-                Board board = arr.get(i);
-                String course = board.getCourse();
-                String topic = board.getTopic();
-                String boardID = board.getBoardID();
-                String dateAndTime = board.getDateAndTime();
-                ArrayList<Comment> comments = board.getComments();
-                String commentIDS = "";
-
-                //grabbing the commentID of each comment obj in comments and putting it in commentIDS
-                for (int x = 0; x < comments.size(); x++) {
-                    Comment comment = comments.get(x);
-                    commentIDS += comment.getCommentID() + "|";
-                }
-                commentIDS = commentIDS.substring(0, commentIDS.length() - 1); //truncating the final '|'
-
-                String line1 = course + ";" + topic + ";" + boardID + ";" + dateAndTime;
-                String line = line1 + "\n" + commentIDS;
-
-                pw.println(line);
+    //serializes the board objects and stores them in a txt file
+    public static void saveBoards(ArrayList<Board> boards, String fileName) {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
+            for (int i = 0; i < boards.size(); i++) {
+                out.writeObject(boards.get(i));
             }
         } catch (Exception e) {
             System.out.println("Failed to save boards to file!");

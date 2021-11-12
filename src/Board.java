@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * @version November 8, 2021
  */
 
-public class Board {
+public class Board implements java.io.Serializable {
     private String course;
     private String topic;
     private String boardID;
