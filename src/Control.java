@@ -487,6 +487,40 @@ public class Control {
                         }
 
                 }
+                        //add in when content of boards is able to be printed out
+                        /*
+                        if (courseSelection == courses.size() + 1) {
+                            ArrayList<Student> sortedStudents = new ArrayList<>();
+                            index = 0;
+                            for (int x = 0; x < students.length; x++) {
+                                if (students.get(x).getLikes() > students.get(index).getLikes()) {
+                                    index = x;
+                                }
+                            }
+                            sortedStudents.add(students.get(x));
+                            for (int x = 0; x < sortedStudents.size(); x++) {
+                                System.out.println(sortedStudents.get(x));
+                            }
+                        }
+                        */
+                        //add in once boards have been printed out
+                        /*
+                        System.out.println((courses.size() + 2) + "What comment would you like to upvote?");
+                        do {
+                            try {
+                                commentNumber = Integer.parseInt(scan.nextLine());
+                                break;
+                            } catch (Exception e) {
+                                System.out.println("Invalid entry, please try again.");
+                            }
+                        } while (true);
+                        for (int x = 0; x < boards.size(); x++) {
+                            if (boards.get(x).getID() == commentNumber) {
+                                boards.get(x).setLikes(boards.get(x).getLikes + 1);
+                            }
+                        }
+                        */
+                    } while(again);
             } while (input != 4);
             System.out.println("Goodbye! Have a nice day!");
             logOut(students, teachers, personCounter, boardCounter, commentCounter);
