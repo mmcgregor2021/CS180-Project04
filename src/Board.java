@@ -1,7 +1,6 @@
 import java.lang.reflect.Array;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Defines a discussion board.
@@ -13,10 +12,10 @@ public class Board {
     private String course;
     private String topic;
     private String boardID;
-    private Date dateAndTime;
+    private String dateAndTime;
     private ArrayList<Comment> comments;
 
-    public Board(String course, String topic, String boardID, Date dateAndTime, ArrayList<Comment> comments) {
+    public Board(String course, String topic, String boardID, String dateAndTime, ArrayList<Comment> comments) {
         this.course = course;
         this.topic = topic;
         this.boardID = boardID;
@@ -25,7 +24,7 @@ public class Board {
     }
 
     //this creates a comment on the board itself (first level comment)
-    public void createComment(String commentID, int ownerID, String content, int likes, Date theDateAndTime,
+    public void createComment(String commentID, int ownerID, String content, int likes, String theDateAndTime,
                               ArrayList<Person> usersWhoLiked, ArrayList<Comment> repliesToComment) {
         comments.add(new Comment(this.boardID, commentID, ownerID, content, likes, theDateAndTime,
                 usersWhoLiked, repliesToComment));
@@ -92,11 +91,11 @@ public class Board {
         this.comments = comments;
     }
 
-    public Date getDateAndTime() {
+    public String getDateAndTime() {
         return dateAndTime;
     }
 
-    public void setDateAndTime(Date dateAndTime) {
+    public void setDateAndTime(String dateAndTime) {
         this.dateAndTime = dateAndTime;
     }
 }

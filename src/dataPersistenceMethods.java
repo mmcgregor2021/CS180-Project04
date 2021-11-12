@@ -2,6 +2,37 @@ import java.io.*;
 import java.util.*;
 public class dataPersistenceMethods {
 
+    //stores each board object as two lines in atxt file in format:
+    //course;topic;boardID;dataAndTime
+    //commentID1|commentID2|commentID3...
+    public static void saveBoards(ArrayList<Board> arr, String fileName) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(fileName))) {
+            for (int i = 0; i < arr.size(); i++) {
+                Board board = arr.get(i);
+                String course = board.getCourse();
+                String topic = board.getTopic();
+                String boardID = board.getBoardID();
+                String dateAndTime = board.getDateAndTime();
+                ArrayList<Comment> comments = board.getComments();
+                String commentIDS = "";
+
+                //grabbing the commentID of each comment obj in comments and putting it in commentIDS
+                for (int x = 0; x < comments.size(); x++) {
+                    Comment comment = comments.get(x);
+                    commentIDS += comment.getCommentID() + "|";
+                }
+                commentIDS = commentIDS.substring(0, commentIDS.length() - 1); //truncating the final '|'
+
+                String line1 = course + ";" + topic + ";" + boardID + ";" + dateAndTime;
+                String line = line1 + "\n" + commentIDS;
+
+                pw.println(line);
+            }
+        } catch (Exception e) {
+            System.out.println("Failed to save boards to file!");
+        }
+    }
+
     //stores each student object as a line in a txt file in format:
     //firstName;lastName;password;id
     public static void saveStudents(ArrayList<Student> arr, String fileName) {
