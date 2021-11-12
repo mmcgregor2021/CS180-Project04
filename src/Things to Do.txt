@@ -1,0 +1,25 @@
+Things left to do:
+
+Add ability to reply
+Add ability for teachers to create, edit, and delete forums
+
+File imports.
+All file imports must occur as a prompt to enter the file path.  
+Teachers can import a file with the discussion topic to create a new discussion forum. 
+Students can import a file with their reply to a forum to post a response. 
+
+Voting
+Teachers can view a dashboard that lists the most popular replies to each forum by votes.
+Data will appear with the student's name and vote count. 
+Teachers can choose to sort the dashboard.
+Students can vote on replies with an upvote button.
+Students should only be able to vote once. 
+
+Grading
+Teachers can view all the replies for a specific student on one page and assign a point value to their work. 
+Students can view the scores they have received for the forum along with. 
+
+Optional stuff
+Add emoji responses to posts and replies. Display the emoji on the post with a count of how many of each are present. 
+Add polling features to posts. Students can select one of the options and a dashboard displays the results. 
+Allow Teachers to edit or remove posts made by students. 
