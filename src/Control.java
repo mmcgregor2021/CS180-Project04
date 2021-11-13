@@ -511,93 +511,142 @@ public class Control {
 						} while (again);
 
 						int boardSelection = 0;
-						int counter = 1;
 						String selectedCourse = null;
+
 						//Display the boards for the selected course.
-						do {
-							again = false;
-							if (courseSelection < courses.size() + 1) {
-								System.out.println("Select one of the following options: ");
-								selectedCourse = courses.get(courseSelection - 1);
-								for (int i = 0; i < boards.size(); i++) {
-									if (boards.get(i).getCourse().equals(selectedCourse)) {
-										System.out.println(counter + ". Discussion Board: " + boards.get(i).getTopic());
-										counter++;
-									}
-								}
-							}
-
-							//Give teachers the option to add a board or view all the comments of a specific student.
-							if (sessionAuthority) {
-								System.out.println((counter) + ". Add a board");
-								counter++;
-								System.out.println((counter) + ". View all comments from a specific student");
-								counter++;
-							}
-							System.out.println((counter) + ". Go back");
-
-							//Give error message if user enters an invalid number.
-							try {
-								boardSelection = Integer.parseInt(scan.nextLine());
-								if (boardSelection == counter) {
-									break;
-								}
-							} catch (Exception e) {
-								System.out.println(notInteger);
-								again = true;
-							}
-							if (boardSelection > boards.size() + 2 && sessionAuthority) {
-								System.out.println(invalidOption);
-								again = true;
-							} else if (boardSelection > boards.size() && !sessionAuthority) {
-								System.out.println(invalidOption);
-								again = true;
-							}
-						}while (again);
-
-						//Create a new board
-						if (boardSelection == boards.size() + 1 && sessionAuthority) {
-							System.out.println("Creating a new board: ");
-							boardCounter++;
-							boards.add(createBoard(scan, selectedCourse, boardCounter));
-						}
-
-						//Print all the comments from a specific student.
-						int studentID = 0;
-						if(boardSelection == boards.size() + 2) {
+						boardSelectionLoop:
+						while (true) {
+							int counter = 1;
 							do {
-								System.out.println("Enter the student ID of the student comments you want to see");
-								try {
-									again = false;
-									studentID = Integer.parseInt(scan.nextLine());
-									for (int i = 0; i < students.size(); i++) {
-										if (students.get(i).getID() == studentID) {
-											again = true;
+								counter = 1;
+								again = false;
+								if (courseSelection < courses.size() + 1) {
+									System.out.println("Select one of the following options: ");
+									selectedCourse = courses.get(courseSelection - 1);
+									for (int i = 0; i < boards.size(); i++) {
+										if (boards.get(i).getCourse().equals(selectedCourse)) {
+											System.out.println(counter + ". Discussion Board: " + boards.get(i).getTopic());
+											counter++;
 										}
 									}
-									if (again)
-										System.out.println("Invalid ID, please try again");
-								} catch (Exception e) {
-									System.out.println("Invalid ID, please try again.");
 								}
-							} while(again);
 
-							for (int i = 0; i < comments.size(); i++) {
-								if(comments.get(i).getOwnerID() == studentID) {
-									comments.get(i).toString();
+								//Give teachers the option to add a board or view all the comments of a specific student.
+								if (sessionAuthority) {
+									System.out.println((counter) + ". Add a board");
+									counter++;
+									System.out.println((counter) + ". View all comments from a specific student");
+									counter++;
+								}
+								System.out.println((counter) + ". Go back");
+
+								//Give error message if user enters an invalid number.
+								try {
+									boardSelection = Integer.parseInt(scan.nextLine());
+									if (boardSelection == counter) {
+										break boardSelectionLoop;
+									}
+								} catch (Exception e) {
+									System.out.println(notInteger);
+									again = true;
+								}
+								if (boardSelection > boards.size() + 2 && sessionAuthority) {
+									System.out.println(invalidOption);
+									again = true;
+								} else if (boardSelection > boards.size() && !sessionAuthority) {
+									System.out.println(invalidOption);
+									again = true;
+								}
+							} while (again);
+
+							//Create a new board
+							if (boardSelection == boards.size() + 1 && sessionAuthority) {
+								System.out.println("Creating a new board: ");
+								boardCounter++;
+								boards.add(createBoard(scan, selectedCourse, boardCounter));
+							}
+
+							//Print all the comments from a specific student.
+							int studentID = 0;
+							if(boardSelection == boards.size() + 2) {
+								do {
+									System.out.println("Enter the student ID of the student comments you want to see");
+									try {
+										again = false;
+										studentID = Integer.parseInt(scan.nextLine());
+										for (int i = 0; i < students.size(); i++) {
+											if (students.get(i).getID() == studentID) {
+												again = true;
+											}
+										}
+										if (again)
+											System.out.println("Invalid ID, please try again");
+									} catch (Exception e) {
+										System.out.println("Invalid ID, please try again.");
+									}
+								} while(again);
+
+								for (int i = 0; i < comments.size(); i++) {
+									if(comments.get(i).getOwnerID() == studentID) {
+										comments.get(i).toString();
+									}
 								}
 							}
-						}
 
-						//Print all comments on a board.
-						int commentSelection = 0;
-						if (boardSelection <= boards.size()) {
-							boards.get(boardSelection - 1).toString();
-							System.out.println("There are no comments on this board yet.");
-							System.out.println("1. Add a comment\n2. Vote on a comment\n3. Go back");
-							commentSelection = Integer.parseInt(scan.nextLine());
-						}
+							//Print all comments on a board.
+							int commentSelection = 0;
+							if (boardSelection <= boards.size()) {
+								System.out.println(boards.get(boardSelection - 1).toString());
+								if (boards.get(boardSelection - 1).getComments().size() == 0) {
+									System.out.println("There are no comments on this board yet.");
+								}
+								while (true) {
+									try {
+										if (sessionAuthority) {
+											System.out.println("1. Edit forum topic\n2. Delete board\n3. Reply to a comment\n4. Go back");
+										} else {
+											System.out.println("1. Add comment\n2. Vote for a comment\n3. Reply to a comment\n4. Go back");
+										}
+										commentSelection = Integer.parseInt(scan.nextLine());
+										break;
+									} catch (NumberFormatException e) {
+										System.out.println(notInteger);
+									}
+								}
 
+								if (sessionAuthority) {
+									//switch statement for teachers
+									switch (commentSelection) {
+										case 1:
+											String newTopic = "";
+											while (true) {
+												System.out.println("Please enter a new forum topic.");
+												newTopic = scan.nextLine();
+												if (newTopic.equals("")) {
+													System.out.println("The new forum topic cannot be empty.");
+												} else {
+													break;
+												}
+											}
+											boards.get(boardSelection - 1).setTopic(newTopic);
+											System.out.println("New forum topic has been set!");
+											break;
+										case 2:
+											System.out.println("Are you sure you would like to delete the board? (y for yes, anything else for no)");
+											String deleteBoardConfirmation = scan.nextLine();
+											if (deleteBoardConfirmation.equals("y")) {
+												boards.remove(boardSelection - 1);
+												System.out.println("The board was successfully deleted!");
+											}
+											break;
+									}
+								} else {
+									//switch statement for students
+									//switch (commentSelection)
+								}
+
+							}
+						}
 					}
                 } else if (input == 5) {
 					if (sessionAuthority) {
