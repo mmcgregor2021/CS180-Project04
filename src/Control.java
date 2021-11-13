@@ -553,7 +553,7 @@ public class Control {
 								System.out.println(invalidOption);
 								again = true;
 							}
-						} while (again);
+						}while (again);
 
 						//Create a new board
 						if (boardSelection == boards.size() + 1 && sessionAuthority) {
@@ -564,7 +564,7 @@ public class Control {
 
 						//Print all the comments from a specific student.
 						int studentID = 0;
-						if(boardSelection == boards.size() + 1) {
+						if(boardSelection == boards.size() + 2) {
 							do {
 								System.out.println("Enter the student ID of the student comments you want to see");
 								try {
@@ -590,9 +590,14 @@ public class Control {
 						}
 
 						//Print all comments on a board.
-						if (boardSelection < boards.size()) {
-							boards.get(boardSelection).toString();
+						int commentSelection = 0;
+						if (boardSelection <= boards.size()) {
+							boards.get(boardSelection - 1).toString();
+							System.out.println("There are no comments on this board yet.");
+							System.out.println("1. Add a comment\n2. Vote on a comment\n3. Go back");
+							commentSelection = Integer.parseInt(scan.nextLine());
 						}
+
 					}
                 } else if (input == 5) {
 					if (sessionAuthority) {
