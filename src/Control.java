@@ -2,13 +2,25 @@ import java.util.*;
 import java.io.*;
 public class Control {
 
-    //saves everything to txt files (STILL NEEDS TO SAVE COURSES, BOARDS, and COMMENTS)
-    public static void logOut(ArrayList<Student> students, ArrayList<Teacher> teachers, int personCounter, int boardCounter, int commentCounter) {
+	//returns an arraylist of every unique course in String format
+	public static ArrayList<String> populateCourses(ArrayList<Board> boards) {
+		ArrayList<String> courses = new ArrayList<>();
+		for (int i = 0; i < boards.size(); i++) {
+			Board board = boards.get(i);
+			if (!courses.contains(board.getCourse())) {
+				courses.add(board.getCourse());
+			}
+		}
+		return courses;
+	}
 
+    public static void logOut(ArrayList<Student> students, ArrayList<Teacher> teachers, ArrayList<Board> boards,
+	       ArrayList<Comment> comments, int personCounter, int boardCounter, int commentCounter) {
         saveStudents(students, "students.txt");
         saveTeachers(teachers, "teachers.txt");
+		saveBoards(boards, "boards.txt");
+		saveComments(comments, "comments.txt");
         saveCounters(personCounter, boardCounter, commentCounter, "counters.txt");
-
     }
 
     public static int logIn(int id, String password, ArrayList<Student> students, ArrayList<Teacher> teachers) {
@@ -17,10 +29,8 @@ public class Control {
                 if (students.get(i).getPassword().equals(password)) {
                     return 3; //correct login
                 }
-
                 return 2; //wrong password
             }
-
         }
 
         for (int j = 0; j <teachers.size(); j++) {
@@ -28,123 +38,152 @@ public class Control {
                 if (teachers.get(j).getPassword().equals(password)) {
                     return 3; //correct login
                 }
-
                 return 2; //wrong password
             }
-
         }
-
         return 1; //id does not exist
     }
 
+	// Beginning of Data Persistence Methods
 
-    //stores each student object as a line in a txt file in format:
-    //firstName;lastName;password;id
-    public static void saveStudents(ArrayList<Student> arr, String fileName) {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(fileName))) {
-            for (int i = 0; i < arr.size(); i++) {
-                Student student = arr.get(i);
-                String firstName = student.getFirstName();
-                String lastName = student.getLastName();
-                String password = student.getPassword();
-                int id = student.getID();
-                String line = firstName + ";" + lastName + ";" + password + ";" + id;
-                pw.println(line);
-            }
-        } catch (Exception e) {
-            System.out.println("Failed to students to file!");
-        }
-    }
+	//serializes the comment objects and stores them in a txt file
+	public static void saveComments(ArrayList<Comment> comments, String fileName) {
+		try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
+			for (int i = 0; i < comments.size(); i++) {
+				out.writeObject(comments.get(i));
+			}
+		} catch (Exception e) {
+			System.out.println("Failed to save comments to file!");
+		}
+	}
 
-    //stores each teacher object as a line in a txt file in format:
-    //firstName;lastName;password;id
-    public static void saveTeachers(ArrayList<Teacher> arr, String fileName) {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(fileName))) {
-            for (int i = 0; i < arr.size(); i++) {
-                Teacher teacher = arr.get(i);
-                String firstName = teacher.getFirstName();
-                String lastName = teacher.getLastName();
-                String password = teacher.getPassword();
-                int id = teacher.getID();
-                String line = firstName + ";" + lastName + ";" + password + ";" + id;
-                pw.println(line);
-            }
-        } catch (Exception e) {
-            System.out.println("Failed to students to file!");
-        }
-    }
+	//serializes the board objects and stores them in a txt file
+	public static void saveBoards(ArrayList<Board> boards, String fileName) {
+		try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
+			for (int i = 0; i < boards.size(); i++) {
+				out.writeObject(boards.get(i));
+			}
+		} catch (Exception e) {
+			System.out.println("Failed to save boards to file!");
+		}
+	}
 
-    //reads student objects from the txt file created by saveStudents() and returns and ArrayList of students
-    public static ArrayList<Student> readStudents(String fileName) {
-        ArrayList<Student> arr = new ArrayList<>();
-        try (BufferedReader bfr = new BufferedReader(new FileReader(fileName))) {
-            String line = bfr.readLine();
-            while (line != null) {
-                String[] lineArr = line.split(";");
-                String firstName = lineArr[0];
-                String lastName = lineArr[1];
-                String password = lineArr[2];
-                int id = Integer.parseInt(lineArr[3]);
-                arr.add(new Student(firstName, lastName, password, id));
-                line = bfr.readLine();
-            }
-        } catch (Exception e) {
-            System.out.println("Failed to parse text file!");
-        }
-        return arr;
-    }
+	//serializes the student objects and stores them in a txt file
+	public static void saveStudents(ArrayList<Student> students, String fileName) {
+		try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
+			for (int i = 0; i < students.size(); i++) {
+				out.writeObject(students.get(i));
+			}
+		} catch (Exception e) {
+			System.out.println("Failed to save students to file!");
+		}
+	}
 
-    //reads teacher objects from the txt file created by saveTeachers() and returns and ArrayList of teachers
-    public static ArrayList<Teacher> readTeachers(String fileName) {
-        ArrayList<Teacher> arr = new ArrayList<>();
-        try (BufferedReader bfr = new BufferedReader(new FileReader(fileName))) {
-            String line = bfr.readLine();
-            while (line != null) {
-                String[] lineArr = line.split(";");
-                String firstName = lineArr[0];
-                String lastName = lineArr[1];
-                String password = lineArr[2];
-                int id = Integer.parseInt(lineArr[3]);
-                arr.add(new Teacher(firstName, lastName, password, id));
-                line = bfr.readLine();
-            }
-        } catch (Exception e) {
-            System.out.println("Failed to parse text file!");
-        }
-        return arr;
-    }
+	//serializes the teacher objects and stores them in a txt file
+	public static void saveTeachers(ArrayList<Teacher> teachers, String fileName) {
+		try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
+			for (int i = 0; i < teachers.size(); i++) {
+				out.writeObject(teachers.get(i));
+			}
+		} catch (Exception e) {
+			System.out.println("Failed to save teachers to file!");
+		}
+	}
 
-    //saves all three counters to one line separated by ';' to a txt file
-    public static void saveCounters(int personCounter, int boardCounter, int commentCounter, String fileName) {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(fileName))) {
-            pw.println(personCounter + ";" + boardCounter + ";" + commentCounter);
-        } catch (Exception e) {
-            System.out.println("Failed to save counter!");
-        }
-    }
+	//deserializes comment objects from the txt file and returns an arraylist of the board objects
+	public static ArrayList<Comment> readComments(String fileName) {
+		ArrayList<Comment> comments = new ArrayList<>();
+		try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
+			while (true) {
+				Comment comment = (Comment) in.readObject();
+				comments.add(comment);
+			}
+		} catch (Exception e) {
+			System.out.println("Failed to parse text file!");
+		}
+		return comments;
+	}
 
-    //reads all three counters from the txt file to an Integer array
-    //Integer Array Format: [personCounter, boardCounter, commentCounter]
-    public static int[] readCounters(String fileName) {
-        int[] arr = new int[3];
-        try (BufferedReader bfr = new BufferedReader(new FileReader(fileName))) {
-            String[] lineArr = bfr.readLine().split(";");
-            int personCounter = Integer.parseInt(lineArr[0]);
-            int boardCounter = Integer.parseInt(lineArr[1]);
-            int commentCounter = Integer.parseInt(lineArr[2]);
-            arr[0] = personCounter;
-            arr[1] = boardCounter;
-            arr[2] = commentCounter;
-        } catch (Exception e) {
-            System.out.println("Failed to parse text file!");
-        }
-        return arr;
-    }
+	//deserializes board objects from the txt file and returns an arraylist of the board objects
+	public static ArrayList<Board> readBoards(String fileName) {
+		ArrayList<Board> boards = new ArrayList<>();
+		try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
+			while (true) {
+				Board board = (Board) in.readObject();
+				boards.add(board);
+			}
+		} catch (Exception e) {
+			System.out.println("Failed to parse text file!");
+		}
+		return boards;
+	}
+
+	//deserializes student objects from the txt file and returns an arraylist of the student objects
+	public static ArrayList<Student> readStudents(String fileName) {
+		ArrayList<Student> students = new ArrayList<>();
+		try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
+			while (true) {
+				Student student = (Student) in.readObject();
+				students.add(student);
+			}
+		} catch (Exception e) {
+			System.out.println("Failed to parse text file!");
+		}
+		return students;
+	}
+
+	//deserializes teacher objects from the txt file and returns an arraylist of the teacher objects
+	public static ArrayList<Teacher> readTeachers(String fileName) {
+		ArrayList<Teacher> teachers = new ArrayList<>();
+		try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
+			while (true) {
+				Teacher teacher = (Teacher) in.readObject();
+				teachers.add(teacher);
+			}
+		} catch (Exception e) {
+			System.out.println("Failed to parse text file!");
+		}
+		return teachers;
+	}
+
+
+	//saves all three counters to one line separated by ';' to a txt file
+	public static void saveCounters(int personCounter, int boardCounter, int commentCounter, String fileName) {
+		try (PrintWriter pw = new PrintWriter(new FileWriter(fileName))) {
+			pw.println(personCounter + ";" + boardCounter + ";" + commentCounter);
+		} catch (Exception e) {
+			System.out.println("Failed to save counter!");
+		}
+	}
+
+	//reads all three counters from the txt file to an Integer array
+	//Integer Array Format: [personCounter, boardCounter, commentCounter]
+	public static int[] readCounters(String fileName) {
+		int[] arr = new int[3];
+		try (BufferedReader bfr = new BufferedReader(new FileReader(fileName))) {
+			String[] lineArr = bfr.readLine().split(";");
+			int personCounter = Integer.parseInt(lineArr[0]);
+			int boardCounter = Integer.parseInt(lineArr[1]);
+			int commentCounter = Integer.parseInt(lineArr[2]);
+			arr[0] = personCounter;
+			arr[1] = boardCounter;
+			arr[2] = commentCounter;
+		} catch (Exception e) {
+			System.out.println("Failed to parse text file!");
+		}
+		return arr;
+	}
+
+	// End of Data Persistence Methods
 
     public static void main(String[] args) {
 
+		ArrayList<Board> boards = readBoards("boards.txt");
+		ArrayList<String> courses = populateCourses(boards);
+		ArrayList<Comment> comments = readComments("comments.txt");
         ArrayList<Student> students = readStudents("students.txt");
         ArrayList<Teacher> teachers = readTeachers("teachers.txt");
+
         int[] counterArray = readCounters("counters.txt");
         int personCounter = counterArray[0];
         int boardCounter = counterArray[1];
@@ -161,11 +200,12 @@ public class Control {
         System.out.println("Welcome to the Discussion Board! What would you like to do?");
         System.out.println("1. Sign up\n2. Log in");
 
+		authenticationLoop:
         do {
             try {
                 input = Integer.parseInt(scan.nextLine());
                 if (input == 1 || input == 2) {
-                    break;
+                    break authenticationLoop;
                 } else {
                     System.out.println("Please enter a valid number");
                     System.out.println("1. Sign up\n2. Log in");
@@ -176,7 +216,7 @@ public class Control {
             }
         } while (true);
 
-        //sets up the account
+        //Beginning of Signup route
         if (input == 1) {
             id = personCounter + 1;
             personCounter++;
@@ -221,8 +261,9 @@ public class Control {
             System.out.println("Successfully Logged in");
             access = true;
             sessionID = id;
-            //End of Signup Route
+        //End of Signup Route
 
+		//Beginning of Login route
         } else if (input == 2) {
             //checks login info
             System.out.println("Please enter your ID number");
@@ -258,16 +299,19 @@ public class Control {
                     sessionID = id;
                     break;
             }
-            //LOGIN
         }
+		//End of Login route
 
+		//Checks to see if user is a teacher or a student
+		//if user is a student, sessionAuthority = false
+		//if user is a teacher, sessionAuthority = true
         boolean sessionAuthority = false;
         for(int i = 0; i < teachers.size(); i++) {
-            if (sessionID == teachers.get(i).getID)
+            if (sessionID == teachers.get(i).getID()) {
                 sessionAuthority = true;
         }
 
-            //main loop once logged in
+        //main loop once logged in
             mainLoop:
             do {
                 System.out.println("What would you like to do?");
@@ -299,12 +343,12 @@ public class Control {
                                 do {
                                     password = scan.nextLine();
                                     if (password.length() != 0) {
-                                        for (int i = 0; i < students.size(); i++) {
+                                        for (i = 0; i < students.size(); i++) {
                                             if (students.get(i).getID() == sessionID) {
                                                 students.get(i).setPassword(password);
                                             }
                                         }
-                                        for (int i = 0; i < teachers.size(); i++) {
+                                        for (i = 0; i < teachers.size(); i++) {
                                             if (teachers.get(i).getID() == sessionID) {
                                                 teachers.get(i).setPassword(password);
                                             }
@@ -321,12 +365,12 @@ public class Control {
                                 do {
                                     first = scan.nextLine();
                                     if (first.length() != 0) {
-                                        for (int i = 0; i < students.size(); i++) {
+                                        for (i = 0; i < students.size(); i++) {
                                             if (students.get(i).getID() == sessionID) {
                                                 students.get(i).setFirstName(first);
                                             }
                                         }
-                                        for (int i = 0; i < teachers.size(); i++) {
+                                        for (i = 0; i < teachers.size(); i++) {
                                             if (teachers.get(i).getID() == sessionID) {
                                                 teachers.get(i).setFirstName(first);
                                             }
@@ -343,12 +387,12 @@ public class Control {
                                 do {
                                     last = scan.nextLine();
                                     if (first.length() != 0) {
-                                        for (int i = 0; i < students.size(); i++) {
+                                        for (i = 0; i < students.size(); i++) {
                                             if (students.get(i).getID() == sessionID) {
                                                 students.get(i).setLastName(password);
                                             }
                                         }
-                                        for (int i = 0; i < teachers.size(); i++) {
+                                        for (i = 0; i < teachers.size(); i++) {
                                             if (teachers.get(i).getID() == sessionID) {
                                                 teachers.get(i).setLastName(password);
                                             }
@@ -371,13 +415,13 @@ public class Control {
                     //delete account
                     System.out.println("Are you sure you would like to delete your account? (y for yes, anything else for no)");
                     if (scan.nextLine().equals("y")) {
-                        for (int i = 0; i < students.size(); i++) {
+                        for (i = 0; i < students.size(); i++) {
                             if (students.get(i).getID() == sessionID) {
                                 students.remove(i);
                                 break mainLoop; //logs user out after deleting their account
                             }
                         }
-                        for (int i = 0; i < teachers.size(); i++) {
+                        for (i = 0; i < teachers.size(); i++) {
                             if (teachers.get(i).getID() == sessionID) {
                                 students.remove(i);
                                 break mainLoop; //logs user out after deleting their account
@@ -392,7 +436,7 @@ public class Control {
                     do {
                         System.out.println("Select one of the following options");
                         again = false;
-                        for (int i = 0; i < courses.size(); i++) {
+                        for (i = 0; i < courses.size(); i++) {
                             System.out.println(i + ". " + courses.get(i));
                         }
                         if (sessionAuthority)
@@ -421,8 +465,8 @@ public class Control {
                         if (courseSelection < courses.size()) {
                             System.out.println("Select one of the following options: ");
                             selectedCourse = courses.get(courseSelection);
-                            for (int i = 0; i < boards.length; i++) {
-                                if (boards.get(i).getCourse.equals(selectedCourse)) {
+                            for (i = 0; i < boards.size(); i++) {
+                                if (boards.get(i).getCourse().equals(selectedCourse)) {
                                     System.out.println(counter + ". " + boards.get(i).getTopic());
                                     counter++;
                                 }
@@ -459,9 +503,9 @@ public class Control {
                         boardCounter++;
                         System.out.println("What is the topic of this board?");
                         String topic = scan.nextLine();
-                        ArrayList<Comment> comments = new ArrayList<Comment>();
+                        ArrayList<Comment> boardComments = new ArrayList<Comment>();
                         Date date = new Date();
-                        boards.add(new Board(selectedCourse, topic, boardID, date, comments));
+                        boards.add(new Board(selectedCourse, topic, boardID, date.toString(), boardComments));
                     }
 
                     //Print all the comments from a specific student.
@@ -472,7 +516,7 @@ public class Control {
                             try {
                                 again = false;
                                 studentID = Integer.parseInt(scan.nextLine());
-                                for (int i = 0; i < students.size(); i++) {
+                                for (i = 0; i < students.size(); i++) {
                                     if (students.get(i).getID() == studentID) {
                                         again = true;
                                     }
@@ -484,8 +528,8 @@ public class Control {
                             }
                         } while(again);
 
-                        for (int i = 0; i < comments.size(); i++) {
-                            if(comments.get(i).getCommentID() == studentID) {
+                        for (i = 0; i < comments.size(); i++) {
+                            if(comments.get(i).getOwnerID() == studentID) {
                                 comments.get(i).toString();
                             }
                         }
@@ -529,11 +573,11 @@ public class Control {
                                 boards.get(x).setLikes(boards.get(x).getLikes + 1);
                             }
                         }
-                        */
                     } while(again);
+					*/
             } while (input != 4);
             System.out.println("Goodbye! Have a nice day!");
-            logOut(students, teachers, personCounter, boardCounter, commentCounter);
+            logOut(students, teachers, boards, comments, personCounter, boardCounter, commentCounter);
         }
     }
-
+}
