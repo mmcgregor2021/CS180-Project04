@@ -3,7 +3,7 @@
  * @author Kris Leungwattanakij
  * @version November 8, 2021
  **/
-public class Person {
+public class Person implements java.io.Serializable {
 
     private String firstName;
     private String lastName;
