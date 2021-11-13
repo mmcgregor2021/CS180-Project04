@@ -161,7 +161,6 @@ public class Control {
 		return students;
 	}
 
-
 	//deserializes teacher objects from the txt file and returns an arraylist of the teacher objects
 	public static ArrayList<Teacher> readTeachers(String fileName) {
 		ArrayList<Teacher> teachers = new ArrayList<>();
@@ -247,11 +246,11 @@ public class Control {
 
         //Beginning of Signup route
         if (input == 1) {
+			id = personCounter + 1;
 			personCounter++;
-            System.out.println("Your UserID is " + personCounter + ". Please remember this number!");
+            System.out.println("Your UserID is " + id + ". Please remember this number!");
 
-            //add userID generator
-            System.out.println("Please enter your password.");
+            System.out.println("Please enter a password.");
             while (true) {
                 password = scan.nextLine();
                 if (password.length() != 0) {
