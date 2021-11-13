@@ -507,17 +507,17 @@ public class Control {
 						} while (again);
 
 						int boardSelection = 0;
-						int counter = 0;
+						int counter = 1;
 						String selectedCourse = null;
 						//Display the boards for the selected course.
 						do {
 							again = false;
-							if (courseSelection < courses.size()) {
+							if (courseSelection < courses.size() + 1) {
 								System.out.println("Select one of the following options: ");
-								selectedCourse = courses.get(courseSelection);
+								selectedCourse = courses.get(courseSelection - 1);
 								for (int i = 0; i < boards.size(); i++) {
 									if (boards.get(i).getCourse().equals(selectedCourse)) {
-										System.out.println(counter + ". " + boards.get(i).getTopic());
+										System.out.println(counter + ". Discussion Board: " + boards.get(i).getTopic());
 										counter++;
 									}
 								}
@@ -525,22 +525,28 @@ public class Control {
 
 							//Give teachers the option to add a board or view all the comments of a specific student.
 							if (sessionAuthority) {
-								System.out.println((counter + 1) + ". Add a board");
-								System.out.println((counter + 2) + ". View all comments from a specific student");
+								System.out.println((counter) + ". Add a board");
+								counter++;
+								System.out.println((counter) + ". View all comments from a specific student");
+								counter++;
 							}
+							System.out.println((counter) + ". Go back");
 
 							//Give error message if user enters an invalid number.
 							try {
 								boardSelection = Integer.parseInt(scan.nextLine());
+								if (boardSelection == counter) {
+									break;
+								}
 							} catch (Exception e) {
-								System.out.println("Invalid entry, please try again.");
+								System.out.println("Please enter an integer.");
 								again = true;
 							}
 							if (boardSelection > boards.size() + 2 && sessionAuthority) {
-								System.out.println("Invalid entry, please try again.");
+								System.out.println("Please enter a valid option.");
 								again = true;
 							} else if (boardSelection > boards.size() && !sessionAuthority) {
-								System.out.println("Invalid entry, please try again.");
+								System.out.println("Please enter a valid option.");
 								again = true;
 							}
 						} while (again);
