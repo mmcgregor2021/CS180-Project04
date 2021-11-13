@@ -207,6 +207,9 @@ public class Control {
 
     public static void main(String[] args) {
 
+		final String invalidOption = "Please enter a valid option.";
+		final String notInteger = "Please enter an integer.";
+
 		ArrayList<Board> boards = readBoards("boards.txt");
 		ArrayList<String> courses = populateCourses(boards);
 		ArrayList<Comment> comments = readComments("comments.txt");
@@ -240,7 +243,7 @@ public class Control {
                     System.out.println("Please select a valid option");
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Please enter an integer");
+                System.out.println(notInteger);
             }
         }
 
@@ -361,11 +364,11 @@ public class Control {
                         if (input >= 1 && input <= 5) {
                             break;
                         } else {
-                            System.out.println("Please enter a valid option");
+                            System.out.println(invalidOption);
                             System.out.println(choicesPrompt);
                         }
                     } catch (NumberFormatException e) {
-                        System.out.println("Please enter a valid option");
+                        System.out.println(notInteger);
                         System.out.println(choicesPrompt);
                     }
                 }
@@ -459,6 +462,7 @@ public class Control {
 	                        for (int i = 0; i < students.size(); i++) {
 	                            if (students.get(i).getID() == sessionID) {
 	                                students.remove(i);
+									System.out.println("Your account has been deleted!");
 	                                break mainLoop; //logs user out after deleting their account
 	                            }
 	                        }
@@ -494,14 +498,14 @@ public class Control {
 									break boardViewingLoop;
 								}
 							} catch (Exception e) {
-								System.out.println("Please enter an integer.");
+								System.out.println(notInteger);
 								again = true;
 							}
 							if (courseSelection > courses.size() + 1 && sessionAuthority) {
-								System.out.println("Please enter a valid option.");
+								System.out.println(invalidOption);
 								again = true;
 							} else if (courseSelection > courses.size() && !sessionAuthority) {
-								System.out.println("Please enter a valid option.");
+								System.out.println(invalidOption);
 								again = true;
 							}
 						} while (again);
@@ -539,29 +543,23 @@ public class Control {
 									break;
 								}
 							} catch (Exception e) {
-								System.out.println("Please enter an integer.");
+								System.out.println(notInteger);
 								again = true;
 							}
 							if (boardSelection > boards.size() + 2 && sessionAuthority) {
-								System.out.println("Please enter a valid option.");
+								System.out.println(invalidOption);
 								again = true;
 							} else if (boardSelection > boards.size() && !sessionAuthority) {
-								System.out.println("Please enter a valid option.");
+								System.out.println(invalidOption);
 								again = true;
 							}
 						} while (again);
 
 						//Create a new board
-						if (boardSelection == boards.size()) {
+						if (boardSelection == boards.size() + 1 && sessionAuthority) {
 							System.out.println("Creating a new board: ");
-							String course;
-							String boardID = String.valueOf(boardCounter + 1);
 							boardCounter++;
-							System.out.println("What is the topic of this board?");
-							String topic = scan.nextLine();
-							ArrayList<Comment> boardComments = new ArrayList<Comment>();
-							Date date = new Date();
-							boards.add(new Board(selectedCourse, topic, boardID, date.toString(), boardComments));
+							boards.add(createBoard(scan, selectedCourse, boardCounter));
 						}
 
 						//Print all the comments from a specific student.
@@ -611,10 +609,10 @@ public class Control {
 						System.out.println("The course has been created!");
 						courses.add(courseName);
 						boardCounter++;
-						System.out.println("Please create a discussion board for the course.");
+						System.out.println("Please initialize a discussion board for the course.");
 						boards.add(createBoard(scan, courseName, boardCounter));
 					} else {
-						System.out.println("Please enter a valid option.");
+						System.out.println(invalidOption);
 					}
 				}
                         //add in when content of boards is able to be printed out
