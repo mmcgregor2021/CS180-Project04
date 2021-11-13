@@ -2,6 +2,27 @@ import java.util.*;
 import java.io.*;
 public class Control {
 
+	//prompts user to enter information and returns a new board object
+	public static Board createBoard(Scanner scan, String courseName, int boardCounter) {
+		System.out.println("Please enter the forum topic.");
+		String topic = "";
+		while (true) {
+			topic = scan.nextLine();
+			if (topic.equals("")) {
+				System.out.println("Please enter a non-blank forum topic.");
+			} else {
+				break;
+			}
+		}
+		ArrayList<Comment> boardComments = new ArrayList<Comment>();
+		Date date = new Date();
+		String boardID = "B" + boardCounter;
+		Board board = new Board(courseName, topic, boardID, date.toString(), boardComments);
+		System.out.println("Board was successfully created.");
+
+		return board;
+	}
+
 	//returns an arraylist of every unique course in String format
 	public static ArrayList<String> populateCourses(ArrayList<Board> boards) {
 		ArrayList<String> courses = new ArrayList<>();
@@ -202,7 +223,7 @@ public class Control {
         int sessionID = 0; // ID number of the current logged in user
 		boolean sessionAuthority = false; // Authority of current logged in user
         int input;
-        int id;
+        int id = 0;
         String password = "";
         String first = "";
         String last = "";
@@ -217,18 +238,17 @@ public class Control {
                 if (input == 1 || input == 2) {
                     break authenticationLoop;
                 } else {
-                    System.out.println("Please enter a valid number");
+                    System.out.println("Please select a valid option");
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Please enter a valid number");
+                System.out.println("Please enter an integer");
             }
         }
 
         //Beginning of Signup route
         if (input == 1) {
-            id = personCounter + 1;
-            personCounter++;
-            System.out.println("Your UserID is " + id);
+			personCounter++;
+            System.out.println("Your UserID is " + personCounter + ". Please remember this number!");
 
             //add userID generator
             System.out.println("Please enter your password.");
@@ -277,7 +297,7 @@ public class Control {
 		//Beginning of Login route
         } else if (input == 2) {
             //checks login info
-            System.out.println("Please enter your ID number");
+            System.out.println("Please enter your ID number.");
             while (true) {
                 try {
                     id = Integer.parseInt(scan.nextLine());
@@ -330,20 +350,24 @@ public class Control {
             mainLoop:
             do {
                 System.out.println("What would you like to do?");
-                System.out.println("1. Edit account\n2. Delete account\n3. View courses\n4. Logout");
+				String choicesPrompt = "1. Edit account\n2. Delete account\n3. View courses\n4. Logout";
+				if (sessionAuthority) {
+					choicesPrompt += "\n5. Create new course";
+				}
+                System.out.println(choicesPrompt);
 
                 while (true) {
                     try {
                         input = Integer.parseInt(scan.nextLine());
-                        if (input >= 1 && input <= 4) {
+                        if (input >= 1 && input <= 5) {
                             break;
                         } else {
-                            System.out.println("Please enter a valid number");
-                            System.out.println("1. Edit account\n2. Delete account\n3. View courses\n4. Logout");
+                            System.out.println("Please enter a valid option");
+                            System.out.println(choicesPrompt);
                         }
                     } catch (NumberFormatException e) {
-                        System.out.println("Please enter a valid number");
-                        System.out.println("1. Edit account\n2. Delete account\n3. View courses\n4. Logout");
+                        System.out.println("Please enter a valid option");
+                        System.out.println(choicesPrompt);
                     }
                 }
 
@@ -356,7 +380,7 @@ public class Control {
                         int editChoice = Integer.parseInt(scan.nextLine());
                         switch (editChoice) {
                             case 1:
-                                System.out.println("Please enter your password.");
+                                System.out.println("Please enter a new password.");
                                 do {
                                     password = scan.nextLine();
                                     if (password.length() != 0) {
@@ -378,7 +402,7 @@ public class Control {
                                 } while (true);
                                 break;
                             case 2:
-                                System.out.println("Please enter your first name.");
+                                System.out.println("Please enter a new first name.");
                                 do {
                                     first = scan.nextLine();
                                     if (first.length() != 0) {
@@ -400,7 +424,7 @@ public class Control {
                                 } while (true);
                                 break;
                             case 3:
-                                System.out.println("Please enter your last name.");
+                                System.out.println("Please enter a new last name.");
                                 do {
                                     last = scan.nextLine();
                                     if (first.length() != 0) {
@@ -432,12 +456,14 @@ public class Control {
                     //delete account
                     System.out.println("Are you sure you would like to delete your account? (y for yes, anything else for no)");
                     if (scan.nextLine().equals("y")) {
-                        for (int i = 0; i < students.size(); i++) {
-                            if (students.get(i).getID() == sessionID) {
-                                students.remove(i);
-                                break mainLoop; //logs user out after deleting their account
-                            }
-                        }
+						if (students.size() != 0 ) {
+	                        for (int i = 0; i < students.size(); i++) {
+	                            if (students.get(i).getID() == sessionID) {
+	                                students.remove(i);
+	                                break mainLoop; //logs user out after deleting their account
+	                            }
+	                        }
+						}
                         for (int i = 0; i < teachers.size(); i++) {
                             if (teachers.get(i).getID() == sessionID) {
                                 students.remove(i);
@@ -445,119 +471,147 @@ public class Control {
                             }
                         }
                     }
+
+				//viewing boards
                 } else if (input == 3) {
+					boardViewingLoop:
+					while (true) {
+						//Display all courses.
+						boolean again;
+						int courseSelection = 0;
+						do {
+							System.out.println("Select one of the following options");
+							again = false;
+							if (courses.size() == 0) {
+								System.out.println("No courses have been created yet.");
+							}
+							for (int i = 0; i < courses.size(); i++) {
+								System.out.println((i + 1) + ". " + courses.get(i));
+							}
+							System.out.println((courses.size() + 1) + ". Go back");
+							try {
+								courseSelection = Integer.parseInt(scan.nextLine());
+								if (courseSelection == courses.size() + 1) {
+									break boardViewingLoop;
+								}
+							} catch (Exception e) {
+								System.out.println("Please enter an integer.");
+								again = true;
+							}
+							if (courseSelection > courses.size() + 1 && sessionAuthority) {
+								System.out.println("Please enter a valid option.");
+								again = true;
+							} else if (courseSelection > courses.size() && !sessionAuthority) {
+								System.out.println("Please enter a valid option.");
+								again = true;
+							}
+						} while (again);
 
-                    //Display all courses.
-                    boolean again;
-                    int courseSelection = 0;
-                    do {
-                        System.out.println("Select one of the following options");
-                        again = false;
-                        for (int i = 0; i < courses.size(); i++) {
-                            System.out.println(i + ". " + courses.get(i));
-                        }
-                        if (sessionAuthority)
-                            System.out.println((courses.size()) + ". Add a course.");
-                        try {
-                            courseSelection = Integer.parseInt(scan.nextLine());
-                        } catch (Exception e) {
-                            System.out.println("Invalid entry, please try again.");
-                            again = true;
-                        }
-                        if (courseSelection > courses.size() && sessionAuthority) {
-                            System.out.println("Invalid entry, please try again.");
-                            again = true;
-                        } else if (courseSelection > courses.size() - 1 && !sessionAuthority) {
-                            System.out.println("Invalid entry, please try again.");
-                        again = true;
-                        }
-                    } while (again);
+						int boardSelection = 0;
+						int counter = 0;
+						String selectedCourse = null;
+						//Display the boards for the selected course.
+						do {
+							again = false;
+							if (courseSelection < courses.size()) {
+								System.out.println("Select one of the following options: ");
+								selectedCourse = courses.get(courseSelection);
+								for (int i = 0; i < boards.size(); i++) {
+									if (boards.get(i).getCourse().equals(selectedCourse)) {
+										System.out.println(counter + ". " + boards.get(i).getTopic());
+										counter++;
+									}
+								}
+							}
 
-                    int boardSelection = 0;
-                    int counter = 0;
-                    String selectedCourse = null;
-                    //Display the boards for the selected course.
-                    do {
-                        again = false;
-                        if (courseSelection < courses.size()) {
-                            System.out.println("Select one of the following options: ");
-                            selectedCourse = courses.get(courseSelection);
-                            for (int i = 0; i < boards.size(); i++) {
-                                if (boards.get(i).getCourse().equals(selectedCourse)) {
-                                    System.out.println(counter + ". " + boards.get(i).getTopic());
-                                    counter++;
-                                }
-                            }
-                        }
+							//Give teachers the option to add a board or view all the comments of a specific student.
+							if (sessionAuthority) {
+								System.out.println((counter + 1) + ". Add a board");
+								System.out.println((counter + 2) + ". View all comments from a specific student");
+							}
 
-                        //Give teachers the option to add a board or view all the comments of a specific student.
-                        if (sessionAuthority) {
-                            System.out.println((counter + 1) + ". Add a board");
-                            System.out.println((counter + 2) + ". View all comments from a specific student");
-                        }
+							//Give error message if user enters an invalid number.
+							try {
+								boardSelection = Integer.parseInt(scan.nextLine());
+							} catch (Exception e) {
+								System.out.println("Invalid entry, please try again.");
+								again = true;
+							}
+							if (boardSelection > boards.size() + 2 && sessionAuthority) {
+								System.out.println("Invalid entry, please try again.");
+								again = true;
+							} else if (boardSelection > boards.size() && !sessionAuthority) {
+								System.out.println("Invalid entry, please try again.");
+								again = true;
+							}
+						} while (again);
 
-                        //Give error message if user enters an invalid number.
-                        try {
-                            boardSelection = Integer.parseInt(scan.nextLine());
-                        } catch (Exception e) {
-                            System.out.println("Invalid entry, please try again.");
-                            again = true;
-                        }
-                        if (boardSelection > boards.size() + 2 && sessionAuthority) {
-                            System.out.println("Invalid entry, please try again.");
-                            again = true;
-                        } else if (boardSelection > boards.size() && !sessionAuthority) {
-                            System.out.println("Invalid entry, please try again.");
-                            again = true;
-                        }
-                    } while (again);
+						//Create a new board
+						if (boardSelection == boards.size()) {
+							System.out.println("Creating a new board: ");
+							String course;
+							String boardID = String.valueOf(boardCounter + 1);
+							boardCounter++;
+							System.out.println("What is the topic of this board?");
+							String topic = scan.nextLine();
+							ArrayList<Comment> boardComments = new ArrayList<Comment>();
+							Date date = new Date();
+							boards.add(new Board(selectedCourse, topic, boardID, date.toString(), boardComments));
+						}
 
-                    //Create a new board
-                    if (boardSelection == boards.size()) {
-                        System.out.println("Creating a new board: ");
-                        String course;
-                        String boardID = String.valueOf(boardCounter + 1);
-                        boardCounter++;
-                        System.out.println("What is the topic of this board?");
-                        String topic = scan.nextLine();
-                        ArrayList<Comment> boardComments = new ArrayList<Comment>();
-                        Date date = new Date();
-                        boards.add(new Board(selectedCourse, topic, boardID, date.toString(), boardComments));
-                    }
+						//Print all the comments from a specific student.
+						int studentID = 0;
+						if(boardSelection == boards.size() + 1) {
+							do {
+								System.out.println("Enter the student ID of the student comments you want to see");
+								try {
+									again = false;
+									studentID = Integer.parseInt(scan.nextLine());
+									for (int i = 0; i < students.size(); i++) {
+										if (students.get(i).getID() == studentID) {
+											again = true;
+										}
+									}
+									if (again)
+										System.out.println("Invalid ID, please try again");
+								} catch (Exception e) {
+									System.out.println("Invalid ID, please try again.");
+								}
+							} while(again);
 
-                    //Print all the comments from a specific student.
-                    int studentID = 0;
-                    if(boardSelection == boards.size() + 1) {
-                        do {
-                            System.out.println("Enter the student ID of the student comments you want to see");
-                            try {
-                                again = false;
-                                studentID = Integer.parseInt(scan.nextLine());
-                                for (int i = 0; i < students.size(); i++) {
-                                    if (students.get(i).getID() == studentID) {
-                                        again = true;
-                                    }
-                                }
-                                if (again)
-                                    System.out.println("Invalid ID, please try again");
-                            } catch (Exception e) {
-                                System.out.println("Invalid ID, please try again.");
-                            }
-                        } while(again);
+							for (int i = 0; i < comments.size(); i++) {
+								if(comments.get(i).getOwnerID() == studentID) {
+									comments.get(i).toString();
+								}
+							}
+						}
 
-                        for (int i = 0; i < comments.size(); i++) {
-                            if(comments.get(i).getOwnerID() == studentID) {
-                                comments.get(i).toString();
-                            }
-                        }
-                    }
-
-                    //Print all comments on a board.
-                    if (boardSelection < boards.size()) {
-                        boards.get(boardSelection).toString();
-                    }
-
-                }
+						//Print all comments on a board.
+						if (boardSelection < boards.size()) {
+							boards.get(boardSelection).toString();
+						}
+					}
+                } else if (input == 5) {
+					if (sessionAuthority) {
+						System.out.println("Please enter the name of the new course.");
+						String courseName = "";
+						while (true) {
+							courseName = scan.nextLine();
+							if (courseName.equals("")) {
+								System.out.println("Please enter a non-blank course name.");
+							} else {
+								break;
+							}
+						}
+						System.out.println("The course has been created!");
+						courses.add(courseName);
+						boardCounter++;
+						System.out.println("Please create a discussion board for the course.");
+						boards.add(createBoard(scan, courseName, boardCounter));
+					} else {
+						System.out.println("Please enter a valid option.");
+					}
+				}
                         //add in when content of boards is able to be printed out
                         /*
                         if (courseSelection == courses.size() + 1) {
