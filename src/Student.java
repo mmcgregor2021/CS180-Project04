@@ -3,7 +3,7 @@
  * @author Kris Leungwattanakij
  * @version November 8, 2021
  **/
-public class Student extends Person {
+public class Student extends Person implements java.io.Serializable {
 
     public Student(String firstName, String lastName, String password, int id) {
         super(firstName, lastName, password, id);

@@ -99,7 +99,7 @@ public class Control {
 				comments.add(comment);
 			}
 		} catch (Exception e) {
-			System.out.println("Failed to parse text file!");
+			System.out.println("Failed to parse comments!");
 		}
 		return comments;
 	}
@@ -113,7 +113,7 @@ public class Control {
 				boards.add(board);
 			}
 		} catch (Exception e) {
-			System.out.println("Failed to parse text file!");
+			System.out.println("Failed to parse boards!");
 		}
 		return boards;
 	}
@@ -127,7 +127,7 @@ public class Control {
 				students.add(student);
 			}
 		} catch (Exception e) {
-			System.out.println("Failed to parse text file!");
+			System.out.println("Failed to parse students!");
 		}
 		return students;
 	}
@@ -141,11 +141,10 @@ public class Control {
 				teachers.add(teacher);
 			}
 		} catch (Exception e) {
-			System.out.println("Failed to parse text file!");
+			System.out.println("Failed to parse teachers!");
 		}
 		return teachers;
 	}
-
 
 	//saves all three counters to one line separated by ';' to a txt file
 	public static void saveCounters(int personCounter, int boardCounter, int commentCounter, String fileName) {
@@ -169,7 +168,7 @@ public class Control {
 			arr[1] = boardCounter;
 			arr[2] = commentCounter;
 		} catch (Exception e) {
-			System.out.println("Failed to parse text file!");
+			System.out.println("Failed to parse counters!");
 		}
 		return arr;
 	}
