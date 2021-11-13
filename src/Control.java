@@ -306,17 +306,17 @@ public class Control {
 					//if user is a student, sessionAuthority = false
 					//if user is a teacher, sessionAuthority = true
 			        sessionAuthority = false;
-			        for(int i = 0; i < teachers.size(); i++) {
+			        for (int i = 0; i < teachers.size(); i++) {
 			            if (sessionID == teachers.get(i).getID()) {
 			                sessionAuthority = true;
-			        }
-
+			        	}
+					}
                     break;
-            }
         }
-		//End of Login route
+	}
+	//End of Login route
 
-        //main loop once logged in
+    //main loop once logged in
 		if (access) {
             mainLoop:
             do {
@@ -589,4 +589,3 @@ public class Control {
             logOut(students, teachers, boards, comments, personCounter, boardCounter, commentCounter);
         }
     }
-}
