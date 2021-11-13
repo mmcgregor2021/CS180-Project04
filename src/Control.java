@@ -191,6 +191,7 @@ public class Control {
 
         Scanner scan = new Scanner(System.in);
         int sessionID = 0; // ID number of the current logged in user
+		boolean sessionAuthority = false; // Authority of current logged in user
         int input;
         int id;
         String password = "";
@@ -198,23 +199,21 @@ public class Control {
         String last = "";
         boolean access = false;
         System.out.println("Welcome to the Discussion Board! What would you like to do?");
-        System.out.println("1. Sign up\n2. Log in");
 
 		authenticationLoop:
-        do {
+        while (true) {
+			System.out.println("1. Sign up\n2. Log in");
             try {
                 input = Integer.parseInt(scan.nextLine());
                 if (input == 1 || input == 2) {
                     break authenticationLoop;
                 } else {
                     System.out.println("Please enter a valid number");
-                    System.out.println("1. Sign up\n2. Log in");
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Please enter a valid number");
-                System.out.println("1. Sign up\n2. Log in");
             }
-        } while (true);
+        }
 
         //Beginning of Signup route
         if (input == 1) {
@@ -224,41 +223,44 @@ public class Control {
 
             //add userID generator
             System.out.println("Please enter your password.");
-            do {
+            while (true) {
                 password = scan.nextLine();
                 if (password.length() != 0) {
                     break;
                 } else {
                     System.out.println("Please enter a non-blank password.");
                 }
-            } while (true);
+            }
 
             System.out.println("Please enter your first name.");
-            do {
+            while (true) {
                 first = scan.nextLine();
                 if (first.length() != 0) {
                     break;
                 } else {
                     System.out.println("You must have a first name.");
                 }
-            } while (true);
+            }
+
             System.out.println("Please enter your last name.");
-            do {
+            while (true) {
                 last = scan.nextLine();
                 if (last.length() != 0) {
                     break;
                 } else {
                     System.out.println("You must have a last name.");
                 }
-            } while (true);
+            }
 
             System.out.println("Are you a teacher? (y for yes, anything else for no)");
             if (scan.nextLine().equals("y")) {
                 teachers.add(new Teacher(first, last, password, id));
+				sessionAuthority = true;
             } else {
                 students.add(new Student(first, last, password, id));
+				sessionAuthority = false;
             }
-            System.out.println("Successfully Logged in");
+            System.out.println("Successfully Signed up");
             access = true;
             sessionID = id;
         //End of Signup Route
@@ -267,23 +269,25 @@ public class Control {
         } else if (input == 2) {
             //checks login info
             System.out.println("Please enter your ID number");
-            do {
+            while (true) {
                 try {
                     id = Integer.parseInt(scan.nextLine());
                     break;
                 } catch (NumberFormatException e) {
                     System.out.println("Please enter a valid ID number");
                 }
-            } while (true);
+            }
+
             System.out.println("Please enter your password.");
-            do {
+            while (true) {
                 password = scan.nextLine();
                 if (password.length() != 0) {
                     break;
                 } else {
                     System.out.println("Please enter a valid password.");
                 }
-            } while (true);
+            }
+
             switch (logIn(id, password, students, teachers)) {
                 case 1:
                     System.out.println("The account with this ID does not exist");
@@ -297,26 +301,29 @@ public class Control {
                     System.out.println("Successfully Logged in");
                     access = true;
                     sessionID = id;
+
+					//Checks to see if user is a teacher or a student
+					//if user is a student, sessionAuthority = false
+					//if user is a teacher, sessionAuthority = true
+			        sessionAuthority = false;
+			        for(int i = 0; i < teachers.size(); i++) {
+			            if (sessionID == teachers.get(i).getID()) {
+			                sessionAuthority = true;
+			        }
+
                     break;
             }
         }
 		//End of Login route
 
-		//Checks to see if user is a teacher or a student
-		//if user is a student, sessionAuthority = false
-		//if user is a teacher, sessionAuthority = true
-        boolean sessionAuthority = false;
-        for(int i = 0; i < teachers.size(); i++) {
-            if (sessionID == teachers.get(i).getID()) {
-                sessionAuthority = true;
-        }
-
         //main loop once logged in
+		if (access) {
             mainLoop:
             do {
                 System.out.println("What would you like to do?");
                 System.out.println("1. Edit account\n2. Delete account\n3. View courses\n4. Logout");
-                do {
+
+                while (true) {
                     try {
                         input = Integer.parseInt(scan.nextLine());
                         if (input >= 1 && input <= 4) {
@@ -329,7 +336,8 @@ public class Control {
                         System.out.println("Please enter a valid number");
                         System.out.println("1. Edit account\n2. Delete account\n3. View courses\n4. Logout");
                     }
-                } while (true);
+                }
+
                 if (input == 1) {
                     //edit account
                     editLoop:
@@ -343,12 +351,12 @@ public class Control {
                                 do {
                                     password = scan.nextLine();
                                     if (password.length() != 0) {
-                                        for (i = 0; i < students.size(); i++) {
+                                        for (int i = 0; i < students.size(); i++) {
                                             if (students.get(i).getID() == sessionID) {
                                                 students.get(i).setPassword(password);
                                             }
                                         }
-                                        for (i = 0; i < teachers.size(); i++) {
+                                        for (int i = 0; i < teachers.size(); i++) {
                                             if (teachers.get(i).getID() == sessionID) {
                                                 teachers.get(i).setPassword(password);
                                             }
@@ -365,12 +373,12 @@ public class Control {
                                 do {
                                     first = scan.nextLine();
                                     if (first.length() != 0) {
-                                        for (i = 0; i < students.size(); i++) {
+                                        for (int i = 0; i < students.size(); i++) {
                                             if (students.get(i).getID() == sessionID) {
                                                 students.get(i).setFirstName(first);
                                             }
                                         }
-                                        for (i = 0; i < teachers.size(); i++) {
+                                        for (int i = 0; i < teachers.size(); i++) {
                                             if (teachers.get(i).getID() == sessionID) {
                                                 teachers.get(i).setFirstName(first);
                                             }
@@ -387,12 +395,12 @@ public class Control {
                                 do {
                                     last = scan.nextLine();
                                     if (first.length() != 0) {
-                                        for (i = 0; i < students.size(); i++) {
+                                        for (int i = 0; i < students.size(); i++) {
                                             if (students.get(i).getID() == sessionID) {
                                                 students.get(i).setLastName(password);
                                             }
                                         }
-                                        for (i = 0; i < teachers.size(); i++) {
+                                        for (int i = 0; i < teachers.size(); i++) {
                                             if (teachers.get(i).getID() == sessionID) {
                                                 teachers.get(i).setLastName(password);
                                             }
@@ -415,13 +423,13 @@ public class Control {
                     //delete account
                     System.out.println("Are you sure you would like to delete your account? (y for yes, anything else for no)");
                     if (scan.nextLine().equals("y")) {
-                        for (i = 0; i < students.size(); i++) {
+                        for (int i = 0; i < students.size(); i++) {
                             if (students.get(i).getID() == sessionID) {
                                 students.remove(i);
                                 break mainLoop; //logs user out after deleting their account
                             }
                         }
-                        for (i = 0; i < teachers.size(); i++) {
+                        for (int i = 0; i < teachers.size(); i++) {
                             if (teachers.get(i).getID() == sessionID) {
                                 students.remove(i);
                                 break mainLoop; //logs user out after deleting their account
@@ -436,7 +444,7 @@ public class Control {
                     do {
                         System.out.println("Select one of the following options");
                         again = false;
-                        for (i = 0; i < courses.size(); i++) {
+                        for (int i = 0; i < courses.size(); i++) {
                             System.out.println(i + ". " + courses.get(i));
                         }
                         if (sessionAuthority)
@@ -465,7 +473,7 @@ public class Control {
                         if (courseSelection < courses.size()) {
                             System.out.println("Select one of the following options: ");
                             selectedCourse = courses.get(courseSelection);
-                            for (i = 0; i < boards.size(); i++) {
+                            for (int i = 0; i < boards.size(); i++) {
                                 if (boards.get(i).getCourse().equals(selectedCourse)) {
                                     System.out.println(counter + ". " + boards.get(i).getTopic());
                                     counter++;
@@ -516,7 +524,7 @@ public class Control {
                             try {
                                 again = false;
                                 studentID = Integer.parseInt(scan.nextLine());
-                                for (i = 0; i < students.size(); i++) {
+                                for (int i = 0; i < students.size(); i++) {
                                     if (students.get(i).getID() == studentID) {
                                         again = true;
                                     }
@@ -528,7 +536,7 @@ public class Control {
                             }
                         } while(again);
 
-                        for (i = 0; i < comments.size(); i++) {
+                        for (int i = 0; i < comments.size(); i++) {
                             if(comments.get(i).getOwnerID() == studentID) {
                                 comments.get(i).toString();
                             }
@@ -576,6 +584,7 @@ public class Control {
                     } while(again);
 					*/
             } while (input != 4);
+		}
             System.out.println("Goodbye! Have a nice day!");
             logOut(students, teachers, boards, comments, personCounter, boardCounter, commentCounter);
         }
