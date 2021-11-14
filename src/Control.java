@@ -716,7 +716,8 @@ public class Control {
 										case 2:
 											//code to vote for a topic
 										case 3:
-											//code to reply to a comment
+											//String reply = inputInfo(scan);
+											//String parentCommentID = 
 										case 4:
 											//code to go back
 											break;
