@@ -13,18 +13,47 @@ public class Comment implements java.io.Serializable {
     private int ownerID;
     private String content;
     private int likes;
+    private int grade;
     private String dateAndTime;
     private ArrayList<Person> usersWhoLiked;
     private ArrayList<Comment> repliesToComment;
 
-    public Comment(String parentID, String commentID, int ownerID, String content, int likes, String dateAndTime,
+    public Comment(String parentID, String commentID, int ownerID, String content, int likes, int grade, String dateAndTime,
                    ArrayList<Person> usersWhoLiked, ArrayList<Comment> repliesToComment) {
         this.parentID = parentID;
         this.commentID = commentID;
         this.ownerID = ownerID;
         this.content = content;
         this.likes = likes;
+        this.grade = grade;
         this.dateAndTime = dateAndTime;
+        this.usersWhoLiked = usersWhoLiked;
+        this.repliesToComment = repliesToComment;
+    }
+
+    public Comment(String parentID, String commentID, int ownerID, String content, int likes, int grade, String dateAndTime, ArrayList<Person> usersWhoLiked) {
+        this.parentID = parentID;
+        this.commentID = commentID;
+        this.ownerID = ownerID;
+        this.content = content;
+        this.likes = likes;
+        this.grade = grade;
+        this.dateAndTime = dateAndTime;
+        this.usersWhoLiked = usersWhoLiked;
+        ArrayList<Comment> repliesToComment = new ArrayList<>();
+        this.repliesToComment = repliesToComment;
+    }
+
+    public Comment(String parentID, String commentID, int ownerID, String content, int likes, int grade, String dateAndTime) {
+        this.parentID = parentID;
+        this.commentID = commentID;
+        this.ownerID = ownerID;
+        this.content = content;
+        this.likes = likes;
+        this.grade = grade;
+        this.dateAndTime = dateAndTime;
+        ArrayList<Person> usersWhoLiked = new ArrayList<>();
+        ArrayList<Comment> repliesToComment = new ArrayList<>();
         this.usersWhoLiked = usersWhoLiked;
         this.repliesToComment = repliesToComment;
     }
@@ -43,8 +72,8 @@ public class Comment implements java.io.Serializable {
 
     public void createReplyToComment(String theCommentID, int theOwnerID, String theContent,
                                      int theLikes, String theDateAndTime, ArrayList<Person> theUsersWhoLiked) {
-        repliesToComment.add(new Comment(this.commentID, theCommentID, theOwnerID, theContent, theLikes,
-                theDateAndTime, theUsersWhoLiked, null));
+        repliesToComment.add(new Comment(this.commentID, theCommentID, theOwnerID, theContent, theLikes, 0,
+                theDateAndTime, theUsersWhoLiked));
     }
 
     public void deleteReplyToComment(String commentID) {
@@ -94,6 +123,14 @@ public class Comment implements java.io.Serializable {
 
     public void setLikes(int likes) {
         this.likes = likes;
+    }
+
+    public int getGrade() {
+        return grade;
+    }
+
+    public void setGrade(int grade) {
+        this.grade = grade;
     }
 
     public String getDateAndTime() {
