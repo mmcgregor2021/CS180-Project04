@@ -50,17 +50,19 @@ public class TestCases {
                     "You must have a last name.\n" +
                     "Please enter your last name.\n" + //user enters a non-blank last name
                     "Are you a teacher? (y for yes, anything else for no)\n" + //user enters y
-                    "Successfully Signed up";
+                    "Successfully Signed up\n" +
+                    "Goodbye! Have a nice day!";
 
             String input = "3\n" +
                     "1\n" +
                     "\n" +
-                    "passw0rd\n" +
+                    "hammerd0wn\n" +
                     "\n" +
                     "mitch\n" +
                     "\n" +
                     "daniels\n" +
-                    "y\n";
+                    "y\n" +
+                    "4\n";
             receiveInput(input);
             Control.main(new String[0]);
             String actual = getOutput();
