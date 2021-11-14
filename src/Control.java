@@ -2,14 +2,42 @@ import java.util.*;
 import java.io.*;
 public class Control {
 
+	public static String grabSessionName(int sessionID, ArrayList<Student> students, ArrayList<Teacher> teachers) {
+		String firstName = "";
+		String lastName = "";
+		if (students.size() > 0) {
+			for (int i = 0; i < students.size(); i++) {
+				if (sessionID == students.get(i).getID()) {
+					firstName = students.get(i).getFirstName();
+					lastName = students.get(i).getLastName();
+					return firstName + " " + lastName;
+				}
+			}
+		}
+		for (int i = 0; i < teachers.size(); i++) {
+			if (sessionID == teachers.get(i).getID()) {
+				firstName = teachers.get(i).getFirstName();
+				lastName = teachers.get(i).getLastName();
+			}
+		}
+		return firstName + " " + lastName;
+	}
+
 	public static String inputInfo(Scanner scan) {
 		boolean again = false;
 		System.out.println("Would you like to input through the terminal or with a file path?\n (t for terminal, anything else for file path)");
 		String response = scan.nextLine();
 		String content = "";
 		if (response.equals("t")) {
-			System.out.println("What would you like to input?");
-			content = scan.nextLine();
+			while (true) {
+				System.out.println("What would you like to input?");
+				content = scan.nextLine();
+				if (content.equals("")) {
+					System.out.println("Comment cannot be empty!");
+				} else {
+					break;
+				}
+			}
 		} else {
 			System.out.println("What is the file path for your input?");
 			String fileName = scan.nextLine();
@@ -378,8 +406,12 @@ public class Control {
 
     //main loop once logged in
 		if (access) {
+
+			String sessionName = grabSessionName(sessionID, students, teachers);
+
             mainLoop:
             do {
+				System.out.println("User: " + sessionName + "\n");
                 System.out.println("What would you like to do?");
 				String choicesPrompt = "1. Edit account\n2. Delete account\n3. View courses\n4. Logout";
 				if (sessionAuthority) {
@@ -672,7 +704,13 @@ public class Control {
 									switch (commentSelection) {
 										case 1:
 											String content = inputInfo(scan);
-											//code to make a new comment with variable content.
+											String parentBoardID = boards.get(boardSelection - 1).getBoardID();
+											commentCounter++;
+											Date commentDate = new Date();
+											String commentID = "C" + commentCounter;
+											Comment createdComment = new Comment(parentBoardID, commentID, sessionID, content, 0, 0, commentDate.toString());
+											boards.get(boardSelection - 1).getComments().add(createdComment);
+											System.out.println("Comment was successfully created!");
 										case 2:
 											//code to vote for a topic
 										case 3:
@@ -733,7 +771,7 @@ public class Control {
                                 System.out.println(sortedStudents.get(x).toString());
                             }
                         }
-						
+
                         */
                         //add in once boards have been printed out
 						//gives ability to upvote comments
@@ -778,7 +816,3 @@ public class Control {
             logOut(students, teachers, boards, comments, personCounter, boardCounter, commentCounter);
         }
     }
-
-
-
-
