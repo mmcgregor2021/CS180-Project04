@@ -709,10 +709,29 @@ public class Control {
                                 System.out.println("Invalid entry, please try again.");
                             }
                         } while (true);
+						boolean stu = false;
+						boolean tea = false;
                         for (int x = 0; x < boards.size(); x++) {
-                            if (boards.get(x).getID() == commentNumber) {
-                                boards.get(x).setLikes(boards.get(x).getLikes + 1);
-                            }
+							try {
+								if (boards.get(x).addLike(students.get(sessionID))) {
+									stu = true;
+								}
+							} catch (Exception e) {
+								stu = false;
+							}
+							try {
+								if (boards.get(x).addLike(teachers.get(sessionID))) {
+									tea = true;
+								}
+							} catch (Exception e) {
+								tea = false;
+							}
+							if (tea) {
+								if (boards.get(x).getID() == commentNumber) {
+									boards.get(x).setLikes(boards.get(x).getLikes() + 1);
+									break;
+								}
+							}
                         }
 						*/
             } while (input != 4);
