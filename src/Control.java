@@ -701,6 +701,7 @@ public class Control {
 						System.out.println(invalidOption);
 					}
 				}
+						//this is the Voting section
                         //add in when content of boards is able to be printed out
 						//sorts the students into an array by likes
                         /*
