@@ -50,17 +50,19 @@ public class TestCases {
                     "You must have a last name.\n" +
                     "Please enter your last name.\n" + //user enters a non-blank last name
                     "Are you a teacher? (y for yes, anything else for no)\n" + //user enters y
-                    "Successfully Signed up";
+                    "Successfully Signed up\n" +
+                    "Goodbye! Have a nice day!";
 
             String input = "3\n" +
                     "1\n" +
                     "\n" +
-                    "passw0rd\n" +
+                    "hammerd0wn\n" +
                     "\n" +
                     "mitch\n" +
                     "\n" +
                     "daniels\n" +
-                    "y\n";
+                    "y\n" +
+                    "4\n";
             receiveInput(input);
             Control.main(new String[0]);
             String actual = getOutput();
@@ -69,6 +71,34 @@ public class TestCases {
             e.printStackTrace();
             fail();
         }
+    }
+
+    @Test(timeout = 1000)
+    public void signIn() {
+        
+         try {
+            String expected = "Welcome to the Discussion Board! What would you like to do?\n" +
+            "1. Sign up\n2. Log in\n" + // user enters 2
+            "Please enter your ID.\n" + //user enters bob
+            "Please enter a valid ID number\n" + //user enters 1`
+            "Please enter your password\n" + //user enters ""
+            "Please enter a valid password\n" + //user enters hammerd0wn
+            "The account with this ID does not exist\n";
+
+            String input = "2\n" +
+                        "bob\n" +
+                        "1\n" +
+                        "\n" +
+                        "hammerd0wn\n";
+            receiveInput(input);
+            Control.main(new String[0]);
+            String actual = getOutput();
+            Assert.assertEquals("The output doesn't match the expected output!", expected, actual);
+        } catch (Exception e){
+            e.printStackTrace();
+            fail();
+        }
+
     }
 
     private void receiveInput(String str) {

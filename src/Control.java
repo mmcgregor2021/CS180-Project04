@@ -23,6 +23,7 @@ public class Control {
 		return board;
 	}
 
+
 	//returns an arraylist of every unique course in String format
 	public static ArrayList<String> populateCourses(ArrayList<Board> boards) {
 		ArrayList<String> courses = new ArrayList<>();
@@ -642,7 +643,38 @@ public class Control {
 									}
 								} else {
 									//switch statement for students
-									//switch (commentSelection)
+									switch (commentSelection) {
+										case 1:
+											System.out.println("Would you like to comment through the terminal or with a file path?\n (t for terminal, anything else for file path");
+											String response = scan.nextLine();
+											if (response.equals("t")) {
+												System.out.println("What would you like to comment?");
+												String content = scan.nextLine();
+												String commentID = "C" + commentCounter;
+												Date date = new Date();
+												
+											} else {
+												System.out.println("What is the file path for your comment?");
+												String fileName = scan.nextLine();
+												String content = "";
+												do {
+													again = false;
+													try (BufferedReader bfr = new BufferedReader(new FileReader(fileName))) {
+														String line;
+														do {
+															line = bfr.readLine();
+															content = content + line;
+														} while (line != null);
+
+													} catch (Exception e) {
+														System.out.println("Issue processing file, please try again.");
+														again = true;
+													}
+												} while (again);
+
+											}
+
+									}
 								}
 
 							}
