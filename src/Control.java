@@ -661,6 +661,7 @@ public class Control {
 								if (boards.get(boardSelection - 1).getComments().size() == 0) {
 									System.out.println("There are no comments on this board yet.");
 								}
+
 								while (true) {
 									try {
 										if (sessionAuthority) {
@@ -698,6 +699,7 @@ public class Control {
 											//code to reply to a comment
 										case 4:
 											//code to go back
+											break;
 									}
 								} else {
 									//switch statement for students
@@ -717,6 +719,7 @@ public class Control {
 											//code to reply to a comment
 										case 4:
 											//code to go back
+											break;
 									}
 								}
 
