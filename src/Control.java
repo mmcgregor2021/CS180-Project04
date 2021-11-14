@@ -6,7 +6,7 @@ public class Control {
 		int indexOfParentComment = 0;
 		String parentCommentID = "";
 		while (true) {
-			System.out.println("Please enter the id of the comment you want to reply to.");
+			System.out.println("Please enter the id of your selected comment.");
 			parentCommentID = scan.nextLine();
 			if (parentCommentID.equals("")) {
 				System.out.println("The comment id cannot be blank.");
@@ -723,6 +723,7 @@ public class Control {
 									}
 								} else {
 									//switch statement for students
+									ArrayList<Comment> currentBoardComments = boards.get(boardSelection - 1).getComments();
 									switch (commentSelection) {
 										case 1:
 											String content = inputInfo(scan);
@@ -730,14 +731,25 @@ public class Control {
 											commentCounter++;
 											Date commentDate = new Date();
 											String commentID = "C" + commentCounter;
-											Comment createdComment = new Comment(parentBoardID, commentID, sessionID, content, 0, 0, commentDate.toString());
+											Comment createdComment = new Comment(parentBoardID, commentID, sessionID,
+											       content, 0, 0, commentDate.toString());
 											boards.get(boardSelection - 1).getComments().add(createdComment);
 											System.out.println("Comment was successfully created!");
 											break;
 										case 2:
-											//code to vote for a topic
+											if (boards.get(boardSelection - 1).getUsersWhoVoted().contains(sessionID)) {
+												System.out.println("Sorry. You have already voted on this board.");
+											} else {
+												String[] commentIndexIDArray = grabCommentIndexAndID(scan, currentBoardComments).split(" ");
+												int indexOfSelectedComment = Integer.parseInt(commentIndexIDArray[0]);
+												int currentNumVotes = currentBoardComments.get(indexOfSelectedComment).getLikes();
+												currentBoardComments.get(indexOfSelectedComment).setLikes(currentNumVotes + 1);
+												boards.get(boardSelection - 1).setComments(currentBoardComments);
+												boards.get(boardSelection - 1).addUsersWhoVoted(sessionID);
+												System.out.println("Vote was successfully added.");
+											}
+											break;
 										case 3:
-											ArrayList<Comment> currentBoardComments = boards.get(boardSelection - 1).getComments();
 											if (currentBoardComments.size() == 0) {
 												System.out.println("Sorry. This board does not have any comments yet.");
 											} else {
@@ -754,7 +766,6 @@ public class Control {
 														break;
 													}
 												}
-
 												Date replyDate = new Date();
 												String replyID = "Reply - NO ID";
 												Comment createdReply = new Comment(parentCommentID, replyID, sessionID, replyToComment, 0, 0, replyDate.toString());

@@ -14,24 +14,37 @@ public class Board implements java.io.Serializable {
     private String boardID;
     private String dateAndTime;
     private ArrayList<Comment> comments;
+	private ArrayList<Integer> usersWhoVoted;
 
-    public Board(String course, String topic, String boardID, String dateAndTime, ArrayList<Comment> comments) {
+    public Board(String course, String topic, String boardID, String dateAndTime, ArrayList<Comment> comments, ArrayList<Integer> usersWhoVoted) {
         this.course = course;
         this.topic = topic;
         this.boardID = boardID;
         this.dateAndTime = dateAndTime;
         this.comments = comments;
+		this.usersWhoVoted = usersWhoVoted;
     }
 
-    //overloaded constructor for when a new board is created and does not have comments yet
+	public Board(String course, String topic, String boardID, String dateAndTime, ArrayList<Comment> comments) {
+		this.course = course;
+		this.topic = topic;
+		this.boardID = boardID;
+		this.dateAndTime = dateAndTime;
+		this.comments = comments;
+		ArrayList<Integer> usersWhoVoted = new ArrayList<>();
+		this.usersWhoVoted = usersWhoVoted;
+	}
+
+    //overloaded constructor for when a new board is created and does not have comments or users who voted yet
     public Board(String course, String topic, String boardID, String dateAndTime) {
         this.course = course;
         this.topic = topic;
         this.boardID = boardID;
         this.dateAndTime = dateAndTime;
-        //creating an empty ArrayList of comment objects
         ArrayList<Comment> listOfComments = new ArrayList<>();
         this.comments = listOfComments;
+		ArrayList<Integer> usersWhoVoted = new ArrayList<>();
+		this.usersWhoVoted = usersWhoVoted;
     }
 
     //this creates a comment on the board itself (first level comment)
@@ -106,4 +119,17 @@ public class Board implements java.io.Serializable {
     public void setDateAndTime(String dateAndTime) {
         this.dateAndTime = dateAndTime;
     }
+
+	public ArrayList<Integer> getUsersWhoVoted() {
+		return usersWhoVoted;
+	}
+
+	public void setUsersWhoVoted() {
+		this.usersWhoVoted = usersWhoVoted;
+	}
+
+	public void addUsersWhoVoted(int id) {
+		this.usersWhoVoted.add(id);
+	}
+
 }
