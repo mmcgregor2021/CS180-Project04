@@ -37,7 +37,7 @@ public class Board implements java.io.Serializable {
     //this creates a comment on the board itself (first level comment)
     public void createComment(String commentID, int ownerID, String content, int likes, String theDateAndTime,
                               ArrayList<Person> usersWhoLiked, ArrayList<Comment> repliesToComment) {
-        comments.add(new Comment(this.boardID, commentID, ownerID, content, likes, theDateAndTime,
+        comments.add(new Comment(this.boardID, commentID, ownerID, content, likes, 0, theDateAndTime,
                 usersWhoLiked, repliesToComment));
     }
 
