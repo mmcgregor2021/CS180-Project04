@@ -702,22 +702,35 @@ public class Control {
 					}
 				}
                         //add in when content of boards is able to be printed out
+						//sorts the students into an array by likes
                         /*
                         if (courseSelection == courses.size() + 1) {
+							boolean done = true;
                             ArrayList<Student> sortedStudents = new ArrayList<>();
-                            index = 0;
-                            for (int x = 0; x < students.length; x++) {
-                                if (students.get(x).getLikes() > students.get(index).getLikes()) {
-                                    index = x;
+							for (int x = 0; x < students.length; x++) {
+								sortedStudents.add(students.get(x));
+							}
+							for (int x = 0; x < students.length; x++) {
+								done = true;
+								for (int y = 0; y < students.length - 1 - x; y++) {
+									if (sortedStudents.get(y).getLikes() < sortedStudents.get(y + 1).getLikes()) {
+										done = false;
+										Collections.swap(sortedStudents, y, y + 1);
+									}
                                 }
+								if (done) {
+									break;
+								}
+								sortedStudents.add(students.get(index));
                             }
-                            sortedStudents.add(students.get(x));
                             for (int x = 0; x < sortedStudents.size(); x++) {
-                                System.out.println(sortedStudents.get(x));
+                                System.out.println(sortedStudents.get(x).toString());
                             }
                         }
+						
                         */
                         //add in once boards have been printed out
+						//gives ability to upvote comments
                         /*
                         System.out.println((courses.size() + 2) + "What comment would you like to upvote?");
                         do {
@@ -733,8 +746,7 @@ public class Control {
                                 boards.get(x).setLikes(boards.get(x).getLikes + 1);
                             }
                         }
-                    } while(again);
-					*/
+						*/
             } while (input != 4);
 		}
             System.out.println("Goodbye! Have a nice day!");
