@@ -56,12 +56,11 @@ public class Board implements java.io.Serializable {
             Comment c = comments.get(i);
             //indent
             toReturn += "\n\t" + c.getContent() + " | " + c.getDateAndTime();
-            toReturn += "\n\t" + c.getLikes() + " likes | Comment ID: " + c.getCommentID();
+            toReturn += "\n\t" + c.getLikes() + " votes | Comment ID: " + c.getCommentID();
             for (int j = c.getRepliesToComment().size() - 1; j >= 0; j--) {
                 Comment r = c.getRepliesToComment().get(j);
                 toReturn += "\n\t\t";
                 toReturn += r.getContent() + " | " + r.getDateAndTime();
-                toReturn += "\n" + r.getLikes() + " likes";
             }
             toReturn += "\n";
         }

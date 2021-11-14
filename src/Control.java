@@ -713,11 +713,64 @@ public class Control {
 											Comment createdComment = new Comment(parentBoardID, commentID, sessionID, content, 0, 0, commentDate.toString());
 											boards.get(boardSelection - 1).getComments().add(createdComment);
 											System.out.println("Comment was successfully created!");
+											break;
 										case 2:
 											//code to vote for a topic
 										case 3:
-											//String reply = inputInfo(scan);
-											//String parentCommentID = 
+											ArrayList<Comment> currentBoardComments = boards.get(boardSelection - 1).getComments();
+											int indexOfParentComment = 0;
+											if (currentBoardComments.size() == 0) {
+												System.out.println("Sorry. This board does not have any comments yet.");
+											} else {
+												String replyToComment = "";
+												String parentCommentID = "";
+												idFindingLoop:
+												while (true) {
+													boolean replyStackError = false;
+													System.out.println("Please enter the id of the comment you want to reply to.");
+													parentCommentID = scan.nextLine();
+
+													if (parentCommentID.equals("")) {
+														System.out.println("The comment id cannot be blank.");
+													} else {
+														for (int i = 0; i < currentBoardComments.size(); i++) {
+															parentCommentID = parentCommentID.toUpperCase();
+															if (parentCommentID.equals(currentBoardComments.get(i).getCommentID())) {
+																if (currentBoardComments.get(i).getParentID().charAt(0) == 'C') {
+																	replyStackError = true;
+																	break;
+																}
+																indexOfParentComment = i;
+																break idFindingLoop;
+															}
+														}
+														if (replyStackError) {
+															System.out.println("You cannot reply to a reply. Please try again.");
+														} else {
+															System.out.println("Inputted comment ID cannot be found. Please try again.");
+														}
+													}
+												}
+
+												while (true) {
+													System.out.println("Please enter a reply.");
+													replyToComment = scan.nextLine();
+													if (replyToComment.equals("")) {
+														System.out.println("Reply cannot be empty.");
+													} else {
+														break;
+													}
+												}
+
+												commentCounter++;
+												Date replyDate = new Date();
+												String replyID = "C" + commentCounter;
+												Comment createdReply = new Comment(parentCommentID, replyID, sessionID, replyToComment, 0, 0, replyDate.toString());
+												currentBoardComments.get(indexOfParentComment).getRepliesToComment().add(createdReply);
+												boards.get(boardSelection - 1).setComments(currentBoardComments);
+												System.out.println("Reply successfully addded.");
+											}
+											break;
 										case 4:
 											//code to go back
 											break;
