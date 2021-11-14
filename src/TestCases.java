@@ -33,10 +33,34 @@ public class TestCases {
     }
 
     @Test(timeout = 1000)
-    public void fullOutputTestOne() {
+    public void signUp() {
         try {
-            String expected = "";
-            String input = "";
+            String expected = "Welcome to the Discussion Board! What would you like to do?\n"  +
+                    "1. Sign up\n2. Log in\n" + //user enters 3
+                    "Please select a valid option\n" +
+                    "1. Sign up\n2. Log in\n" + //user enters 1
+                    "Your UserID is " + 1 + ". Please remember this number!\n" +
+                    "Please enter a password.\n" + //user enters a blank password
+                    "Please enter a non-blank password.\n" +
+                    "Please enter a password.\n" + //user enters a non-blank password
+                    "Please enter your first name.\n" + //user enters a blank first name
+                    "You must have a first name.\n" +
+                    "Please enter your first name.\n" + //user enters a non-blank first name
+                    "Please enter your last name.\n" + //user enters a blank last name
+                    "You must have a last name.\n" +
+                    "Please enter your last name.\n" + //user enters a non-blank last name
+                    "Are you a teacher? (y for yes, anything else for no)\n" + //user enters y
+                    "Successfully Signed up";
+
+            String input = "3\n" +
+                    "1\n" +
+                    "\n" +
+                    "passw0rd\n" +
+                    "\n" +
+                    "mitch\n" +
+                    "\n" +
+                    "daniels\n" +
+                    "y\n";
             receiveInput(input);
             Control.main(new String[0]);
             String actual = getOutput();
