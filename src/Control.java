@@ -436,7 +436,8 @@ public class Control {
 				String choicesPrompt = "1. Edit account\n2. Delete account\n3. View courses\n4. Logout";
 				if (sessionAuthority) {
 					choicesPrompt += "\n5. Create new course";
-				}
+				} else
+					choicesPrompt += "\n5. View your comments and their grades";
                 System.out.println(choicesPrompt);
 
                 while (true) {
@@ -616,7 +617,7 @@ public class Control {
 								if (sessionAuthority) {
 									System.out.println((counter) + ". Add a board");
 									counter++;
-									System.out.println((counter) + ". View all comments from a specific student");
+									System.out.println((counter) + ". View all comments from a specific student to grade");
 									counter++;
 								}
 								System.out.println((counter) + ". Go back");
@@ -651,13 +652,13 @@ public class Control {
 							int studentID = 0;
 							if(boardSelection == boards.size() + 2) {
 								do {
-									System.out.println("Enter the student ID of the student comments you want to see");
+									System.out.println("Enter the student ID of the student comments you want to grade");
 									try {
-										again = false;
+										again = true;
 										studentID = Integer.parseInt(scan.nextLine());
 										for (int i = 0; i < students.size(); i++) {
 											if (students.get(i).getID() == studentID) {
-												again = true;
+												again = false;
 											}
 										}
 										if (again)
@@ -667,9 +668,33 @@ public class Control {
 									}
 								} while(again);
 
+								System.out.println("These are all the comments for ID " + studentID);
 								for (int i = 0; i < comments.size(); i++) {
 									if(comments.get(i).getOwnerID() == studentID) {
-										comments.get(i).toString();
+										System.out.println(comments.get(i).toString());
+										//Could someone make a toString method for comment so that this works?
+									}
+								}
+
+								//Code to assign a grade to each student comment
+								int commentNumber = 1;
+								for (int i = 0; i < comments.size(); i++) {
+									if(comments.get(i).getOwnerID() == studentID) {
+										System.out.println("What grade would you like to assign to comment " + commentNumber);
+										int grade = 0;
+										do {
+											again = false;
+											try {
+												grade = Integer.parseInt(scan.nextLine());
+												if (grade < 0 || grade > 100)
+													System.out.println("Invalid grade, please try again");
+											} catch (Exception e) {
+												System.out.println("Invalid grade, please try again");
+												again = true;
+											}
+										} while(again);
+										comments.get(i).setGrade(grade);
+										System.out.println("The grade is set to " + comments.get(i).getGrade());
 									}
 								}
 							}
@@ -726,6 +751,7 @@ public class Control {
 									ArrayList<Comment> currentBoardComments = boards.get(boardSelection - 1).getComments();
 									switch (commentSelection) {
 										case 1:
+											//code to add a comment
 											String content = inputInfo(scan);
 											String parentBoardID = boards.get(boardSelection - 1).getBoardID();
 											commentCounter++;
@@ -734,6 +760,7 @@ public class Control {
 											Comment createdComment = new Comment(parentBoardID, commentID, sessionID,
 											       content, 0, 0, commentDate.toString());
 											boards.get(boardSelection - 1).getComments().add(createdComment);
+											comments.add(createdComment);
 											System.out.println("Comment was successfully created!");
 											break;
 										case 2:
@@ -801,7 +828,7 @@ public class Control {
 						System.out.println("Please initialize a discussion board for the course.");
 						boards.add(createBoard(scan, courseName, boardCounter));
 					} else {
-						System.out.println(invalidOption);
+						//Student can view the grade on all their comments.
 					}
 				}
 						//this is the Voting section
