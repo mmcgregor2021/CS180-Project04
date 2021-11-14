@@ -2,12 +2,40 @@ import java.util.*;
 import java.io.*;
 public class Control {
 
+	public static String inputInfo(Scanner scan) {
+		boolean again = false;
+		System.out.println("Would you like to input through the terminal or with a file path?\n (t for terminal, anything else for file path)");
+		String response = scan.nextLine();
+		String content = "";
+		if (response.equals("t")) {
+			System.out.println("What would you like to input?");
+			content = scan.nextLine();
+		} else {
+			System.out.println("What is the file path for your input?");
+			String fileName = scan.nextLine();
+			do {
+				again = false;
+				try (BufferedReader bfr = new BufferedReader(new FileReader(fileName))) {
+					String line;
+					do {
+						line = bfr.readLine();
+						content = content + line;
+					} while (line != null);
+
+				} catch (Exception e) {
+					System.out.println("Issue processing file, please try again.");
+					again = true;
+				}
+			} while (again);
+		}
+		return content;
+	}
+
 	//prompts user to enter information and returns a new board object
 	public static Board createBoard(Scanner scan, String courseName, int boardCounter) {
 		System.out.println("Please enter the forum topic.");
-		String topic = "";
+		String topic = inputInfo(scan);
 		while (true) {
-			topic = scan.nextLine();
 			if (topic.equals("")) {
 				System.out.println("Please enter a non-blank forum topic.");
 			} else {
@@ -620,18 +648,12 @@ public class Control {
 									switch (commentSelection) {
 										case 1:
 											String newTopic = "";
-											while (true) {
-												System.out.println("Please enter a new forum topic.");
-												newTopic = scan.nextLine();
-												if (newTopic.equals("")) {
-													System.out.println("The new forum topic cannot be empty.");
-												} else {
-													break;
-												}
+											while(true) {
+												newTopic =  inputInfo(scan);
+												boards.get(boardSelection - 1).setTopic(newTopic);
+												System.out.println("New forum topic has been set!");
+												break;
 											}
-											boards.get(boardSelection - 1).setTopic(newTopic);
-											System.out.println("New forum topic has been set!");
-											break;
 										case 2:
 											System.out.println("Are you sure you would like to delete the board? (y for yes, anything else for no)");
 											String deleteBoardConfirmation = scan.nextLine();
@@ -640,40 +662,23 @@ public class Control {
 												System.out.println("The board was successfully deleted!");
 											}
 											break;
+										case 3:
+											//code to reply to a comment
+										case 4:
+											//code to go back
 									}
 								} else {
 									//switch statement for students
 									switch (commentSelection) {
 										case 1:
-											System.out.println("Would you like to comment through the terminal or with a file path?\n (t for terminal, anything else for file path");
-											String response = scan.nextLine();
-											if (response.equals("t")) {
-												System.out.println("What would you like to comment?");
-												String content = scan.nextLine();
-												String commentID = "C" + commentCounter;
-												Date date = new Date();
-												
-											} else {
-												System.out.println("What is the file path for your comment?");
-												String fileName = scan.nextLine();
-												String content = "";
-												do {
-													again = false;
-													try (BufferedReader bfr = new BufferedReader(new FileReader(fileName))) {
-														String line;
-														do {
-															line = bfr.readLine();
-															content = content + line;
-														} while (line != null);
-
-													} catch (Exception e) {
-														System.out.println("Issue processing file, please try again.");
-														again = true;
-													}
-												} while (again);
-
-											}
-
+											String content = inputInfo(scan);
+											//code to make a new comment with variable content.
+										case 2:
+											//code to vote for a topic
+										case 3:
+											//code to reply to a comment
+										case 4:
+											//code to go back
 									}
 								}
 
@@ -753,3 +758,7 @@ public class Control {
             logOut(students, teachers, boards, comments, personCounter, boardCounter, commentCounter);
         }
     }
+
+
+
+
