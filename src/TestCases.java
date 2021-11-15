@@ -84,7 +84,7 @@ public class TestCases {
             Control.main(new String[0]);
             String actual = getOutput();
             Assert.assertEquals("The output doesn't match the expected output!", expected, actual);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             fail();
         }
@@ -167,7 +167,7 @@ public class TestCases {
             Control.main(new String[0]);
             String actual = getOutput();
             Assert.assertEquals("The output doesn't match the expected output!", expected, actual);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             fail();
         }
@@ -175,15 +175,15 @@ public class TestCases {
 
     @Test(timeout = 1000)
     public void signIn() {
-         try {
+        try {
             String expected = "Welcome to the Discussion Board! What would you like to do?\n" +
-            "1. Sign up\n2. Log in\n" + // user enters 2
-            "Please enter your ID number.\n" + //user enters bob
-            "Please enter a valid ID number\n" + //user enters 1`
-            "Please enter your password.\n" + //user enters ""
-            "Please enter a valid password.\n" +
-            "The entered password is incorrect\n" + //user enters a random string
-            "Goodbye! Have a nice day!\n";
+                "1. Sign up\n2. Log in\n" + // user enters 2
+                "Please enter your ID number.\n" + //user enters bob
+                "Please enter a valid ID number\n" + //user enters 1`
+                "Please enter your password.\n" + //user enters ""
+                "Please enter a valid password.\n" +
+                "The entered password is incorrect\n" + //user enters a random string
+                "Goodbye! Have a nice day!\n";
 
             String input = "2\n" +
                         "bob\n" +
@@ -194,7 +194,7 @@ public class TestCases {
             Control.main(new String[0]);
             String actual = getOutput();
             Assert.assertEquals("The output doesn't match the expected output!", expected, actual);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             fail();
         }
