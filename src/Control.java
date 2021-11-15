@@ -142,7 +142,8 @@ public class Control {
         saveCounters(personCounter, boardCounter, commentCounter, "counters.txt");
     }
 
-    public static int logIn(int id, String password, ArrayList<Student> students, ArrayList<Teacher> teachers) {
+    public static int logIn(int id, String password, ArrayList<Student> students,
+	       ArrayList<Teacher> teachers) {
         for (int i = 0; i < students.size(); i++) {
             if (students.get(i).getID() == id) {
                 if (students.get(i).getPassword().equals(password)) {
@@ -952,73 +953,6 @@ public class Control {
 						}
 					}
 				}
-
-						//this is the Voting section
-                        //add in when content of boards is able to be printed out
-						//sorts the students into an array by likes
-                        /*
-                        if (courseSelection == courses.size() + 1) {
-							boolean done = true;
-                            ArrayList<Student> sortedStudents = new ArrayList<>();
-							for (int x = 0; x < students.length; x++) {
-								sortedStudents.add(students.get(x));
-							}
-							for (int x = 1; x < students.length; x++) {
-								done = true;
-								for (int y = 0; y < students.length - 1 - x; y++) {
-									if (sortedStudents.get(y).getLikes() < sortedStudents.get(y + 1).getLikes()) {
-										done = false;
-										Collections.swap(sortedStudents, y, y + 1);
-									}
-                                }
-								if (done) {
-									break;
-								}
-								sortedStudents.add(students.get(index));
-                            }
-                            for (int x = 0; x < sortedStudents.size(); x++) {
-                                System.out.println(sortedStudents.get(x).toString());
-                            }
-                        }
-
-                        */
-                        //add in once boards have been printed out
-						//gives ability to upvote comments
-                        /*
-                        System.out.println((courses.size() + 2) + "What comment would you like to upvote?");
-                        do {
-                            try {
-                                commentNumber = Integer.parseInt(scan.nextLine());
-                                break;
-                            } catch (Exception e) {
-                                System.out.println("Invalid entry, please try again.");
-                            }
-                        } while (true);
-						boolean stu = false;
-						boolean tea = false;
-                        for (int x = 0; x < boards.size(); x++) {
-							try {
-								if (boards.get(x).addLike(students.get(sessionID))) {
-									stu = true;
-								}
-							} catch (Exception e) {
-								stu = false;
-							}
-							try {
-								if (boards.get(x).addLike(teachers.get(sessionID))) {
-									tea = true;
-								}
-							} catch (Exception e) {
-								tea = false;
-							}
-							if (tea) {
-								if (boards.get(x).getID() == commentNumber) {
-									boards.get(x).setLikes(boards.get(x).getLikes() + 1);
-									break;
-								}
-							}
-                        }
-						*/
             } while (input != 4);
 		}
             System.out.println("Goodbye! Have a nice day!");

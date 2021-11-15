@@ -18,8 +18,9 @@ public class Comment implements java.io.Serializable {
     private ArrayList<Person> usersWhoLiked;
     private ArrayList<Comment> repliesToComment;
 
-    public Comment(String parentID, String commentID, int ownerID, String content, int likes, int grade, String dateAndTime,
-                   ArrayList<Person> usersWhoLiked, ArrayList<Comment> repliesToComment) {
+    public Comment(String parentID, String commentID, int ownerID, String content, int likes,
+           int grade, String dateAndTime, ArrayList<Person> usersWhoLiked,
+                  ArrayList<Comment> repliesToComment) {
         this.parentID = parentID;
         this.commentID = commentID;
         this.ownerID = ownerID;
@@ -31,7 +32,8 @@ public class Comment implements java.io.Serializable {
         this.repliesToComment = repliesToComment;
     }
 
-    public Comment(String parentID, String commentID, int ownerID, String content, int likes, int grade, String dateAndTime, ArrayList<Person> usersWhoLiked) {
+    public Comment(String parentID, String commentID, int ownerID, String content, int likes,
+           int grade, String dateAndTime, ArrayList<Person> usersWhoLiked) {
         this.parentID = parentID;
         this.commentID = commentID;
         this.ownerID = ownerID;
@@ -44,7 +46,8 @@ public class Comment implements java.io.Serializable {
         this.repliesToComment = repliesToComment;
     }
 
-    public Comment(String parentID, String commentID, int ownerID, String content, int likes, int grade, String dateAndTime) {
+    public Comment(String parentID, String commentID, int ownerID, String content,
+           int likes, int grade, String dateAndTime) {
         this.parentID = parentID;
         this.commentID = commentID;
         this.ownerID = ownerID;
@@ -106,15 +109,16 @@ public class Comment implements java.io.Serializable {
         }
     }
 
-    public void createReplyToComment(String theCommentID, int theOwnerID, String theContent,
-                                     int theLikes, String theDateAndTime, ArrayList<Person> theUsersWhoLiked) {
+    public void createReplyToComment(String theCommentID, int theOwnerID,
+           String theContent, int theLikes, String theDateAndTime,
+                  ArrayList<Person> theUsersWhoLiked) {
         repliesToComment.add(new Comment(this.commentID, theCommentID, theOwnerID, theContent, theLikes, 0,
                 theDateAndTime, theUsersWhoLiked));
     }
 
     public void deleteReplyToComment(String commentID) {
         for (Comment c: repliesToComment) {
-            if(c.getCommentID().equals(commentID)) {
+            if (c.getCommentID().equals(commentID)) {
                 repliesToComment.remove(c);
             }
         }

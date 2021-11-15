@@ -16,7 +16,8 @@ public class Board implements java.io.Serializable {
     private ArrayList<Comment> comments;
 	private ArrayList<Integer> usersWhoVoted;
 
-    public Board(String course, String topic, String boardID, String dateAndTime, ArrayList<Comment> comments, ArrayList<Integer> usersWhoVoted) {
+    public Board(String course, String topic, String boardID, String dateAndTime,
+           ArrayList<Comment> comments, ArrayList<Integer> usersWhoVoted) {
         this.course = course;
         this.topic = topic;
         this.boardID = boardID;
@@ -25,7 +26,8 @@ public class Board implements java.io.Serializable {
 		this.usersWhoVoted = usersWhoVoted;
     }
 
-	public Board(String course, String topic, String boardID, String dateAndTime, ArrayList<Comment> comments) {
+	public Board(String course, String topic, String boardID,
+           String dateAndTime, ArrayList<Comment> comments) {
 		this.course = course;
 		this.topic = topic;
 		this.boardID = boardID;
@@ -48,13 +50,14 @@ public class Board implements java.io.Serializable {
     }
 
     //this creates a comment on the board itself (first level comment)
-    public void createComment(String commentID, int ownerID, String content, int likes, String theDateAndTime) {
+    public void createComment(String commentID, int ownerID, String content,
+           int likes, String theDateAndTime) {
         comments.add(new Comment(this.boardID, commentID, ownerID, content, likes, 0, theDateAndTime));
     }
 
     public void deleteComment(String commentID) {
         for (Comment c: comments) {
-            if(c.getCommentID().equals(commentID)) {
+            if (c.getCommentID().equals(commentID)) {
                 comments.remove(c);
             }
         }
