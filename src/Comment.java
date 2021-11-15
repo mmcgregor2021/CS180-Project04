@@ -58,6 +58,11 @@ public class Comment implements java.io.Serializable {
         this.repliesToComment = repliesToComment;
     }
 
+    public String toString() {
+        String string = ("Content of the comment: " + content + "\n Current grade on the comment: " + grade);
+        return string;
+    }
+
     //returns true if the like was added successfully, and false if the
     //passed in user has already liked the comment
     public boolean addLike(Person user) {

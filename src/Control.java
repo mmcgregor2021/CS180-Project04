@@ -635,7 +635,7 @@ public class Control {
 								if (boardSelection > boards.size() + 2 && sessionAuthority) {
 									System.out.println(invalidOption);
 									again = true;
-								} else if (boardSelection > boards.size() && !sessionAuthority) {
+								} else if (boardSelection > boards.size() + 1 && !sessionAuthority) {
 									System.out.println(invalidOption);
 									again = true;
 								}
@@ -647,6 +647,8 @@ public class Control {
 								boardCounter++;
 								boards.add(createBoard(scan, selectedCourse, boardCounter));
 							}
+
+
 
 							//Print all the comments from a specific student.
 							int studentID = 0;
@@ -764,6 +766,7 @@ public class Control {
 											System.out.println("Comment was successfully created!");
 											break;
 										case 2:
+											//code to vote on a comment
 											if (boards.get(boardSelection - 1).getUsersWhoVoted().contains(sessionID)) {
 												System.out.println("Sorry. You have already voted on this board.");
 											} else {
@@ -777,6 +780,7 @@ public class Control {
 											}
 											break;
 										case 3:
+											//code to reply to a comment
 											if (currentBoardComments.size() == 0) {
 												System.out.println("Sorry. This board does not have any comments yet.");
 											} else {
@@ -828,9 +832,17 @@ public class Control {
 						System.out.println("Please initialize a discussion board for the course.");
 						boards.add(createBoard(scan, courseName, boardCounter));
 					} else {
-						//Student can view the grade on all their comments.
+						//Student views all their posts and their grades.
+						System.out.println("These are all the comments for ID " + sessionID);
+						for (int i = 0; i < comments.size(); i++) {
+							if(comments.get(i).getOwnerID() == sessionID) {
+								System.out.println(comments.get(i).toString());
+								//Could someone make a toString method for comment so that this works?
+							}
+						}
 					}
 				}
+
 						//this is the Voting section
                         //add in when content of boards is able to be printed out
 						//sorts the students into an array by likes
