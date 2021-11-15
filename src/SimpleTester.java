@@ -1,6 +1,11 @@
 import java.util.Date;
 import java.util.ArrayList;
 
+/**
+ * Tests some of the functions in LogInTest, Comment and Board using a main method and print statements.
+ * @author Astrid Popovici
+ * @version November 15, 2021
+ */
 public class SimpleTester {
     public static void main(String[] args) {
         //Test LogInTest
