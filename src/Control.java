@@ -518,12 +518,12 @@ public class Control {
                                     if (first.length() != 0) {
                                         for (int i = 0; i < students.size(); i++) {
                                             if (students.get(i).getID() == sessionID) {
-                                                students.get(i).setLastName(password);
+                                                students.get(i).setLastName(last);
                                             }
                                         }
                                         for (int i = 0; i < teachers.size(); i++) {
                                             if (teachers.get(i).getID() == sessionID) {
-                                                teachers.get(i).setLastName(password);
+                                                teachers.get(i).setLastName(last);
                                             }
                                         }
                                         System.out.println("Your last name has been changed.");
@@ -793,7 +793,7 @@ public class Control {
 											Date commentDate = new Date();
 											String commentID = "C" + commentCounter;
 											Comment createdComment = new Comment(parentBoardID, commentID, sessionID,
-											       sessionName + "\n\t" + content, 0, 0, commentDate.toString());
+											       "Student: " + sessionID + "\n\t" + content, 0, 0, commentDate.toString());
 											boards.get(boardSelection - 1).getComments().add(createdComment);
 											comments.add(createdComment);
 											System.out.println("Comment was successfully created!\n");
@@ -869,13 +869,17 @@ public class Control {
 						boards.add(createBoard(scan, courseName, boardCounter));
 					} else {
 						//Student views all their posts and their grades.
-						System.out.println("These are all the comments for ID " + sessionID);
+						ArrayList<Comment> studentComments = new ArrayList<>();
 						for (int i = 0; i < comments.size(); i++) {
 							if (comments.get(i).getOwnerID() == sessionID) {
-								System.out.println(comments.get(i).toString());
-
+								studentComments.add(comments.get(i));
 							}
 						}
+						if (studentComments.size() == 0) {
+							System.out.println("You have not posted to any boards yet.");
+						}
+						System.out.println("These are all the comments for ID " + sessionID);
+
 					}
 				}
 
