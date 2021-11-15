@@ -33,7 +33,7 @@ public class TestCases {
     }
 
     @Test(timeout = 1000)
-    public void signUp() {
+    public void signUpAndLogOutTeacher() {
         try {
             String expected = "Welcome to the Discussion Board! What would you like to do?\n"  +
                     "1. Sign up\n2. Log in\n" + //user enters 3
@@ -51,6 +51,8 @@ public class TestCases {
                     "Please enter your last name.\n" + //user enters a non-blank last name
                     "Are you a teacher? (y for yes, anything else for no)\n" + //user enters y
                     "Successfully Signed up\n" +
+                    "User: mitch daniels\n" +
+                    //TODO add what would you like to do menu
                     "Goodbye! Have a nice day!";
 
             String input = "3\n" +
@@ -74,8 +76,88 @@ public class TestCases {
     }
 
     @Test(timeout = 1000)
+    public void signUpAndEditAccountStudent() {
+        try {
+            String expected = "Welcome to the Discussion Board! What would you like to do?\n"  +
+                    "1. Sign up\n2. Log in\n" + //user enters 1
+                    "Your UserID is " + 1 + ". Please remember this number!\n" +
+                    "Please enter a password.\n" + //b0ilerup
+                    "Please enter your first name.\n" + //purdue
+                    "Please enter your last name.\n" + //pete
+                    "Are you a teacher? (y for yes, anything else for no)\n" + //user enters n
+                    "Successfully Signed up\n" +
+                    "User: purdue pete \n\n" + //double newline char is intentional
+                    "What would you like to do?\n" +
+                    "1. Edit account\n" +
+                    "2. Delete account\n" +
+                    "3. View courses\n" +
+                    "4. Logout\n" +
+                    "5. View your comments and their grades\n" +
+                    "Which field would you like to modify?\n" +
+                    "1. password\n" +
+                    "2. first name\n" +
+                    "3. last name\n" +
+                    "4. go back\n" +
+                    "Please enter a new password.\n" +
+                    "Your password has been changed.\n" +
+                    "Which field would you like to modify?\n" +
+                    "1. password\n" +
+                    "2. first name\n" +
+                    "3. last name\n" +
+                    "4. go back\n" +
+                    "Please enter a new first name.\n" +
+                    "Your first name has been changed.\n" +
+                    "Which field would you like to modify?\n" +
+                    "1. password\n" +
+                    "2. first name\n" +
+                    "3. last name\n" +
+                    "4. go back\n" +
+                    "Please enter a new last name.\n" +
+                    "Your last name has been changed.\n" +
+                    "Which field would you like to modify?\n" +
+                    "1. password\n" +
+                    "2. first name\n" +
+                    "3. last name\n" +
+                    "4. go back\n" +
+                    "User: iu paulina\n" +
+                    "\n" +
+                    "What would you like to do?\n" +
+                    "1. Edit account\n" +
+                    "2. Delete account\n" +
+                    "3. View courses\n" +
+                    "4. Logout\n" +
+                    "5. View your comments and their grades\n" +
+                    "Are you sure you would like to delete your account? (y for yes, anything else for no)\n" +
+                    "Your account has been deleted!\n" +
+                    "Goodbye! Have a nice day!\n";
+
+            String input = "1\n" +
+                    "b0ilerup\n" +
+                    "purdue\n" +
+                    "pete\n" +
+                    "n\n" +
+                    "1\n" + //edit account
+                    "1\n" + //edit password
+                    "hailpurdue\n" +
+                    "2\n" + //edit first name
+                    "iu\n" +
+                    "3\n" + //edit last name
+                    "paulina\n" +
+                    "4\n" + //go back
+                    "2\n"; //delete account
+
+            receiveInput(input);
+            Control.main(new String[0]);
+            String actual = getOutput();
+            Assert.assertEquals("The output doesn't match the expected output!", expected, actual);
+        } catch (Exception e){
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test(timeout = 1000)
     public void signIn() {
-        
          try {
             String expected = "Welcome to the Discussion Board! What would you like to do?\n" +
             "1. Sign up\n2. Log in\n" + // user enters 2
