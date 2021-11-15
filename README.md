@@ -38,7 +38,7 @@ Represents a reply to a discussion board, or a comment on a reply.  Tested in th
 - Implements Java's Serializable interface
 
 ### Control
-Handles control flow for the project.  This allows the user to interact with the classes and files using the command line interface.  We tested this class manually, and using the test cases in the TestCases class.  Instantiates object of type:
+Handles control flow for the project.  This allows the user to interact with the classes and files using the command line interface.  We tested this class manually, and using the test cases in the TestCases class.  Instantiates objects of type:
 - Student
 - Teacher
 - Board
