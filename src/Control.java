@@ -882,7 +882,7 @@ public class Control {
 							for (int x = 0; x < students.length; x++) {
 								sortedStudents.add(students.get(x));
 							}
-							for (int x = 0; x < students.length; x++) {
+							for (int x = 1; x < students.length; x++) {
 								done = true;
 								for (int y = 0; y < students.length - 1 - x; y++) {
 									if (sortedStudents.get(y).getLikes() < sortedStudents.get(y + 1).getLikes()) {
