@@ -1,4 +1,4 @@
-public class accountTest {
+public class AccountTester {
 
     public static void main(String[] args) {
 
