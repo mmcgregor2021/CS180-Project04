@@ -173,26 +173,23 @@ public class TestCases {
         }
     }
 
-
-
-
-    /**
     @Test(timeout = 1000)
     public void signIn() {
          try {
             String expected = "Welcome to the Discussion Board! What would you like to do?\n" +
             "1. Sign up\n2. Log in\n" + // user enters 2
-            "Please enter your ID.\n" + //user enters bob
+            "Please enter your ID number.\n" + //user enters bob
             "Please enter a valid ID number\n" + //user enters 1`
-            "Please enter your password\n" + //user enters ""
-            "Please enter a valid password\n" + //user enters hammerd0wn
-            "The account with this ID does not exist\n";
+            "Please enter your password.\n" + //user enters ""
+            "Please enter a valid password.\n" +
+            "The entered password is incorrect\n" + //user enters a random string
+            "Goodbye! Have a nice day!\n";
 
             String input = "2\n" +
                         "bob\n" +
                         "1\n" +
                         "\n" +
-                        "hammerd0wn\n";
+                        "as;dlkfjasdlf;kjsad\n";
             receiveInput(input);
             Control.main(new String[0]);
             String actual = getOutput();
@@ -202,7 +199,7 @@ public class TestCases {
             fail();
         }
 
-    } **/
+    }
 
     private void receiveInput(String str) {
         testIn = new ByteArrayInputStream(str.getBytes());
