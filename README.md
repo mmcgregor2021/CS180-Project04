@@ -15,16 +15,16 @@ Grant McCord--submitted Vocareum workspace
 
 ## Descriptions of classes
 ### Board
-Represents a discussion board.  Tested 
+Represents a discussion board.  Tested in the SimpleTester class.
 
 ### Comment
-Represents a reply to a discussion board, or a comment on a reply.
+Represents a reply to a discussion board, or a comment on a reply.  Tested in the SimpleTester class.
 
 ### Control
 Handles control flow for the project.  This allows the user to interact with the classes and files using the command line interface.  We tested this class manually, and using the test cases in the TestCases class.
 
 ### LogInTest
-Implements methods used to sign up, log in, and edit and delete accounts.
+Implements methods used to sign up, log in, and edit and delete accounts.  Tested in the SimpleTester class.
 
 ### Person
 Defines a person with a first name, last name, password, and ID.
