@@ -652,59 +652,6 @@ public class Control {
 								boards.add(createBoard(scan, selectedCourse, boardCounter));
 							}
 
-
-
-							//Print all the comments from a specific student.
-							int studentID = 0;
-							if (boardSelection == boards.size() + 2) {
-								do {
-									System.out.println("Enter the student ID of the student comments you want to grade");
-									try {
-										again = true;
-										studentID = Integer.parseInt(scan.nextLine());
-										for (int i = 0; i < students.size(); i++) {
-											if (students.get(i).getID() == studentID) {
-												again = false;
-											}
-										}
-										if (again)
-											System.out.println("Invalid ID, please try again");
-									} catch (Exception e) {
-										System.out.println("Invalid ID, please try again.");
-									}
-								} while (again);
-
-								System.out.println("These are all the comments for ID " + studentID);
-								for (int i = 0; i < comments.size(); i++) {
-									if (comments.get(i).getOwnerID() == studentID) {
-										System.out.println(comments.get(i).toString());
-										//Could someone make a toString method for comment so that this works?
-									}
-								}
-
-								//Code to assign a grade to each student comment
-								int commentNumber = 1;
-								for (int i = 0; i < comments.size(); i++) {
-									if (comments.get(i).getOwnerID() == studentID) {
-										System.out.println("What grade would you like to assign to comment " + commentNumber);
-										int grade = 0;
-										do {
-											again = false;
-											try {
-												grade = Integer.parseInt(scan.nextLine());
-												if (grade < 0 || grade > 100)
-													System.out.println("Invalid grade, please try again");
-											} catch (Exception e) {
-												System.out.println("Invalid grade, please try again");
-												again = true;
-											}
-										} while (again);
-										comments.get(i).setGrade(grade);
-										System.out.println("The grade is set to " + comments.get(i).getGrade());
-									}
-								}
-							}
-
 							//Print all comments on a board.
 							int commentSelection = 0;
 							if (boardSelection <= boards.size()) {
@@ -886,8 +833,62 @@ public class Control {
 							for (int i = 0; i < studentComments.size(); i++){
 								System.out.println(studentComments.get(i).toString(boards));
 							}
-							System.out.println("Press enter to return to menu.");
-							String returnToMenu = scan.nextLine();
+						}
+						System.out.println("Press enter to return to menu.");
+						String returnToMenu = scan.nextLine();
+					}
+				} else if (input == 6 && sessionAuthority) {
+					//Print all the comments from a specific student.
+					if (comments.size() == 0) {
+						System.out.println("There are no comments that have been posted to any boards yet.");
+					} else {
+						int studentID = 0;
+						studentIDLoop:
+						while (true) {
+							System.out.println("Enter the student ID of the student whose comments you want to grade.");
+							try {
+								studentID = Integer.parseInt(scan.nextLine());
+								for (int i = 0; i < students.size(); i++) {
+									if (students.get(i).getID() == studentID) {
+										break studentIDLoop;
+									}
+								}
+								System.out.println("Inputted student ID cannot be found. Please try again.");
+							} catch (Exception e) {
+								System.out.println(notInteger);
+							}
+						}
+
+						System.out.println("These are all the comments for ID " + studentID);
+						for (int i = 0; i < comments.size(); i++) {
+							if (comments.get(i).getOwnerID() == studentID) {
+								System.out.println(comments.get(i).toString(boards));
+							}
+						}
+
+						//Code to assign a grade to each student comment
+						for (int i = 0; i < comments.size(); i++) {
+							if (comments.get(i).getOwnerID() == studentID) {
+								System.out.println("What grade would you like to assign to comment " + (i + 1) + "?");
+								String gradeRepeat1 = "If a grade has already been assigned and you do not wish to change it,";
+								String gradeRepeat2 = " type in the same grade.";
+								System.out.println(gradeRepeat1 + gradeRepeat2);
+								int grade = 0;
+								while (true) {
+									try {
+										grade = Integer.parseInt(scan.nextLine());
+										if (grade < 0 || grade > 100) {
+											System.out.println("Invalid grade, please try again");
+										} else {
+											break;
+										}
+									} catch (Exception e) {
+										System.out.println("Invalid grade, please try again");
+									}
+								}
+								comments.get(i).setGrade(grade);
+								System.out.println("The grade is set to " + comments.get(i).getGrade());
+							}
 						}
 					}
 				}
