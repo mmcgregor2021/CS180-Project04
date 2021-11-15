@@ -58,9 +58,24 @@ public class Comment implements java.io.Serializable {
         this.repliesToComment = repliesToComment;
     }
 
-    public String toString() {
-        String string = ("Content of the comment: " + content + "\n Current grade on the comment: " + grade);
-        return string;
+    public String toString(ArrayList<Board> boards) {
+        String course = "";
+        String topic = "";
+        for (int i = 0; i < boards.size(); i++) {
+            if (parentID.equals(boards.get(i).getBoardID())) {
+                course = boards.get(i).getCourse();
+                topic = boards.get(i).getTopic();
+                break;
+            }
+        }
+        String part1 = "Course: " + course + "\n";
+        String part2 = "Forum Topic: " + topic + "\n";
+        String part3 = "Comment: " + content + "\n";
+        String part4 = "Grade Assigned: " + grade + "\n";
+        if (grade == 0) {
+            part4 += "(a grade of 0 could mean that your comment has not been graded yet)\n";
+        }
+        return part1 + part2 + part3 + part4;
     }
 
     //returns true if the like was added successfully, and false if the

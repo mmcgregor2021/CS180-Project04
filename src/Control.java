@@ -793,7 +793,7 @@ public class Control {
 											Date commentDate = new Date();
 											String commentID = "C" + commentCounter;
 											Comment createdComment = new Comment(parentBoardID, commentID, sessionID,
-											       "Student: " + sessionID + "\n\t" + content, 0, 0, commentDate.toString());
+											       content, 0, 0, commentDate.toString());
 											boards.get(boardSelection - 1).getComments().add(createdComment);
 											comments.add(createdComment);
 											System.out.println("Comment was successfully created!\n");
@@ -876,10 +876,15 @@ public class Control {
 							}
 						}
 						if (studentComments.size() == 0) {
-							System.out.println("You have not posted to any boards yet.");
+							System.out.println("You have not posted to any boards yet.\n");
+						} else {
+							System.out.println("These are all the comments for ID " + sessionID + "\n");
+							for (int i = 0; i < studentComments.size(); i++){
+								System.out.println(studentComments.get(i).toString(boards));
+							}
+							System.out.println("Press enter to return to menu.");
+							String returnToMenu = scan.nextLine();
 						}
-						System.out.println("These are all the comments for ID " + sessionID);
-
 					}
 				}
 

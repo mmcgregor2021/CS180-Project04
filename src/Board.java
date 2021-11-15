@@ -68,6 +68,7 @@ public class Board implements java.io.Serializable {
         for (int i = comments.size() - 1; i >= 0; i--) {
             Comment c = comments.get(i);
             //indent
+            toReturn += "\n\tStudent ID: " + c.getOwnerID();
             toReturn += "\n\t" + c.getContent() + " | " + c.getDateAndTime();
             toReturn += "\n\t" + c.getLikes() + " votes | Comment ID: " + c.getCommentID();
             for (int j = c.getRepliesToComment().size() - 1; j >= 0; j--) {
