@@ -27,15 +27,18 @@ public class SimpleTester {
 
         ArrayList<Comment> repliesToComment = new ArrayList<Comment>();
         Comment r = new Comment("C1", "C2", 1,
-                "Idk man", 3, 0, date.toString());
+                "This is a reply to a comment.", 3, 0, date.toString());
         repliesToComment.add(r);
 
-        Comment c = new Comment("B1", "C1", 2,
-                "How do we complete project 4 pls help", 1, 95, date.toString(),
-                usersWhoLiked, repliesToComment);
+        Comment c1 = new Comment("B1", "C1", 2,
+                "This is a comment.", 1, 95, date.toString());
+        Comment c2 = new Comment("B1", "C2", 2,
+                "This is another comment.", 3, 95, date.toString());
+        c1.setRepliesToComment(repliesToComment);
 
         ArrayList<Comment> commentList = new ArrayList<Comment>();
-        commentList.add(c);
+        commentList.add(c1);
+        commentList.add(c2);
 
         Board b = new Board("CS 180", "Project 4", "B1", date.toString(),
                 commentList, usersWhoVoted);
