@@ -7,7 +7,7 @@
 - Kris Leungwattanakij 
 
 ## How to Compile and Run the Project
-Compile and run the Control.java file in the command line interface of your choice.
+Compile and run the Control.java file in the command line interface of your choice.  The text files (students.txt, teachers.txt, boards.txt, comments.txt, and counters.txt) will be generated during the first run.
 
 ## Project Submission
 Jainam Doshi-submitted report on Brightspace
@@ -36,7 +36,7 @@ Defines a person with a first name, last name, password, and ID.
 Tests some functionality of the Board, Comment and LogInTest classes using print statements.
 
 ### Student 
-A type of person without the authority to do teacher-specific actions.
+A type of person without the authority to do student-specific actions.
 - Implements Java's Serializable interface
 - Extends Person
 
