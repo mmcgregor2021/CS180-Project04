@@ -1,3 +1,5 @@
+//IMPORTANT NOTE: please reset the counters file to 0;0;0 and empty all other files before running the tests
+
 import java.io.*;
 import org.junit.Test;
 import org.junit.After;
@@ -11,7 +13,7 @@ import static org.junit.Assert.*;
 
 /**
  * The test cases for the project.
- * @author Purdue CS, Astrid Popovici
+ * @author Purdue CS, Astrid Popovici, Jainam Doshi
  * @version November 13, 2021
  */
 
@@ -22,6 +24,13 @@ public class TestCases {
     private ByteArrayOutputStream testOut;
 
     public static void main(String[] args) {
+        //reset all counters to 0
+        try (PrintWriter pw = new PrintWriter(new FileWriter("counters.txt"))) {
+            pw.println("0;0;0");
+        } catch (Exception e) {
+            System.out.println("Failed to reset counters to 0.");
+        }
+
         Result result = JUnitCore.runClasses(TestCases.class);
         if (result.wasSuccessful()) {
             System.out.println("Excellent - Test ran successfully");
@@ -33,6 +42,7 @@ public class TestCases {
     }
 
     @Test(timeout = 1000)
+    //USER ID: 1
     public void signUpAndLogOutTeacher() {
         try {
             String expected = "Welcome to the Discussion Board! What would you like to do?\n"  +
@@ -42,18 +52,22 @@ public class TestCases {
                     "Your UserID is " + 1 + ". Please remember this number!\n" +
                     "Please enter a password.\n" + //user enters a blank password
                     "Please enter a non-blank password.\n" +
-                    "Please enter a password.\n" + //user enters a non-blank password
                     "Please enter your first name.\n" + //user enters a blank first name
                     "You must have a first name.\n" +
-                    "Please enter your first name.\n" + //user enters a non-blank first name
-                    "Please enter your last name.\n" + //user enters a blank last name
+                    "Please enter your last name.\n" + //user enters a non-blank first name
                     "You must have a last name.\n" +
-                    "Please enter your last name.\n" + //user enters a non-blank last name
                     "Are you a teacher? (y for yes, anything else for no)\n" + //user enters y
                     "Successfully Signed up\n" +
+                    "\n" +
                     "User: mitch daniels\n" +
-                    //TODO add what would you like to do menu
-                    "Goodbye! Have a nice day!";
+                    "What would you like to do?\n" +
+                    "1. Edit account\n" +
+                    "2. Delete account\n" +
+                    "3. View courses\n" +
+                    "4. Logout\n" +
+                    "5. Create new course\n" +
+                    "6. Grade student posts\n" +
+                    "Goodbye! Have a nice day!\n";
 
             String input = "3\n" +
                     "1\n" +
@@ -64,7 +78,8 @@ public class TestCases {
                     "\n" +
                     "daniels\n" +
                     "y\n" +
-                    "4\n";
+                    "4\n"; //log out
+
             receiveInput(input);
             Control.main(new String[0]);
             String actual = getOutput();
@@ -76,17 +91,18 @@ public class TestCases {
     }
 
     @Test(timeout = 1000)
+    //USER ID: 2
     public void signUpAndEditAccountStudent() {
         try {
             String expected = "Welcome to the Discussion Board! What would you like to do?\n"  +
                     "1. Sign up\n2. Log in\n" + //user enters 1
-                    "Your UserID is " + 1 + ". Please remember this number!\n" +
+                    "Your UserID is " + 2 + ". Please remember this number!\n" +
                     "Please enter a password.\n" + //b0ilerup
                     "Please enter your first name.\n" + //purdue
                     "Please enter your last name.\n" + //pete
                     "Are you a teacher? (y for yes, anything else for no)\n" + //user enters n
-                    "Successfully Signed up\n" +
-                    "User: purdue pete \n\n" + //double newline char is intentional
+                    "Successfully Signed up\n\n" +
+                    "User: purdue pete\n" + //double newline char is intentional
                     "What would you like to do?\n" +
                     "1. Edit account\n" +
                     "2. Delete account\n" +
@@ -119,15 +135,15 @@ public class TestCases {
                     "2. first name\n" +
                     "3. last name\n" +
                     "4. go back\n" +
-                    "User: iu paulina\n" +
                     "\n" +
+                    "User: iu paulina\n" +
                     "What would you like to do?\n" +
                     "1. Edit account\n" +
                     "2. Delete account\n" +
                     "3. View courses\n" +
                     "4. Logout\n" +
                     "5. View your comments and their grades\n" +
-                    "Are you sure you would like to delete your account? (y for yes, anything else for no)\n" +
+                    "Are you sure you would like to delete your account?(y for yes, anything else for no)\n" +
                     "Your account has been deleted!\n" +
                     "Goodbye! Have a nice day!\n";
 
@@ -144,7 +160,8 @@ public class TestCases {
                     "3\n" + //edit last name
                     "paulina\n" +
                     "4\n" + //go back
-                    "2\n"; //delete account
+                    "2\n" +
+                    "y\n"; //delete account
 
             receiveInput(input);
             Control.main(new String[0]);
@@ -155,6 +172,7 @@ public class TestCases {
             fail();
         }
     }
+
 
     @Test(timeout = 1000)
     public void signIn() {

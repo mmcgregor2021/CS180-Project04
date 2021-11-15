@@ -1,5 +1,5 @@
 TEST CASES WRITTEN FOR:
-- signing up (teacher), logging in (teacher)
+- signing up (teacher), logging in (teacher), logging out (teacher)
 - signing up (student), editing an account (student), deleting an account (student)
 
 STILL NEED TO TEST:
@@ -8,5 +8,4 @@ STILL NEED TO TEST:
 - teacher: editing the forum topic, deleting the board
 - student: commenting on the board, voting on/liking a comment
 - either teacher or student: replying to a comment
-- logging out
-- logging back in--ensure data persistence works as expected
+- check files--ensure data persistence works as expected
