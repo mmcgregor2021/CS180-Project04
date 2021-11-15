@@ -162,7 +162,7 @@ public class Control {
             }
         }
 
-        for (int j = 0; j <teachers.size(); j++) {
+        for (int j = 0; j < teachers.size(); j++) {
             if (teachers.get(j).getID() == id) {
                 if (teachers.get(j).getPassword().equals(password)) {
                     return 3; //correct login
@@ -453,7 +453,7 @@ public class Control {
 					}
                     break;
         }
-	}
+		}
 	//End of Login route
 
     //main loop once logged in
@@ -641,13 +641,13 @@ public class Control {
 									selectedCourse = courses.get(courseSelection - 1);
 									for (int i = 0; i < boards.size(); i++) {
 										if (boards.get(i).getCourse().equals(selectedCourse)) {
-											System.out.println(counter + ". Discussion Board: " + boards.get(i).getTopic());
+											System.out.println(counter + ". Discussion Board: " +
+											       boards.get(i).getTopic());
 											counter++;
 										}
 									}
 								}
 
-								//Give teachers the option to add a board or view all the comments of a specific student.
 								if (sessionAuthority) {
 									System.out.println((counter) + ". Add a board");
 									counter++;
@@ -691,9 +691,11 @@ public class Control {
 								while (true) {
 									try {
 										if (sessionAuthority) {
-											System.out.println("1. Edit forum topic\n2. Delete board\n3. Reply to a comment\n4. View dashboard\n5. Go back");
+											System.out.println("1. Edit forum topic\n2. Delete board" +
+											       "\n3. Reply to a comment\n4. View dashboard\n5. Go back");
 										} else {
-											System.out.println("1. Add comment\n2. Vote for a comment\n3. Reply to a comment\n4. Go back");
+											System.out.println("1. Add comment\n2. Vote for a comment" +
+											       "\n3. Reply to a comment\n4. Go back");
 										}
 										commentSelection = Integer.parseInt(scan.nextLine());
 										break;
@@ -718,7 +720,8 @@ public class Control {
 												break;
 											}
 										case 2:
-											System.out.println("Are you sure you would like to delete the board?\n(y for yes, anything else for no)");
+											System.out.println("Are you sure you would like to delete the board?" +
+											       "\n(y for yes, anything else for no)");
 											String deleteBoardConfirmation = scan.nextLine();
 											if (deleteBoardConfirmation.equals("y")) {
 												String deletedBoardID = boards.get(boardSelection - 1).getBoardID();
@@ -728,7 +731,8 @@ public class Control {
 													}
 												}
 												boards.remove(boardSelection - 1);
-												System.out.println("The board and all of its comments were successfully deleted!");
+												System.out.println("The board and all of its " +
+												       "comments were successfully deleted!");
 											}
 											break;
 										case 3:
@@ -736,7 +740,8 @@ public class Control {
 											if (currentBoardComments.size() == 0) {
 												System.out.println("Sorry. This board does not have any comments yet.");
 											} else {
-												String[] indexAndID = grabCommentIndexAndID(scan, currentBoardComments).split(" ");
+												String[] indexAndID = grabCommentIndexAndID(scan,
+												       currentBoardComments).split(" ");
 												indexOfParentComment = Integer.parseInt(indexAndID[0]);
 												parentCommentID = indexAndID[1];
 												while (true) {
@@ -750,9 +755,11 @@ public class Control {
 												}
 												Date teacherReplyDate = new Date();
 												String teacherReplyID = "Teacher Reply - NO ID";
-												Comment createdTeacherReply = new Comment(parentCommentID, teacherReplyID, sessionID,
-												       "Teacher Reply - " + replyToComment, 0, 0, teacherReplyDate.toString());
-												currentBoardComments.get(indexOfParentComment).getRepliesToComment().add(createdTeacherReply);
+												Comment createdTeacherReply = new Comment(parentCommentID,
+												       teacherReplyID, sessionID, "Teacher Reply - " +
+													          replyToComment, 0, 0, teacherReplyDate.toString());
+												currentBoardComments.get(indexOfParentComment)
+												       .getRepliesToComment().add(createdTeacherReply);
 												boards.get(boardSelection - 1).setComments(currentBoardComments);
 												System.out.println("Reply successfully addded.");
 											}
@@ -761,7 +768,8 @@ public class Control {
 											if (currentBoardComments.size() == 0) {
 												System.out.println("Sorry. This board does not have any comments yet.");
 											} else {
-												System.out.println("Would you like to view the comments in ascending or descending order?");
+												System.out.println("Would you like to view the " +
+												       "comments in ascending or descending order?");
 												System.out.println("(a for ascending, anything else for descending)");
 												String sortSelection = scan.nextLine();
 												boolean done = true;
@@ -772,7 +780,8 @@ public class Control {
 												for (int x = 1; x < currentBoardComments.size(); x++) {
 													done = true;
 													for (int y = 0; y < currentBoardComments.size() - 1 - x; y++) {
-														if (sortedComments.get(y).getLikes() < sortedComments.get(y + 1).getLikes()) {
+														if (sortedComments.get(y).getLikes()
+														       < sortedComments.get(y + 1).getLikes()) {
 															done = false;
 															Collections.swap(sortedComments, y, y + 1);
 														}
@@ -784,12 +793,14 @@ public class Control {
 												}
 												if (!sortSelection.equals("a")) {
 													for (int x = 0; x < sortedComments.size(); x++) {
-														System.out.println(sortedComments.get(x).dashboardToString(students));
+														System.out.println(sortedComments
+														       .get(x).dashboardToString(students));
 													}
 												} else {
 													Collections.reverse(sortedComments);
 													for (int x = 0; x < sortedComments.size(); x++) {
-														System.out.println(sortedComments.get(x).dashboardToString(students));
+														System.out.println(sortedComments
+														       .get(x).dashboardToString(students));
 													}
 												}
 											}
@@ -821,13 +832,17 @@ public class Control {
 											if (currentBoardComments.size() == 0) {
 												System.out.println("Sorry. This board does not have any comments yet.");
 											}
-											else if (boards.get(boardSelection - 1).getUsersWhoVoted().contains(sessionID)) {
+											else if (boards.get(boardSelection - 1)
+											       .getUsersWhoVoted().contains(sessionID)) {
 												System.out.println("Sorry. You have already voted on this board.");
 											} else {
-												String[] commentIndexIDArray = grabCommentIndexAndID(scan, currentBoardComments).split(" ");
+												String[] commentIndexIDArray = grabCommentIndexAndID(scan,
+												       currentBoardComments).split(" ");
 												int indexOfSelectedComment = Integer.parseInt(commentIndexIDArray[0]);
-												int currentNumVotes = currentBoardComments.get(indexOfSelectedComment).getLikes();
-												currentBoardComments.get(indexOfSelectedComment).setLikes(currentNumVotes + 1);
+												int currentNumVotes = currentBoardComments
+												       .get(indexOfSelectedComment).getLikes();
+												currentBoardComments.get(indexOfSelectedComment)
+												       .setLikes(currentNumVotes + 1);
 												boards.get(boardSelection - 1).setComments(currentBoardComments);
 												boards.get(boardSelection - 1).addUsersWhoVoted(sessionID);
 												System.out.println("Vote was successfully added.");
@@ -838,7 +853,8 @@ public class Control {
 											if (currentBoardComments.size() == 0) {
 												System.out.println("Sorry. This board does not have any comments yet.");
 											} else {
-												String[] commentIndexAndID = grabCommentIndexAndID(scan, currentBoardComments).split(" ");
+												String[] commentIndexAndID = grabCommentIndexAndID(scan,
+												       currentBoardComments).split(" ");
 												indexOfParentComment = Integer.parseInt(commentIndexAndID[0]);
 												parentCommentID = commentIndexAndID[1];
 												while (true) {
@@ -854,7 +870,8 @@ public class Control {
 												String replyID = "Reply - NO ID";
 												Comment createdReply = new Comment(parentCommentID, replyID,
 												       sessionID, replyToComment, 0, 0, replyDate.toString());
-												currentBoardComments.get(indexOfParentComment).getRepliesToComment().add(createdReply);
+												currentBoardComments.get(indexOfParentComment)
+												       .getRepliesToComment().add(createdReply);
 												boards.get(boardSelection - 1).setComments(currentBoardComments);
 												System.out.println("Reply successfully addded.");
 											}
@@ -900,7 +917,7 @@ public class Control {
 							System.out.println("You have not posted to any boards yet.");
 						} else {
 							System.out.println("These are all the comments for ID " + sessionID + "\n");
-							for (int i = 0; i < studentComments.size(); i++){
+							for (int i = 0; i < studentComments.size(); i++) {
 								System.out.println(studentComments.get(i).toString(boards));
 							}
 						}
@@ -939,9 +956,10 @@ public class Control {
 						//Code to assign a grade to each student comment
 						for (int i = 0; i < comments.size(); i++) {
 							if (comments.get(i).getOwnerID() == studentID) {
-								System.out.println("What grade would you like to assign to comment " + (i + 1) + "? (0-100)");
-								String gradeRepeat1 = "If a grade has already been assigned and you do not wish to change it,";
-								String gradeRepeat2 = " type in the same grade.";
+								System.out.println("What grade would you like to assign to comment " +
+								       (i + 1) + "? (0-100)");
+								String gradeRepeat1 = "If a grade has already been assigned and ";
+								String gradeRepeat2 = "you do not wish to change it, type in the same grade.";
 								System.out.println(gradeRepeat1 + gradeRepeat2);
 								int grade = 0;
 								while (true) {
@@ -964,7 +982,7 @@ public class Control {
 				}
             } while (input != 4);
 		}
-            System.out.println("Goodbye! Have a nice day!");
-            logOut(students, teachers, boards, comments, personCounter, boardCounter, commentCounter);
-        }
+        System.out.println("Goodbye! Have a nice day!");
+        logOut(students, teachers, boards, comments, personCounter, boardCounter, commentCounter);
     }
+}

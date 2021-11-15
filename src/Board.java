@@ -33,8 +33,8 @@ public class Board implements java.io.Serializable {
 		this.boardID = boardID;
 		this.dateAndTime = dateAndTime;
 		this.comments = comments;
-		ArrayList<Integer> usersWhoVoted = new ArrayList<>();
-		this.usersWhoVoted = usersWhoVoted;
+		ArrayList<Integer> votedUsers = new ArrayList<>();
+		this.usersWhoVoted = votedUsers;
 	}
 
     //overloaded constructor for when a new board is created and does not have comments or users who voted yet
@@ -45,8 +45,8 @@ public class Board implements java.io.Serializable {
         this.dateAndTime = dateAndTime;
         ArrayList<Comment> listOfComments = new ArrayList<>();
         this.comments = listOfComments;
-		ArrayList<Integer> usersWhoVoted = new ArrayList<>();
-		this.usersWhoVoted = usersWhoVoted;
+		ArrayList<Integer> votedUsers = new ArrayList<>();
+		this.usersWhoVoted = votedUsers;
     }
 
     //this creates a comment on the board itself (first level comment)

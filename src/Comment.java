@@ -38,8 +38,8 @@ public class Comment implements java.io.Serializable {
         this.likes = likes;
         this.grade = grade;
         this.dateAndTime = dateAndTime;
-        ArrayList<Comment> repliesToComment = new ArrayList<>();
-        this.repliesToComment = repliesToComment;
+        ArrayList<Comment> commentReplies = new ArrayList<>();
+        this.repliesToComment = commentReplies;
     }
 
     public String toString(ArrayList<Board> boards) {
@@ -89,9 +89,9 @@ public class Comment implements java.io.Serializable {
                 theDateAndTime));
     }
 
-    public void deleteReplyToComment(String commentID) {
+    public void deleteReplyToComment(String idOfComment) {
         for (Comment c: repliesToComment) {
-            if (c.getCommentID().equals(commentID)) {
+            if (c.getCommentID().equals(idOfComment)) {
                 repliesToComment.remove(c);
             }
         }
