@@ -78,6 +78,22 @@ public class Comment implements java.io.Serializable {
         return part1 + part2 + part3 + part4;
     }
 
+    public String dashboardToString(ArrayList<Student> students) {
+        String name = "";
+        for (int i = 0; i < students.size(); i++) {
+            Student student = students.get(i);
+            if (student.getID() == ownerID) {
+                name = student.getFirstName() + " " + student.getLastName();
+            }
+        }
+        String part1 = "Student Name: " + name + "\n";
+        String part2 = "Vote Count: " + likes + "\n";
+        String part3 = "Comment: " + content + "\n";
+        String part4 = "Time Posted: " + dateAndTime + "\n";
+
+        return part1 + part2 + part3 + part4;
+    }
+
     //returns true if the like was added successfully, and false if the
     //passed in user has already liked the comment
     public boolean addLike(Person user) {

@@ -447,7 +447,7 @@ public class Control {
                 while (true) {
                     try {
                         input = Integer.parseInt(scan.nextLine());
-                        if (input >= 1 && input <= 5) {
+                        if (input >= 1 && input <= 6) {
                             break;
                         } else {
                             System.out.println(invalidOption);
@@ -663,7 +663,7 @@ public class Control {
 								while (true) {
 									try {
 										if (sessionAuthority) {
-											System.out.println("1. Edit forum topic\n2. Delete board\n3. Reply to a comment\n4. Go back");
+											System.out.println("1. Edit forum topic\n2. Delete board\n3. Reply to a comment\n4. View dashboard\n5. Go back");
 										} else {
 											System.out.println("1. Add comment\n2. Vote for a comment\n3. Reply to a comment\n4. Go back");
 										}
@@ -730,7 +730,46 @@ public class Control {
 											}
 											break;
 										case 4:
+											if (currentBoardComments.size() == 0) {
+												System.out.println("Sorry. This board does not have any comments yet.");
+											} else {
+												System.out.println("Would you like to view the comments in ascending or descending order?");
+												System.out.println("(a for ascending, anything else for descending)");
+												String sortSelection = scan.nextLine();
+												boolean done = true;
+												ArrayList<Comment> sortedComments = new ArrayList<>();
+												for (int x = 0; x < currentBoardComments.size(); x++) {
+													sortedComments.add(currentBoardComments.get(x));
+												}
+												for (int x = 1; x < currentBoardComments.size(); x++) {
+													done = true;
+													for (int y = 0; y < currentBoardComments.size() - 1 - x; y++) {
+														if (sortedComments.get(y).getLikes() < sortedComments.get(y + 1).getLikes()) {
+															done = false;
+															Collections.swap(sortedComments, y, y + 1);
+														}
+													}
+													if (done) {
+														break;
+													}
+													sortedComments.add(currentBoardComments.get(x));
+												}
+												if (!sortSelection.equals("a")) {
+													for (int x = 0; x < sortedComments.size(); x++) {
+														System.out.println(sortedComments.get(x).dashboardToString(students));
+													}
+												} else {
+													Collections.reverse(sortedComments);
+													for (int x = 0; x < sortedComments.size(); x++) {
+														System.out.println(sortedComments.get(x).dashboardToString(students));
+													}
+												}
+											}
+										case 5:
 											//code to go back
+											break;
+										default:
+											System.out.println(invalidOption);
 											break;
 									}
 								} else {
@@ -794,6 +833,9 @@ public class Control {
 											break;
 										case 4:
 											//code to go back
+											break;
+										default:
+											System.out.println(invalidOption);
 											break;
 									}
 								}
@@ -869,7 +911,7 @@ public class Control {
 						//Code to assign a grade to each student comment
 						for (int i = 0; i < comments.size(); i++) {
 							if (comments.get(i).getOwnerID() == studentID) {
-								System.out.println("What grade would you like to assign to comment " + (i + 1) + "?");
+								System.out.println("What grade would you like to assign to comment " + (i + 1) + "? (0-100)");
 								String gradeRepeat1 = "If a grade has already been assigned and you do not wish to change it,";
 								String gradeRepeat2 = " type in the same grade.";
 								System.out.println(gradeRepeat1 + gradeRepeat2);
