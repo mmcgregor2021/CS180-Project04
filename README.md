@@ -35,11 +35,15 @@ Defines a person with a first name, last name, password, and ID.
 ### SimpleTester
 Tests some functionality of the Board, Comment and LogInTest classes using print statements.
 
-### Student (extends Person)
+### Student 
 A type of person without the authority to do teacher-specific actions.
+- Implements Java's Serializable interface
+- Extends Person
 
-### Teacher (extends Person)
+### Teacher 
 A type of person with the authority to do teacher-specific actions.
+- Implements Java's Serializable interface
+- Extends Person
 
 ### TestCases
 JUnitTests for certain parts of Control--signing up, editing an account, deleting an account, and logging out.
