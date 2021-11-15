@@ -41,7 +41,7 @@ public class LogInTest {
 
         }
 
-        for (int j = 0; j <teachers.size(); j++) {
+        for (int j = 0; j < teachers.size(); j++) {
             if (teachers.get(j).getID() == id) {
                 if (teachers.get(j).getPassword().equals(password)) {
                     return 3;
@@ -80,17 +80,17 @@ public class LogInTest {
     * @param  teachers   arraylist of teachers
     * @return      boolean prompting user successful or failure of login
     */
-    public void delete(int id, ArrayList<Student> students, ArrayList<Teacher> teachers) {
+    public void delete(int id, ArrayList<Student> listOfStudents, ArrayList<Teacher> listOfTeachers) {
 
-        for (int i = 0; i < students.size(); i++) {
-            if (students.get(i).getID() == id) {
-                students.remove(i);
+        for (int i = 0; i < listOfStudents.size(); i++) {
+            if (listOfStudents.get(i).getID() == id) {
+                listOfStudents.remove(i);
             }
         }
 
-        for (int j = 0; j < teachers.size(); j++) {
-            if (teachers.get(j).getID() == id) {
-                teachers.remove(j);
+        for (int j = 0; j < listOfTeachers.size(); j++) {
+            if (listOfTeachers.get(j).getID() == id) {
+                listOfTeachers.remove(j);
             }
         }
     }

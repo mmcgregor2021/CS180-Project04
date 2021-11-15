@@ -1,3 +1,8 @@
+/**
+* A testing class that tests all the functionalities of the Teacher and Student classes
+* @author Kris Leungwattanakij
+* @version November 15, 2021
+**/
 public class AccountTester {
 
     public static void main(String[] args) {
