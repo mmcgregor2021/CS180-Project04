@@ -174,6 +174,9 @@ public class TestCases {
     }
 
 
+
+
+    /**
     @Test(timeout = 1000)
     public void signIn() {
          try {
@@ -199,7 +202,7 @@ public class TestCases {
             fail();
         }
 
-    }
+    } **/
 
     private void receiveInput(String str) {
         testIn = new ByteArrayInputStream(str.getBytes());

@@ -76,8 +76,8 @@ public class Board implements java.io.Serializable {
             toReturn += "\n\t" + c.getLikes() + " votes | Comment ID: " + c.getCommentID();
             for (int j = c.getRepliesToComment().size() - 1; j >= 0; j--) {
                 Comment r = c.getRepliesToComment().get(j);
-                toReturn += "\n\t\t";
-                toReturn += r.getContent() + " | " + r.getDateAndTime();
+                toReturn += "\n\t\tStudent ID: " + r.getOwnerID();
+                toReturn += "\n\t\t" + r.getContent() + " | " + r.getDateAndTime();
             }
             toReturn += "\n";
         }
