@@ -7,6 +7,9 @@ import java.io.*;
  */
 public class Control {
 
+	//prompts user to enter a comment ID and finds the comment associated with it
+	//if the ID is found, method returns the index of the comment in currentBoardComments
+	//and the inputted id separated by a space character
 	public static String grabCommentIndexAndID(Scanner scan, ArrayList<Comment> currentBoardComments) {
 		int indexOfParentComment = 0;
 		String parentCommentID = "";
@@ -27,6 +30,7 @@ public class Control {
 		}
 	}
 
+	//uses the sessionID to find the first and last name of either the teacher or student who is currently signed in
 	public static String grabSessionName(int sessionID, ArrayList<Student> students,
 	       ArrayList<Teacher> teachers) {
 		String firstName = "";
@@ -49,6 +53,8 @@ public class Control {
 		return firstName + " " + lastName;
 	}
 
+	//prompts user to input text either through the terminal or a text file
+	//method is called when posting a reply to a board or creating a board
 	public static String inputInfo(Scanner scan) {
 		boolean again = false;
 		String part1 = "Would you like to input through the terminal or with a file path?\n";
@@ -133,6 +139,7 @@ public class Control {
 		return courses;
 	}
 
+	//calls on all saving methods to save all information upon log out
     public static void logOut(ArrayList<Student> students, ArrayList<Teacher> teachers, ArrayList<Board> boards,
 	       ArrayList<Comment> comments, int personCounter, int boardCounter, int commentCounter) {
         saveStudents(students, "students.txt");
@@ -142,6 +149,8 @@ public class Control {
         saveCounters(personCounter, boardCounter, commentCounter, "counters.txt");
     }
 
+	//takes the inputted id and password and checks to see if the login was successful
+	//returns either 1, 2, or 3 based on the result of the login operation
     public static int logIn(int id, String password, ArrayList<Student> students,
 	       ArrayList<Teacher> teachers) {
         for (int i = 0; i < students.size(); i++) {
