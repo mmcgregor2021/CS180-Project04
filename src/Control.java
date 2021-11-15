@@ -62,22 +62,35 @@ public class Control {
 				}
 			}
 		} else {
-			System.out.println("What is the file path for your input?");
-			String fileName = scan.nextLine();
-			do {
-				again = false;
-				try (BufferedReader bfr = new BufferedReader(new FileReader(fileName))) {
-					String line;
-					do {
-						line = bfr.readLine();
-						content = content + line;
-					} while (line != null);
+			String format1 = "**Please only have 1 line in your txt file ";
+			String format2 = "with either the forum topic or comment content**";
+			System.out.println(format1 + format2);
+			String fileName = "";
 
-				} catch (Exception e) {
-					System.out.println("Issue processing file, please try again.");
-					again = true;
+			while (true) {
+				while (true) {
+					System.out.println("What is the file name for your input?");
+					fileName = scan.nextLine();
+					if (fileName.equals("")) {
+						System.out.println("File name cannot be empty. Please try again.");
+					} else {
+						break;
+					}
 				}
-			} while (again);
+				try (BufferedReader bfr = new BufferedReader(new FileReader(fileName))) {
+					String line = bfr.readLine();
+					content = line;
+					if (content.equals("")) {
+						System.out.println("File content cannot be empty. Please try again.");
+					} else {
+						break;
+					}
+				} catch (FileNotFoundException e) {
+					System.out.println("File not found. Please try again.");
+				} catch (Exception e) {
+					System.out.println("Issue processing file. Please try again.");
+				}
+			}
 		}
 		return content;
 	}
