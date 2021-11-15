@@ -46,7 +46,7 @@ public class Control {
 
 	public static String inputInfo(Scanner scan) {
 		boolean again = false;
-		String part1 = "Would you like to input through the terminal or with a file path?\n"
+		String part1 = "Would you like to input through the terminal or with a file path?\n";
 		String part2 = "(t for terminal, anything else for file path)";
 		System.out.println(part1 + part2);
 		String response = scan.nextLine();
@@ -543,7 +543,7 @@ public class Control {
                     } while (true);
                 } else if (input == 2) {
                     //delete account
-					String deleteAccountConfirm = "Are you sure you would like to delete your account?"
+					String deleteAccountConfirm = "Are you sure you would like to delete your account?";
                     System.out.println(deleteAccountConfirm + "(y for yes, anything else for no)");
                     if (scan.nextLine().equals("y")) {
 						if (students.size() != 0 ) {
@@ -873,7 +873,7 @@ public class Control {
 						for (int i = 0; i < comments.size(); i++) {
 							if (comments.get(i).getOwnerID() == sessionID) {
 								System.out.println(comments.get(i).toString());
-								//Could someone make a toString method for comment so that this works?
+
 							}
 						}
 					}
