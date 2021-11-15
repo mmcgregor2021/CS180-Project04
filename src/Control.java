@@ -435,11 +435,11 @@ public class Control {
 
             mainLoop:
             do {
-				System.out.println("User: " + sessionName + "\n");
+				System.out.println("\nUser: " + sessionName);
                 System.out.println("What would you like to do?");
 				String choicesPrompt = "1. Edit account\n2. Delete account\n3. View courses\n4. Logout";
 				if (sessionAuthority) {
-					choicesPrompt += "\n5. Create new course";
+					choicesPrompt += "\n5. Create new course\n6. Grade student posts";
 				} else
 					choicesPrompt += "\n5. View your comments and their grades";
                 System.out.println(choicesPrompt);
@@ -623,8 +623,6 @@ public class Control {
 								if (sessionAuthority) {
 									System.out.println((counter) + ". Add a board");
 									counter++;
-									System.out.println((counter) + ". View all comments from a specific student to grade");
-									counter++;
 								}
 								System.out.println((counter) + ". Go back");
 
@@ -745,11 +743,17 @@ public class Control {
 												break;
 											}
 										case 2:
-											System.out.println("Are you sure you would like to delete the board? (y for yes, anything else for no)");
+											System.out.println("Are you sure you would like to delete the board?\n(y for yes, anything else for no)");
 											String deleteBoardConfirmation = scan.nextLine();
 											if (deleteBoardConfirmation.equals("y")) {
+												String deletedBoardID = boards.get(boardSelection - 1).getBoardID();
+												for (int i = 0; i < comments.size(); i++) {
+													if (comments.get(i).getParentID().equals(deletedBoardID)) {
+														comments.remove(i);
+													}
+												}
 												boards.remove(boardSelection - 1);
-												System.out.println("The board was successfully deleted!");
+												System.out.println("The board and all of its comments were successfully deleted!");
 											}
 											break;
 										case 3:
@@ -876,7 +880,7 @@ public class Control {
 							}
 						}
 						if (studentComments.size() == 0) {
-							System.out.println("You have not posted to any boards yet.\n");
+							System.out.println("You have not posted to any boards yet.");
 						} else {
 							System.out.println("These are all the comments for ID " + sessionID + "\n");
 							for (int i = 0; i < studentComments.size(); i++){
