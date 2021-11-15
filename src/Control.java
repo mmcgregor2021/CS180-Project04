@@ -22,7 +22,8 @@ public class Control {
 		}
 	}
 
-	public static String grabSessionName(int sessionID, ArrayList<Student> students, ArrayList<Teacher> teachers) {
+	public static String grabSessionName(int sessionID, ArrayList<Student> students,
+	       ArrayList<Teacher> teachers) {
 		String firstName = "";
 		String lastName = "";
 		if (students.size() > 0) {
@@ -45,7 +46,9 @@ public class Control {
 
 	public static String inputInfo(Scanner scan) {
 		boolean again = false;
-		System.out.println("Would you like to input through the terminal or with a file path?\n (t for terminal, anything else for file path)");
+		String part1 = "Would you like to input through the terminal or with a file path?\n"
+		String part2 = "(t for terminal, anything else for file path)";
+		System.out.println(part1 + part2);
 		String response = scan.nextLine();
 		String content = "";
 		if (response.equals("t")) {
@@ -254,7 +257,8 @@ public class Control {
 	}
 
 	//saves all three counters to one line separated by ';' to a txt file
-	public static void saveCounters(int personCounter, int boardCounter, int commentCounter, String fileName) {
+	public static void saveCounters(int personCounter, int boardCounter,
+	       int commentCounter, String fileName) {
 		try (PrintWriter pw = new PrintWriter(new FileWriter(fileName))) {
 			pw.println(personCounter + ";" + boardCounter + ";" + commentCounter);
 		} catch (Exception e) {
@@ -535,10 +539,12 @@ public class Control {
                                 System.out.println("Please enter a valid number");
                                 break;
                         }
+						sessionName = grabSessionName(sessionID, students, teachers);
                     } while (true);
                 } else if (input == 2) {
                     //delete account
-                    System.out.println("Are you sure you would like to delete your account? (y for yes, anything else for no)");
+					String deleteAccountConfirm = "Are you sure you would like to delete your account?"
+                    System.out.println(deleteAccountConfirm + "(y for yes, anything else for no)");
                     if (scan.nextLine().equals("y")) {
 						if (students.size() != 0 ) {
 	                        for (int i = 0; i < students.size(); i++) {
@@ -652,7 +658,7 @@ public class Control {
 
 							//Print all the comments from a specific student.
 							int studentID = 0;
-							if(boardSelection == boards.size() + 2) {
+							if (boardSelection == boards.size() + 2) {
 								do {
 									System.out.println("Enter the student ID of the student comments you want to grade");
 									try {
@@ -668,11 +674,11 @@ public class Control {
 									} catch (Exception e) {
 										System.out.println("Invalid ID, please try again.");
 									}
-								} while(again);
+								} while (again);
 
 								System.out.println("These are all the comments for ID " + studentID);
 								for (int i = 0; i < comments.size(); i++) {
-									if(comments.get(i).getOwnerID() == studentID) {
+									if (comments.get(i).getOwnerID() == studentID) {
 										System.out.println(comments.get(i).toString());
 										//Could someone make a toString method for comment so that this works?
 									}
@@ -681,7 +687,7 @@ public class Control {
 								//Code to assign a grade to each student comment
 								int commentNumber = 1;
 								for (int i = 0; i < comments.size(); i++) {
-									if(comments.get(i).getOwnerID() == studentID) {
+									if (comments.get(i).getOwnerID() == studentID) {
 										System.out.println("What grade would you like to assign to comment " + commentNumber);
 										int grade = 0;
 										do {
@@ -694,7 +700,7 @@ public class Control {
 												System.out.println("Invalid grade, please try again");
 												again = true;
 											}
-										} while(again);
+										} while (again);
 										comments.get(i).setGrade(grade);
 										System.out.println("The grade is set to " + comments.get(i).getGrade());
 									}
@@ -732,7 +738,7 @@ public class Control {
 									switch (commentSelection) {
 										case 1:
 											String newTopic = "";
-											while(true) {
+											while (true) {
 												newTopic = inputInfo(scan);
 												boards.get(boardSelection - 1).setTopic(newTopic);
 												System.out.println("New forum topic has been set!");
@@ -828,7 +834,8 @@ public class Control {
 												}
 												Date replyDate = new Date();
 												String replyID = "Reply - NO ID";
-												Comment createdReply = new Comment(parentCommentID, replyID, sessionID, replyToComment, 0, 0, replyDate.toString());
+												Comment createdReply = new Comment(parentCommentID, replyID,
+												       sessionID, replyToComment, 0, 0, replyDate.toString());
 												currentBoardComments.get(indexOfParentComment).getRepliesToComment().add(createdReply);
 												boards.get(boardSelection - 1).setComments(currentBoardComments);
 												System.out.println("Reply successfully addded.");
@@ -864,7 +871,7 @@ public class Control {
 						//Student views all their posts and their grades.
 						System.out.println("These are all the comments for ID " + sessionID);
 						for (int i = 0; i < comments.size(); i++) {
-							if(comments.get(i).getOwnerID() == sessionID) {
+							if (comments.get(i).getOwnerID() == sessionID) {
 								System.out.println(comments.get(i).toString());
 								//Could someone make a toString method for comment so that this works?
 							}
