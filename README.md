@@ -11,7 +11,7 @@ Compile and run the Control.java file in the command line interface of your choi
 
 ## Project Submission
 - Jainam Doshi: submitted report on Brightspace
-- Grant McCord: submitted Vocareum workspace
+- Kris Leungwattanakij: submitted Vocareum workspace
 
 ## Descriptions of classes
 ### Person
