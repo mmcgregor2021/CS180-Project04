@@ -27,9 +27,10 @@ Handles control flow for the project.  This allows the user to interact with the
 Implements methods used to sign up, log in, and edit and delete accounts.  Tested in the SimpleTester class.
 
 ### Person
+Defines a person with a first name, last name, password, and ID.
 - Implements Java's Serializable interface
 - Inherited by Student and Teacher
-Defines a person with a first name, last name, password, and ID.
+
 
 ### SimpleTester
 Tests some functionality of the Board, Comment and LogInTest classes using print statements.
