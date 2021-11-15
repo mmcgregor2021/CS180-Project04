@@ -15,10 +15,12 @@ Compile and run the Control.java file in the command line interface of your choi
 
 ## Descriptions of classes
 ### Board
-Represents a discussion board.  Tested in the SimpleTester class.
+Represents a discussion board.  Has a field of type ArrayList<Comment>.  Tested in the SimpleTester class.  
+- Implements Java's Serializable interface
 
 ### Comment
 Represents a reply to a discussion board, or a comment on a reply.  Tested in the SimpleTester class.
+- Implements Java's Serializable interface
 
 ### Control
 Handles control flow for the project.  This allows the user to interact with the classes and files using the command line interface.  We tested this class manually, and using the test cases in the TestCases class.
