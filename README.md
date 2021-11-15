@@ -15,17 +15,17 @@ Compile and run the Control.java file in the command line interface of your choi
 
 ## Descriptions of classes
 ### Person
-Defines a person with a first name, last name, password, and ID.
+Defines a person with a first name, last name, password, and ID.  
 - Implements Java's Serializable interface
-- Inherited by Student and Teacher
+- Inherited by Student and Teacher, which are both tested in the AccountTester class.
 
 ### Student 
-A type of person with the authority to do student-specific actions.
+A type of person with the authority to do student-specific actions.  Tested in the AccountTester class.
 - Implements Java's Serializable interface
 - Extends Person
 
 ### Teacher 
-A type of person with the authority to do teacher-specific actions.
+A type of person with the authority to do teacher-specific actions.  Tested in the AccountTester class.
 - Implements Java's Serializable interface
 - Extends Person
   
@@ -47,6 +47,9 @@ Handles control flow for the project.  This allows the user to interact with the
 ### SimpleTester
 Tests some functionality of the Board, Comment and LogInTest classes using print statements.
 
+### AccountTester
+Tests the getter and setter methods in both the Student and Teacher classes.
+ 
 ### LogInTest
 Implements methods used to sign up, log in, and edit and delete accounts.  Tested in the SimpleTester class.
   
