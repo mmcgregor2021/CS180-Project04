@@ -1,5 +1,10 @@
 import java.util.*;
 import java.io.*;
+/**
+ * A learning management discussion board system
+ * @author Astrid Popovici, Grant McCord, Jainam Doshi, Kathryn McGregor, Kris Leungwattanakij
+ * @version November 8, 2021
+ */
 public class Control {
 
 	public static String grabCommentIndexAndID(Scanner scan, ArrayList<Comment> currentBoardComments) {
