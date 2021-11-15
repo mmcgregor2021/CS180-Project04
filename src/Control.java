@@ -706,7 +706,7 @@ public class Control {
 							if (boardSelection <= boards.size()) {
 								System.out.println(boards.get(boardSelection - 1).toString());
 								if (boards.get(boardSelection - 1).getComments().size() == 0) {
-									System.out.println("There are no comments on this board yet.");
+									System.out.println("There are no comments on this board yet.\n");
 								}
 
 								while (true) {
@@ -723,13 +723,17 @@ public class Control {
 									}
 								}
 
+								ArrayList<Comment> currentBoardComments = boards.get(boardSelection - 1).getComments();
+								int indexOfParentComment = 0;
+								String replyToComment = "";
+								String parentCommentID = "";
 								if (sessionAuthority) {
 									//switch statement for teachers
 									switch (commentSelection) {
 										case 1:
 											String newTopic = "";
 											while(true) {
-												newTopic =  inputInfo(scan);
+												newTopic = inputInfo(scan);
 												boards.get(boardSelection - 1).setTopic(newTopic);
 												System.out.println("New forum topic has been set!");
 												break;
@@ -744,13 +748,36 @@ public class Control {
 											break;
 										case 3:
 											//code to reply to a comment
+											if (currentBoardComments.size() == 0) {
+												System.out.println("Sorry. This board does not have any comments yet.");
+											} else {
+												String[] indexAndID = grabCommentIndexAndID(scan, currentBoardComments).split(" ");
+												indexOfParentComment = Integer.parseInt(indexAndID[0]);
+												parentCommentID = indexAndID[1];
+												while (true) {
+													System.out.println("Please enter a reply.");
+													replyToComment = scan.nextLine();
+													if (replyToComment.equals("")) {
+														System.out.println("Reply cannot be empty.");
+													} else {
+														break;
+													}
+												}
+												Date teacherReplyDate = new Date();
+												String teacherReplyID = "Teacher Reply - NO ID";
+												Comment createdTeacherReply = new Comment(parentCommentID, teacherReplyID, sessionID,
+												       "Teacher Reply - " + replyToComment, 0, 0, teacherReplyDate.toString());
+												currentBoardComments.get(indexOfParentComment).getRepliesToComment().add(createdTeacherReply);
+												boards.get(boardSelection - 1).setComments(currentBoardComments);
+												System.out.println("Reply successfully addded.");
+											}
+											break;
 										case 4:
 											//code to go back
 											break;
 									}
 								} else {
 									//switch statement for students
-									ArrayList<Comment> currentBoardComments = boards.get(boardSelection - 1).getComments();
 									switch (commentSelection) {
 										case 1:
 											//code to add a comment
@@ -760,14 +787,17 @@ public class Control {
 											Date commentDate = new Date();
 											String commentID = "C" + commentCounter;
 											Comment createdComment = new Comment(parentBoardID, commentID, sessionID,
-											       content, 0, 0, commentDate.toString());
+											       sessionName + "\n\t" + content, 0, 0, commentDate.toString());
 											boards.get(boardSelection - 1).getComments().add(createdComment);
 											comments.add(createdComment);
-											System.out.println("Comment was successfully created!");
+											System.out.println("Comment was successfully created!\n");
 											break;
 										case 2:
 											//code to vote on a comment
-											if (boards.get(boardSelection - 1).getUsersWhoVoted().contains(sessionID)) {
+											if (currentBoardComments.size() == 0) {
+												System.out.println("Sorry. This board does not have any comments yet.");
+											}
+											else if (boards.get(boardSelection - 1).getUsersWhoVoted().contains(sessionID)) {
 												System.out.println("Sorry. You have already voted on this board.");
 											} else {
 												String[] commentIndexIDArray = grabCommentIndexAndID(scan, currentBoardComments).split(" ");
@@ -785,9 +815,8 @@ public class Control {
 												System.out.println("Sorry. This board does not have any comments yet.");
 											} else {
 												String[] commentIndexAndID = grabCommentIndexAndID(scan, currentBoardComments).split(" ");
-												int indexOfParentComment = Integer.parseInt(commentIndexAndID[0]);
-												String parentCommentID = commentIndexAndID[1];
-												String replyToComment = "";
+												indexOfParentComment = Integer.parseInt(commentIndexAndID[0]);
+												parentCommentID = commentIndexAndID[1];
 												while (true) {
 													System.out.println("Please enter a reply.");
 													replyToComment = scan.nextLine();
@@ -810,7 +839,7 @@ public class Control {
 											break;
 									}
 								}
-
+								System.out.println("Redirecting you back to the previous menu.\n");
 							}
 						}
 					}
