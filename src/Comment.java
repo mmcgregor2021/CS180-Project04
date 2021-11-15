@@ -73,7 +73,7 @@ public class Comment implements java.io.Serializable {
         String part3 = "Comment: " + content + "\n";
         String part4 = "Grade Assigned: " + grade + "\n";
         if (grade == 0) {
-            part4 += "(a grade of 0 could mean that your comment has not been graded yet)\n";
+            part4 += "(a grade of 0 could mean that the comment has not been graded yet)\n";
         }
         return part1 + part2 + part3 + part4;
     }
