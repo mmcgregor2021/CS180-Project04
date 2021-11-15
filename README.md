@@ -20,7 +20,7 @@ Defines a person with a first name, last name, password, and ID.
 - Inherited by Student and Teacher
 
 ### Student 
-A type of person without the authority to do student-specific actions.
+A type of person with the authority to do student-specific actions.
 - Implements Java's Serializable interface
 - Extends Person
 
