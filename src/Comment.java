@@ -15,12 +15,10 @@ public class Comment implements java.io.Serializable {
     private int likes;
     private int grade;
     private String dateAndTime;
-    private ArrayList<Person> usersWhoLiked;
     private ArrayList<Comment> repliesToComment;
 
     public Comment(String parentID, String commentID, int ownerID, String content, int likes,
-           int grade, String dateAndTime, ArrayList<Person> usersWhoLiked,
-                  ArrayList<Comment> repliesToComment) {
+           int grade, String dateAndTime, ArrayList<Comment> repliesToComment) {
         this.parentID = parentID;
         this.commentID = commentID;
         this.ownerID = ownerID;
@@ -28,21 +26,6 @@ public class Comment implements java.io.Serializable {
         this.likes = likes;
         this.grade = grade;
         this.dateAndTime = dateAndTime;
-        this.usersWhoLiked = usersWhoLiked;
-        this.repliesToComment = repliesToComment;
-    }
-
-    public Comment(String parentID, String commentID, int ownerID, String content, int likes,
-           int grade, String dateAndTime, ArrayList<Person> usersWhoLiked) {
-        this.parentID = parentID;
-        this.commentID = commentID;
-        this.ownerID = ownerID;
-        this.content = content;
-        this.likes = likes;
-        this.grade = grade;
-        this.dateAndTime = dateAndTime;
-        this.usersWhoLiked = usersWhoLiked;
-        ArrayList<Comment> repliesToComment = new ArrayList<>();
         this.repliesToComment = repliesToComment;
     }
 
@@ -55,9 +38,7 @@ public class Comment implements java.io.Serializable {
         this.likes = likes;
         this.grade = grade;
         this.dateAndTime = dateAndTime;
-        ArrayList<Person> usersWhoLiked = new ArrayList<>();
         ArrayList<Comment> repliesToComment = new ArrayList<>();
-        this.usersWhoLiked = usersWhoLiked;
         this.repliesToComment = repliesToComment;
     }
 
@@ -97,23 +78,15 @@ public class Comment implements java.io.Serializable {
         return part1 + part2 + part3 + part4;
     }
 
-    //returns true if the like was added successfully, and false if the
-    //passed in user has already liked the comment
-    public boolean addLike(Person user) {
-        if (usersWhoLiked.contains(user)) {
-            return false;
-        } else {
-            likes++;
-            usersWhoLiked.add(user);
-            return true;
-        }
+	//adds a vote/like to a comment
+    public void addLike(Person user) {
+        likes++;
     }
 
     public void createReplyToComment(String theCommentID, int theOwnerID,
-           String theContent, int theLikes, String theDateAndTime,
-                  ArrayList<Person> theUsersWhoLiked) {
+           String theContent, int theLikes, String theDateAndTime) {
         repliesToComment.add(new Comment(this.commentID, theCommentID, theOwnerID, theContent, theLikes, 0,
-                theDateAndTime, theUsersWhoLiked));
+                theDateAndTime));
     }
 
     public void deleteReplyToComment(String commentID) {
@@ -179,14 +152,6 @@ public class Comment implements java.io.Serializable {
 
     public void setDateAndTime(String dateAndTime) {
         this.dateAndTime = dateAndTime;
-    }
-
-    public ArrayList<Person> getUsersWhoLiked() {
-        return usersWhoLiked;
-    }
-
-    public void setUsersWhoLiked(ArrayList<Person> usersWhoLiked) {
-        this.usersWhoLiked = usersWhoLiked;
     }
 
     public ArrayList<Comment> getRepliesToComment() {
