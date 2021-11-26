@@ -1,17 +1,21 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 
 public class GUI extends JComponent{
     private static JFrame frame;
-    private static JPanel content;
-    private static JButton signUpButton;
-    private static JButton logInButton;
+    private static JButton signUpButton = new JButton("Sign Up");
+    private static JButton logInButton = new JButton("Log In");
+    private static JButton firstBack = new JButton("Back");
+    private static JButton firstContinue = new JButton("Continue");
+
 
     public static void main(String[] args) {
 
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 initializeGUI();
+                openMenu();
 
                 logInButton.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
@@ -24,6 +28,12 @@ public class GUI extends JComponent{
                         signUp();
                     }
                 });
+
+                firstBack.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        openMenu();
+                    }
+                });
             }
         });
     }
@@ -31,37 +41,63 @@ public class GUI extends JComponent{
     public static void initializeGUI() {
         frame = new JFrame("Discussion Board Application");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        signUpButton = new JButton("Sign Up");
-        logInButton = new JButton("Log In");
-        JLabel welcomeMessage = new JLabel("Welcome to our discussion board! Please Login or Sign up below.");
-        content = new JPanel();
-        frame.add(content);
-        content.add(welcomeMessage);
-        content.add(signUpButton);
-        content.add(logInButton);
-        frame.setSize(500,300);
         frame.setVisible(true);
     }
 
+    public static void openMenu() {
+        frame.getContentPane().removeAll();
+        frame.setLayout(new GridLayout(2, 2));
+        JLabel welcomeMessage1 = new JLabel("Welcome to our discussion board! ");
+        JLabel welcomeMessage2 = new JLabel("Please Login or Sign up below.");
+        frame.add(welcomeMessage1);frame.add(welcomeMessage2);
+        frame.add(signUpButton);frame.add(logInButton);
+        frame.pack();
+
+    }
+
     public static void logIn() {
-        content.removeAll();
-        frame.repaint();
+        frame.getContentPane().removeAll();
+        frame.setLayout(new GridLayout(3, 2));
 
         JLabel username = new JLabel("Enter your userID: ");
         JTextField userID = new JTextField(15);
         JLabel pass = new JLabel("Enter your password: ");
         JTextField password = new JTextField(15);
-        content.add(username);
-        content.add(userID);
-        content.add(pass);
-        content.add(password);
+
+        frame.add(username);frame.add(userID);
+        frame.add(pass);frame.add(password);
+        frame.add(firstBack);frame.add(firstContinue);
+
+        frame.repaint();
         frame.pack();
-        frame.setSize(500,300);
     }
 
     public static void signUp() {
-        content.removeAll();
+        frame.getContentPane().removeAll();
+        frame.setLayout(new GridLayout(6, 2));
+
+        JLabel IDMessage1 = new JLabel("Your new ID is: ");
+        JLabel IDMessage2 = new JLabel("This is where the generated ID will go");
+        JLabel passMessage = new JLabel("PLease enter a password: ");
+        JTextField password = new JTextField(15);
+        JLabel firstMessage = new JLabel("Please enter your first name: ");
+        JTextField firstName = new JTextField(15);
+        JLabel lastMessage = new JLabel("Please enter your last name: ");
+        JTextField lastName = new JTextField(15);
+        JLabel studentTeacher = new JLabel ("I am a ");
+        String[] options = {"Student", "Teacher"};
+        JComboBox<String> combo = new JComboBox<String>(options);
+
+
+        frame.add(IDMessage1); frame.add(IDMessage2);
+        frame.add(passMessage); frame.add(password);
+        frame.add(firstMessage); frame.add(firstName);
+        frame.add(lastMessage); frame.add(lastName);
+        frame.add(studentTeacher); frame.add(combo);
+        frame.add(firstBack); frame.add(firstContinue);
+
         frame.repaint();
+        frame.pack();
     }
 
 
