@@ -8,7 +8,15 @@ public class GUI extends JComponent{
     private static JButton logInButton = new JButton("Log In");
     private static JButton firstBack = new JButton("Back");
     private static JButton firstContinue = new JButton("Continue");
-
+    static boolean sessionAuthority;
+    private static String[] options = {"Student", "Teacher"};
+    private static JComboBox<String> combo = new JComboBox<String>(options);
+    private static JButton edit = new JButton("Edit account");
+    private static JButton delete = new JButton("Delete account");
+    private static JButton viewCourses = new JButton("View courses");
+    private static JButton logout = new JButton("Logout");
+    private static JButton newCourses = new JButton("Create new button");
+    private static JButton gradePosts = new JButton("Grade student posts");
 
     public static void main(String[] args) {
 
@@ -32,6 +40,14 @@ public class GUI extends JComponent{
                 firstBack.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         openMenu();
+                    }
+                });
+
+                firstContinue.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        sessionAuthority = combo.getSelectedItem().equals("Teacher");
+                        firstMenu();
+
                     }
                 });
             }
@@ -85,9 +101,6 @@ public class GUI extends JComponent{
         JLabel lastMessage = new JLabel("Please enter your last name: ");
         JTextField lastName = new JTextField(15);
         JLabel studentTeacher = new JLabel ("I am a ");
-        String[] options = {"Student", "Teacher"};
-        JComboBox<String> combo = new JComboBox<String>(options);
-
 
         frame.add(IDMessage1); frame.add(IDMessage2);
         frame.add(passMessage); frame.add(password);
@@ -99,6 +112,20 @@ public class GUI extends JComponent{
         frame.repaint();
         frame.pack();
     }
+
+    public static void firstMenu() {
+        frame.getContentPane().removeAll();
+        frame.setLayout(new GridLayout(3, 2));
+        frame.add(edit); frame.add(delete);
+        frame.add(viewCourses); frame.add(logout);
+        if(sessionAuthority) {
+            frame.add(newCourses);
+            frame.add(gradePosts);
+        }
+        frame.repaint();
+        frame.pack();
+    }
+
 
 
 }
