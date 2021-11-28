@@ -15,8 +15,12 @@ public class GUI extends JComponent{
     private static JButton delete = new JButton("Delete account");
     private static JButton viewCourses = new JButton("View courses");
     private static JButton logout = new JButton("Logout");
-    private static JButton newCourses = new JButton("Create new button");
+    private static JButton newCourses = new JButton("Create new course");
     private static JButton gradePosts = new JButton("Grade student posts");
+    private static JButton viewGrades = new JButton("View posts and grades");
+    private static JButton processEdit = new JButton("Process changes");
+    private static JButton backEdit = new JButton("Back");
+    private static JButton viewCoursesBack = new JButton("Back");
 
     public static void main(String[] args) {
 
@@ -27,6 +31,7 @@ public class GUI extends JComponent{
 
                 logInButton.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
+                        //Add code to make sure user has put in valid info.
                         logIn();
                     }
                 });
@@ -45,9 +50,65 @@ public class GUI extends JComponent{
 
                 firstContinue.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
+                        //Add code to make an account.
                         sessionAuthority = combo.getSelectedItem().equals("Teacher");
                         firstMenu();
 
+                    }
+                });
+
+                edit.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        editAccount();
+                    }
+                });
+
+                backEdit.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        firstMenu();
+                    }
+                });
+
+                processEdit.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        //Add code to change user info
+                        String infoMessage = "This is now your saved user information: \n (Print user details here)";
+                        JOptionPane.showMessageDialog(null, infoMessage, "Changes Made", JOptionPane.INFORMATION_MESSAGE);
+                        firstMenu();
+                    }
+                });
+
+                logout.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        frame.dispose();
+                        JOptionPane.showMessageDialog(frame, "Thank you for using our platform!", "Logout", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                });
+
+                delete.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        int result = JOptionPane.showConfirmDialog(frame,"Are you sure you want to delete your account?", "Delete Account",
+                                JOptionPane.YES_NO_OPTION,
+                                JOptionPane.QUESTION_MESSAGE);
+                        if(result == JOptionPane.NO_OPTION) {
+                            firstMenu();
+                        } else {
+                            frame.dispose();
+                            //Add code to delete the account
+                            JOptionPane.showMessageDialog(null, "Thank you for using our platform!", "Closing System", JOptionPane.INFORMATION_MESSAGE);
+                        }
+                    }
+                });
+
+                viewCourses.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        viewAllCourses();
+                    }
+                });
+
+                viewCoursesBack.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        firstMenu();
                     }
                 });
             }
@@ -121,10 +182,65 @@ public class GUI extends JComponent{
         if(sessionAuthority) {
             frame.add(newCourses);
             frame.add(gradePosts);
-        }
+        } else
+            frame.add(viewGrades);
+
         frame.repaint();
         frame.pack();
     }
+
+    public static void editAccount() {
+        //The idea here is to print all the current information in the text fields and allow the user to change it.
+        frame.getContentPane().removeAll();
+        frame.setLayout(new GridLayout(5, 2));
+
+        JLabel message = new JLabel("Enter any changes you would like to make in the text fields below. ");
+        JLabel empty = new JLabel("");
+        JLabel pass = new JLabel("Password: ");
+        JTextField passwordChange = new JTextField("Current password");
+        JLabel first = new JLabel("First Name: ");
+        JTextField firstNameChange = new JTextField("Current first name");
+        JLabel last = new JLabel("Last Name: ");
+        JTextField lastNameChange = new JTextField("Current last name");
+
+        frame.add(message); frame.add(empty);
+        frame.add(pass); frame.add(passwordChange);
+        frame.add(first); frame.add(firstNameChange);
+        frame.add(last); frame.add(lastNameChange);
+        frame.add(backEdit); frame.add(processEdit);
+
+        frame.repaint();
+        frame.pack();
+    }
+
+    public static void viewAllCourses() {
+        //There are still issues with this method, I don't think scroll bar is working correctly.
+        frame.getContentPane().removeAll();
+        frame.setLayout(new GridLayout(3, 1));
+
+        String[] coursesArray = {"array of all courses here"};
+        JComboBox<String> coursesCombo = new JComboBox<String>(coursesArray);
+        JScrollPane commentsPane = new JScrollPane();
+        JLabel test = new JLabel("Test \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n test");
+        commentsPane.add(test);
+        commentsPane.setVisible(true);
+        frame.add(coursesCombo);
+        frame.add(commentsPane);
+        frame.add(viewCoursesBack);
+
+        frame.repaint();
+        frame.pack();
+
+    }
+
+    public static void createNewCourse() {
+
+    }
+
+    public static void gradeStudentPosts() {
+
+    }
+
 
 
 
