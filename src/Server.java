@@ -17,36 +17,23 @@ public class Server {
         ServerSocket server = null;
         System.out.println("Server Starting up...");
         try {
-            // server is listening on port 1234
             server = new ServerSocket(1234);
             server.setReuseAddress(true);
 
-            // running infinite loop for getting
-            // client request
             while (true) {
-
-                // socket object to receive incoming client
-                // requests
                 Socket client = server.accept();
-                System.out.println("New client connected" + client.getInetAddress().getHostAddress());
+                System.out.println("Client connected: " + client.getInetAddress().getHostAddress());
 
-                // create a new thread object
                 ClientHandler clientSock = new ClientHandler(client);
-
-                // This thread will handle the client
-                // separately
                 new Thread(clientSock).start();
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             if (server != null) {
                 try {
                     server.close();
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -79,13 +66,24 @@ public class Server {
                             Integer loginResult = logIn(userID, password, students, teachers);
                             out.println(loginResult);
                             break;
+						case "logout":
+							try {
+								if (out != null) {
+									out.close();
+								}
+								if (in != null) {
+									in.close();
+									clientSocket.close();
+								}
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+							break;
                     }
                 }
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
-            }
-            finally {
+            } finally {
                 try {
                     if (out != null) {
                         out.close();

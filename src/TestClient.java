@@ -24,7 +24,7 @@ class TestClient {
                 System.out.println("Enter password:");
 				String loginPassword = sc.nextLine();
 
-                logIn(loginID, loginPassword);
+                logIn(loginID, loginPassword, socket);
 			}
 
 			// closing the scanner object
@@ -36,8 +36,8 @@ class TestClient {
 	}
 
     //GRANT
-    public static void logIn(Integer userID, String password) {
-        try (Socket socket = new Socket("localhost", 1234)) {
+    public static void logIn(Integer userID, String password, Socket socket) {
+        try {
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String verificationPayload = "login;" + userID + ";" + password;
