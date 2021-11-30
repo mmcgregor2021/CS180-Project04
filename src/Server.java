@@ -6,8 +6,8 @@ public class Server {
 
     ArrayList<Comment> comments = readComments("comments.txt");
     ArrayList<Board> boards = readBoards("boards.txt");
-    ArrayList<Teacher> teachers = readTeachers("teachers.txt");
-    ArrayList<Student> students = readStudents("teachers.txt");
+    private static ArrayList<Teacher> teachers = readTeachers("teachers.txt");
+    private static ArrayList<Student> students = readStudents("students.txt");
     HashMap<Integer, Person> users = populateHashMap();
     int personCounter = readCounters("counters.txt")[0];
     int boardCounter = readCounters("counters.txt")[1];
@@ -72,8 +72,13 @@ public class Server {
                 String line = in.readLine();
                 while (line != null) {
                     switch (line.split(";")[0]) {
+                        //login request
                         case "login":
-                            String userID =
+                            Integer userID = Integer.parseInt(line.split(";")[1]);
+                            String password = line.split(";")[2];
+                            Integer loginResult = logIn(userID, password, students, teachers);
+                            out.println(loginResult);
+                            break;
                     }
                 }
             }
@@ -95,6 +100,29 @@ public class Server {
                 }
             }
         }
+    }
+
+    //takes the inputted id and password and checks to see if the login was successful
+    //returns either 1, 2, or 3 based on the result of the login operation
+    public static int logIn(int id, String password, ArrayList<Student> students, ArrayList<Teacher> teachers) {
+        for (int i = 0; i < students.size(); i++) {
+            if (students.get(i).getID() == id) {
+                if (students.get(i).getPassword().equals(password)) {
+                    return 3; //correct login
+                }
+                return 2; //wrong password
+            }
+        }
+
+        for (int j = 0; j < teachers.size(); j++) {
+            if (teachers.get(j).getID() == id) {
+                if (teachers.get(j).getPassword().equals(password)) {
+                    return 3; //correct login
+                }
+                return 2; //wrong password
+            }
+        }
+        return 1; //id does not exist
     }
 
     public HashMap<Integer, Person> populateHashMap() {

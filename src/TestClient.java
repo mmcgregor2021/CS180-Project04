@@ -1,21 +1,16 @@
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import javax.swing.*;
 
 // Client class
 class TestClient {
 
 	// driver code
-	public static void main(String[] args)
-	{
-		// establish a connection by providing host and port
-		// number
+	public static void main(String[] args) {
 		try (Socket socket = new Socket("localhost", 1234)) {
 
-			// writing to server
 			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-
-			// reading from server
 			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
 			// object of scanner class
@@ -24,15 +19,12 @@ class TestClient {
 
 			while (!"exit".equalsIgnoreCase(line)) {
 
-				// reading from user
-				line = sc.nextLine();
+				System.out.println("Enter user id:");
+				Integer loginID = Integer.parseInt(sc.nextLine());
+                System.out.println("Enter password:");
+				String loginPassword = sc.nextLine();
 
-				// sending the user input to server
-				out.println(line);
-				out.flush();
-
-				// displaying server reply
-				System.out.println("Server replied " + in.readLine());
+                logIn(loginID, loginPassword);
 			}
 
 			// closing the scanner object
@@ -43,13 +35,28 @@ class TestClient {
 		}
 	}
 
+    //GRANT
     public static void logIn(Integer userID, String password) {
         try (Socket socket = new Socket("localhost", 1234)) {
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            String verficationPayload = "login;" + userID + ";" + password;
+            String verificationPayload = "login;" + userID + ";" + password;
             out.println(verificationPayload);
             out.flush();
+            switch(Integer.parseInt(in.readLine())) {
+                //TO DO: replace print statements below with JOptionPane messages
+                case 1:
+                    System.out.println("ID DOESN'T EXIST");
+                    break;
+                case 2:
+                    System.out.println("WRONG PASSWORD");
+                    break;
+                case 3:
+                    System.out.println("SUCCESFUL LOGIN");
+                    break;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
