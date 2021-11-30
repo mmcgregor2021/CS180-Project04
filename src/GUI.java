@@ -21,6 +21,14 @@ public class GUI extends JComponent{
     private static JButton processEdit = new JButton("Process changes");
     private static JButton backEdit = new JButton("Back");
     private static JButton viewCoursesBack = new JButton("Back");
+    private static JButton selectCourse = new JButton("Select course");
+    private static String[] uploadChoices = {"Direct text", "File path"};
+    private static JComboBox<String> methodChoice = new JComboBox<>(uploadChoices);
+    private static JLabel chosenMethod = new JLabel("Type in the forum topic you want: ");
+    private static JButton createCourse = new JButton("Create course");
+    private static JButton newCourseBack = new JButton("Back");
+    private static String[] coursesArray = {"array of all courses here"};
+    private static JComboBox<String> coursesCombo = new JComboBox<String>(coursesArray);
 
     public static void main(String[] args) {
 
@@ -109,6 +117,30 @@ public class GUI extends JComponent{
                 viewCoursesBack.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         firstMenu();
+                    }
+                });
+
+                selectCourse.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        //Eventually this array will be replaced with the array that corresponds to the selected course.
+                        String[] discussionBoards = {"Array of all the boards under the selected course", "Option 2"};
+                        viewBoards(discussionBoards);
+                    }
+                });
+
+                methodChoice.addActionListener (new ActionListener () {
+                    public void actionPerformed(ActionEvent e) {
+                        if(methodChoice.getSelectedItem().equals("Direct text"))
+                            chosenMethod.setText("Type in the forum topic you want: ");
+                        else
+                            chosenMethod.setText("Enter the file path to the forum topic you want: ");
+
+                    }
+                });
+
+                newCourses.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        createNewCourse();
                     }
                 });
             }
@@ -214,26 +246,51 @@ public class GUI extends JComponent{
     }
 
     public static void viewAllCourses() {
-        //There are still issues with this method, I don't think scroll bar is working correctly.
         frame.getContentPane().removeAll();
-        frame.setLayout(new GridLayout(3, 1));
+        frame.setLayout(new GridLayout(2, 2));
 
-        String[] coursesArray = {"array of all courses here"};
-        JComboBox<String> coursesCombo = new JComboBox<String>(coursesArray);
-        JScrollPane commentsPane = new JScrollPane();
-        JLabel test = new JLabel("Test \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n test");
-        commentsPane.add(test);
-        commentsPane.setVisible(true);
         frame.add(coursesCombo);
-        frame.add(commentsPane);
+        frame.add(selectCourse);
         frame.add(viewCoursesBack);
 
-        frame.repaint();
         frame.pack();
+
 
     }
 
+    public static void viewBoards(String[] boards) {
+        //Still needs work
+        frame.remove(viewCoursesBack);
+        frame.setLayout(new GridLayout(3,2));
+
+        JButton selectBoard = new JButton("Select Board");
+        JComboBox<String> discussionBoardsCombo = new JComboBox<String>(boards);
+
+        frame.add(discussionBoardsCombo);
+        frame.add(selectBoard);
+        frame.add(viewCoursesBack);
+
+        frame.pack();
+    }
+
     public static void createNewCourse() {
+        frame.getContentPane().removeAll();
+        frame.setLayout(new GridLayout(4, 2));
+        JLabel newName = new JLabel("Enter the name of the new course");
+        JTextField name = new JTextField();
+        JLabel chooseMethod = new JLabel("How would you like to input the forum topic?");
+        JTextField forumTopic = new JTextField();
+
+        frame.add(newName);
+        frame.add(name);
+        frame.add(chooseMethod);
+        frame.add(methodChoice);
+        frame.add(chosenMethod);
+        frame.add(forumTopic);
+        frame.add(backEdit);
+        frame.add(createCourse);
+
+        frame.pack();
 
     }
 
