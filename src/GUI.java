@@ -27,7 +27,7 @@ public class GUI extends JComponent{
     private static JLabel chosenMethod = new JLabel("Type in the forum topic you want: ");
     private static JButton createCourse = new JButton("Create course");
     private static JButton newCourseBack = new JButton("Back");
-    private static String[] coursesArray = {"array of all courses here"};
+    private static String[] coursesArray = {"array of all courses here", "Option 2"};
     private static JComboBox<String> coursesCombo = new JComboBox<String>(coursesArray);
 
     public static void main(String[] args) {
@@ -86,12 +86,7 @@ public class GUI extends JComponent{
                     }
                 });
 
-                logout.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        frame.dispose();
-                        JOptionPane.showMessageDialog(frame, "Thank you for using our platform!", "Logout", JOptionPane.INFORMATION_MESSAGE);
-                    }
-                });
+
 
                 delete.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
@@ -141,6 +136,19 @@ public class GUI extends JComponent{
                 newCourses.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         createNewCourse();
+                    }
+                });
+
+                logout.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        frame.dispose();
+                        JOptionPane.showMessageDialog(frame, "Thank you for using our platform!", "Logout", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                });
+
+                viewGrades.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        viewPostsAndGrades();
                     }
                 });
             }
@@ -210,6 +218,7 @@ public class GUI extends JComponent{
         frame.setLayout(new GridLayout(3, 2));
         frame.add(edit); frame.add(delete);
         frame.add(viewCourses); frame.add(logout);
+
         if(sessionAuthority) {
             frame.add(newCourses);
             frame.add(gradePosts);
@@ -259,12 +268,14 @@ public class GUI extends JComponent{
 
     public static void viewBoards(String[] boards) {
         //Still needs work
-        frame.remove(viewCoursesBack);
+        frame.getContentPane().removeAll();
         frame.setLayout(new GridLayout(3,2));
 
         JButton selectBoard = new JButton("Select Board");
         JComboBox<String> discussionBoardsCombo = new JComboBox<String>(boards);
 
+        frame.add(coursesCombo);
+        frame.add(selectCourse);
         frame.add(discussionBoardsCombo);
         frame.add(selectBoard);
         frame.add(viewCoursesBack);
@@ -293,7 +304,24 @@ public class GUI extends JComponent{
 
     }
 
+
     public static void gradeStudentPosts() {
+
+    }
+
+    //Still fixing scroll pane
+    public static void viewPostsAndGrades() {
+        frame.getContentPane().removeAll();
+        frame.setLayout(new FlowLayout());
+
+        JPanel panel = new JPanel();
+        JScrollPane postsAndGrades = new JScrollPane(panel);
+
+        JLabel title = new JLabel("See all posts and their grades here \n \n \n \n \n \n \n \n \n test");
+        panel.add(title);
+        frame.add(panel);
+
+        frame.pack();
 
     }
 
