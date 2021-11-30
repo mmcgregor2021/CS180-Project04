@@ -161,7 +161,6 @@ public class GUI extends JComponent{
         frame.add(welcomeMessage1);frame.add(welcomeMessage2);
         frame.add(signUpButton);frame.add(logInButton);
         frame.pack();
-
     }
 
     public static void logIn() {
