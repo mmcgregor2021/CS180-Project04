@@ -19,23 +19,64 @@ class TestClient {
 
 			while (!"exit".equalsIgnoreCase(line)) {
 
-				System.out.println("Enter user id:");
-				Integer loginID = Integer.parseInt(sc.nextLine());
-                System.out.println("Enter password:");
-				String loginPassword = sc.nextLine();
+				System.out.println("1. login\n2. signup");
+				Integer choice = Integer.parseInt(sc.nextLine());
+				switch (choice) {
+					case 1:
+						System.out.println("Enter user id:");
+						Integer loginID = Integer.parseInt(sc.nextLine());
+						System.out.println("Enter password:");
+						String loginPassword = sc.nextLine();
+						logIn(loginID, loginPassword, socket);
+						break;
+					case 2:
+						Integer newID = requestNewID(socket);
+						System.out.println("Your ID is: " + newID);
+						System.out.println("Please enter your first name: ");
+						String first = sc.nextLine();
+						System.out.println("Please enter your last name: ");
+						String last = sc.nextLine();
+						System.out.println("Please enter a password: ");
+						String pass = sc.nextLine();
+						System.out.println("Please enter your role (Teacher or Student): ");
+						String role = sc.nextLine();
+						signUp(newID, first, last, pass, role, socket);
+				}
 
-                logIn(loginID, loginPassword, socket);
 			}
-
 			// closing the scanner object
 			sc.close();
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-    //GRANT
+	public static void signUp(Integer userID, String firstName, String lastName, String password, String role, Socket socket) {
+		try {
+			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			String signUpPayload = "signup;" + userID + ";" + password + ";" + role + ";" + firstName + ";" + lastName;
+			out.println(signUpPayload);
+			out.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static Integer requestNewID(Socket socket) {
+		try {
+			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			//sending a request to the server for a new ID to be assigned
+			out.println("newID");
+			out.flush();
+			return Integer.parseInt(in.readLine());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
     public static void logIn(Integer userID, String password, Socket socket) {
         try {
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);

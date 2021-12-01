@@ -4,14 +4,12 @@ import java.util.*;
 
 public class Server {
 
-    ArrayList<Comment> comments = readComments("comments.txt");
-    ArrayList<Board> boards = readBoards("boards.txt");
+    private static ArrayList<Comment> comments = readComments("comments.txt");
+    private static ArrayList<Board> boards = readBoards("boards.txt");
     private static ArrayList<Teacher> teachers = readTeachers("teachers.txt");
     private static ArrayList<Student> students = readStudents("students.txt");
-    HashMap<Integer, Person> users = populateHashMap();
-    int personCounter = readCounters("counters.txt")[0];
-    int boardCounter = readCounters("counters.txt")[1];
-    int commentCounter = readCounters("counters.txt")[2];
+    private HashMap<Integer, Person> users = populateHashMap();
+    private static Integer[] counters = readCounters("counters.txt");
 
     public static void main(String[] args) {
         ServerSocket server = null;
@@ -47,8 +45,7 @@ public class Server {
             this.clientSocket = socket;
         }
 
-        public void run()
-        {
+        public void run() {
             PrintWriter out = null;
             BufferedReader in = null;
             try {
@@ -56,31 +53,51 @@ public class Server {
                 in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
                 //TO DO
-                String line = in.readLine();
-                while (line != null) {
-                    switch (line.split(";")[0]) {
-                        //login request
-                        case "login":
-                            Integer userID = Integer.parseInt(line.split(";")[1]);
-                            String password = line.split(";")[2];
-                            Integer loginResult = logIn(userID, password, students, teachers);
-                            out.println(loginResult);
-                            break;
-						case "logout":
-							try {
-								if (out != null) {
-									out.close();
+				while (true) {
+					String line = in.readLine();
+					while (line != null) {
+						switch (line.split(";")[0]) {
+							//login request
+							case "login":
+								Integer userID = Integer.parseInt(line.split(";")[1]);
+								String password = line.split(";")[2];
+								Integer loginResult = logIn(userID, password, students, teachers);
+								out.println(loginResult);
+								break;
+							//signup request
+							case "signup":
+								Integer assignedID = Integer.parseInt(line.split(";")[1]);
+								String assignedPassword = line.split(";")[2];
+								String assignedRole = line.split(";")[3];
+								String assignedFirstName = line.split(";")[4];
+								String assignedLastName = line.split(";")[5];
+								if (assignedRole.equals("Student")) {
+									//locking students ArrayList for modification
+									synchronized (students) {
+										students.add(new Student(assignedFirstName, assignedLastName, assignedPassword, assignedID));
+										saveStudents(students, "students.txt");
+									}
+								} else {
+									//locking teachers ArrayList for modification
+									synchronized (teachers) {
+										teachers.add(new Teacher(assignedFirstName, assignedLastName, assignedPassword, assignedID));
+										saveTeachers(teachers, "teachers.txt");
+									}
 								}
-								if (in != null) {
-									in.close();
-									clientSocket.close();
+								break;
+							//new ID assignment request
+							case "newID":
+								//locking personCounter for modification
+								synchronized (counters) {
+									//counter[0] is personCounter
+									counters[0]++;
+									out.println(counters[0]);
 								}
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
-							break;
-                    }
-                }
+						}
+						//resetting line to null, so requests do not get spammed
+						line = null;
+					}
+				}
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
@@ -92,13 +109,14 @@ public class Server {
                         in.close();
                         clientSocket.close();
                     }
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }
     }
+
+
 
     //takes the inputted id and password and checks to see if the login was successful
     //returns either 1, 2, or 3 based on the result of the login operation
@@ -247,9 +265,11 @@ public class Server {
     }
 
     //saves all three counters to one line separated by ';' to a txt file
-    public static void saveCounters(int personCounter, int boardCounter,
-           int commentCounter, String fileName) {
+    public static void saveCounters(Integer[] counters, String fileName) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(fileName))) {
+			Integer personCounter = counters[0];
+			Integer boardCounter = counters[1];
+			Integer commentCounter = counters[2];
             pw.println(personCounter + ";" + boardCounter + ";" + commentCounter);
         } catch (Exception e) {
             System.out.println("Failed to save counter!");
@@ -258,8 +278,8 @@ public class Server {
 
     //reads all three counters from the txt file to an Integer array
     //Integer Array Format: [personCounter, boardCounter, commentCounter]
-    public static int[] readCounters(String fileName) {
-        int[] arr = new int[3];
+    public static Integer[] readCounters(String fileName) {
+        Integer[] arr = new Integer[3];
         try (BufferedReader bfr = new BufferedReader(new FileReader(fileName))) {
             String[] lineArr = bfr.readLine().split(";");
             int personCounter = Integer.parseInt(lineArr[0]);
