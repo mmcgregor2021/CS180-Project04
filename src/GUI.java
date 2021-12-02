@@ -4,13 +4,19 @@ import java.awt.event.*;
 
 public class GUI extends JComponent{
     private static JFrame frame;
+    //Variables for opening page
     private static JButton signUpButton = new JButton("Sign Up");
     private static JButton logInButton = new JButton("Log In");
     private static JButton firstBack = new JButton("Back");
     private static JButton firstContinue = new JButton("Continue");
+
     static boolean sessionAuthority;
+
+    //Variables for signing up
     private static String[] options = {"Student", "Teacher"};
     private static JComboBox<String> combo = new JComboBox<String>(options);
+
+    //Main menu buttons
     private static JButton edit = new JButton("Edit account");
     private static JButton delete = new JButton("Delete account");
     private static JButton viewCourses = new JButton("View courses");
@@ -18,17 +24,30 @@ public class GUI extends JComponent{
     private static JButton newCourses = new JButton("Create new course");
     private static JButton gradePosts = new JButton("Grade student posts");
     private static JButton viewGrades = new JButton("View posts and grades");
+
+    //Variables for edit account
     private static JButton processEdit = new JButton("Process changes");
     private static JButton backEdit = new JButton("Back");
-    private static JButton viewCoursesBack = new JButton("Back");
-    private static JButton selectCourse = new JButton("Select course");
+
+    //Variables for creating a course
     private static String[] uploadChoices = {"Direct text", "File path"};
     private static JComboBox<String> methodChoice = new JComboBox<>(uploadChoices);
     private static JLabel chosenMethod = new JLabel("Type in the forum topic you want: ");
     private static JButton createCourse = new JButton("Create course");
     private static JButton newCourseBack = new JButton("Back");
+
+    //Variables for viewing all courses
+    private static JButton viewCoursesBack = new JButton("Back");
+    private static JButton selectCourse = new JButton("Select course");
     private static String[] coursesArray = {"array of all courses here", "Option 2"};
     private static JComboBox<String> coursesCombo = new JComboBox<String>(coursesArray);
+
+    //Variables for grading all of a student's posts
+    private static JComboBox<String> studentIDs = new JComboBox<>();
+    private static JButton selectStudent = new JButton("Select this student");
+    private static JTextArea studentComment = new JTextArea();
+    private static JTextField grade = new JTextField("Enter the grade here");
+    private static JButton enterGrade = new JButton("Enter grade");
 
     public static void main(String[] args) {
 
@@ -151,6 +170,20 @@ public class GUI extends JComponent{
                         viewPostsAndGrades();
                     }
                 });
+
+                selectStudent.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        studentComment.setVisible(true);
+                        enterGrade.setVisible(true);
+                        grade.setVisible(true);
+                    }
+                });
+
+                gradePosts.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        gradeStudentPosts();
+                    }
+                });
             }
         });
     }
@@ -171,6 +204,7 @@ public class GUI extends JComponent{
         frame.pack();
     }
 
+    //TODO check if what the user entered is an accurate login.
     public static void logIn() {
         frame.getContentPane().removeAll();
         frame.setLayout(new GridLayout(3, 2));
@@ -188,6 +222,7 @@ public class GUI extends JComponent{
         frame.pack();
     }
 
+    //TODO create a new user profile based on what they entered here
     public static void signUp() {
         frame.getContentPane().removeAll();
         frame.setLayout(new GridLayout(6, 2));
@@ -229,6 +264,8 @@ public class GUI extends JComponent{
         frame.pack();
     }
 
+    //TODO save this edited account info
+    //TODO update the GUI pop up with the user info
     public static void editAccount() {
         //The idea here is to print all the current information in the text fields and allow the user to change it.
         frame.getContentPane().removeAll();
@@ -253,6 +290,7 @@ public class GUI extends JComponent{
         frame.pack();
     }
 
+    //TODO have all courses appear in the combo box
     public static void viewAllCourses() {
         frame.getContentPane().removeAll();
         frame.setLayout(new GridLayout(2, 2));
@@ -266,8 +304,9 @@ public class GUI extends JComponent{
 
     }
 
+    //TODO have all corresponding boards appear in the combo box
+    //TODO have the selectBoard button take you to the next page
     public static void viewBoards(String[] boards) {
-        //Still needs work
         frame.getContentPane().removeAll();
         frame.setLayout(new GridLayout(3,2));
 
@@ -283,6 +322,7 @@ public class GUI extends JComponent{
         frame.pack();
     }
 
+    //TODO save the created course
     public static void createNewCourse() {
         frame.getContentPane().removeAll();
         frame.setLayout(new GridLayout(4, 2));
@@ -304,24 +344,48 @@ public class GUI extends JComponent{
 
     }
 
-
+    //TODO populate combo box with all student IDs
+    //TODO iterate through all of a student's posts, print each in the text field one at a time
+    //TODO save the grades the teacher puts in
     public static void gradeStudentPosts() {
+        frame.getContentPane().removeAll();
+        frame.setLayout(new GridLayout(3,2));
 
+        studentComment.setEditable(false);
+
+        frame.add(studentIDs);
+        frame.add(selectStudent);
+        frame.add(studentComment);
+        frame.add(grade);
+        frame.add(enterGrade);
+
+        grade.setVisible(false);
+        studentComment.setVisible(false);
+        enterGrade.setVisible(false);
+
+        frame.pack();
     }
 
-    //Still fixing scroll pane
+    //TODO populate the scrollPane with all the relative comments
     public static void viewPostsAndGrades() {
         frame.getContentPane().removeAll();
         frame.setLayout(new FlowLayout());
 
         JPanel panel = new JPanel();
         JScrollPane postsAndGrades = new JScrollPane(panel);
+        JLabel test = new JLabel("Test        Test");
+        JLabel test2 = new JLabel("Test 2");
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        postsAndGrades.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        panel.add(test);
+        panel.add(test2);
 
-        JLabel title = new JLabel("See all posts and their grades here \n \n \n \n \n \n \n \n \n test");
-        panel.add(title);
-        frame.add(panel);
+        panel.add(Box.createVerticalGlue());
+
 
         frame.pack();
+        frame.getContentPane().add(postsAndGrades);
+        frame.setSize(500,300);
 
     }
 
