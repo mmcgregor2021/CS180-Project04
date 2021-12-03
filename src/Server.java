@@ -122,6 +122,9 @@ public class Server {
                                     saveComments(comments, "comments.txt");
                                 }
                                 break;
+                            //requesting session name and password from server
+                            case "sessionVariable":
+
 
 						}
 						//resetting line to null, so requests do not get spammed
@@ -147,6 +150,27 @@ public class Server {
     }
 
 
+
+    public static String getSessionVariable(String payload, ArrayList<Student> students, ArrayList<Teacher> teachers) {
+        Integer sentSessionID = Integer.parseInt(payload.split(";")[1]);
+        for (int i = 0; i < students.size(); i++) {
+            if (students.get(i).getID() == sentSessionID) {
+                String firstName = students.get(i).getFirstName();
+                String lastName = students.get(i).getLastName();
+                String password = students.get(i).getPassword();
+                return firstName + ";" + lastName + ";" + password;
+            }
+        }
+        for (int i = 0; i < teachers.size(); i++) {
+            if (teachers.get(i).getID() == sentSessionID) {
+                String firstName = teachers.get(i).getFirstName();
+                String lastName = teachers.get(i).getLastName();
+                String password = teachers.get(i).getPassword();
+                return firstName + ";" + lastName + ";" + password;
+            }
+        }
+        return "";
+    }
 
     //takes the inputted id and password and checks to see if the login was successful
     //returns either 1, 2, or 3 based on the result of the login operation
@@ -323,78 +347,4 @@ public class Server {
         }
         return arr;
     }
-
-    public static void signUp(Integer userID, String firstName, String lastName, String password, String role, Socket socket) {
-        try {
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            String signUpPayload = "signup;" + userID + ";" + password + ";" + role + ";" + firstName + ";" + lastName;
-            out.println(signUpPayload);
-            out.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static Integer requestNewID(Socket socket) {
-        try {
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            //sending a request to the server for a new ID to be assigned
-            out.println("newID");
-            out.flush();
-            return Integer.parseInt(in.readLine());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
-
-    //TODO replace print statements with JOptionPane windows
-    public static void logIn(Integer userID, String password, Socket socket) {
-        try {
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            String verificationPayload = "login;" + userID + ";" + password;
-            out.println(verificationPayload);
-            out.flush();
-            switch(Integer.parseInt(in.readLine())) {
-                //TO DO: replace print statements below with JOptionPane messages
-                case 1:
-                    System.out.println("ID DOESN'T EXIST");
-                    break;
-                case 2:
-                    System.out.println("WRONG PASSWORD");
-                    break;
-                case 3:
-                    System.out.println("SUCCESFUL LOGIN");
-                    break;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void sendRequest(String requestPayload, Socket socket) {
-        try {
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            out.println(requestPayload);
-            out.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    //returns an arraylist of every unique course in String format
-    public static ArrayList<String> populateCourses(ArrayList<Board> boards) {
-        ArrayList<String> courses = new ArrayList<>();
-        for (int i = 0; i < boards.size(); i++) {
-            Board board = boards.get(i);
-            if (!courses.contains(board.getCourse())) {
-                courses.add(board.getCourse());
-            }
-        }
-        return courses;
-    }
-
 }
