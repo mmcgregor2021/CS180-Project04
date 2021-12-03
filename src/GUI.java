@@ -98,12 +98,11 @@ public class GUI extends JComponent{
                 //this is pressed after the user enters their signup information
                 firstContinue.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-                        Integer id = requestNewID(socket);
                         String firstName = signUpFirstName.getText();
                         String lastName = signUpLastName.getText();
                         String password = signUpPassword.getText();
                         String role = (String)combo.getSelectedItem();
-                        out.println("signup;" + id + ";" + password + ";" + role + ";" + firstName + ";" + lastName);
+                        out.println("signup;" + signupID + ";" + password + ";" + role + ";" + firstName + ";" + lastName);
                         sessionAuthority = combo.getSelectedItem().equals("Teacher");
                         firstMenu();
                     }
@@ -253,7 +252,9 @@ public class GUI extends JComponent{
         frame.setLayout(new GridLayout(6, 2));
 
         JLabel IDMessage1 = new JLabel("Your new ID is: ");
-        IDMessage2 = new JLabel("This is where the generated ID will go");
+        int requestedID = requestNewID(socket);
+        IDMessage2 = new JLabel(String.valueOf(requestedID));
+        signupID = requestedID;
         JLabel passMessage = new JLabel("PLease enter a password: ");
         signUpPassword = new JTextField(15);
         JLabel firstMessage = new JLabel("Please enter your first name: ");
