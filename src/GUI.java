@@ -18,6 +18,7 @@ public class GUI extends JComponent{
     //Session variables
     private static Integer signupID = 0;
     private static Integer sessionID;
+    private static String sessionName;
 
     //Variables for signing up
     private static String[] options = {"Student", "Teacher"};
