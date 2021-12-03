@@ -94,6 +94,31 @@ public class Server {
 									counters[0]++;
 									out.println(counters[0]);
 								}
+                                //TODO create course
+                            case "createCourse":
+                                String name = line.split(";")[1];
+                            case "createBoard":
+                                String course = line.split(";")[1];
+                                String topic = line.split(";")[2];
+                                String boardID = line.split(";")[3];
+                                String dateAndTime = line.split(";")[4];
+                                synchronized (boards) {
+                                    boards.add(new Board(course, topic, boardID, dateAndTime));
+                                    saveBoards(boards, "boards.txt");
+                                }
+                            case "createComment":
+                                String parentID = line.split(";")[1];
+                                String commentID = line.split(";")[1];
+                                int ownerID = Integer.parseInt(line.split(";")[1]);
+                                String content = line.split(";")[1];
+                                int likes = Integer.parseInt(line.split(";")[1]);
+                                int grade = Integer.parseInt(line.split(";")[1]);
+                                String commentDateAndTime = line.split(";")[1];
+                                synchronized (comments) {
+                                    comments.add(new Comment(parentID, commentID, ownerID, content, likes, grade, commentDateAndTime));
+                                    saveComments(comments, "comments.txt");
+                                }
+
 						}
 						//resetting line to null, so requests do not get spammed
 						line = null;
