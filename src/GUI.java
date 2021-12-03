@@ -96,11 +96,18 @@ public class GUI extends JComponent{
                 //this is pressed after the user enters their signup information
                 firstContinue.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
+                        out.println("newID");
+                        Integer id = null;
+                        try {
+                            id = Integer.parseInt(in.readLine());
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
                         String firstName = signUpFirstName.getText();
                         String lastName = signUpLastName.getText();
                         String password = signUpPassword.getText();
                         String role = (String)combo.getSelectedItem();
-                        out.write("signup;" + password + ";" + role + ";" + firstName + ";" + lastName);
+                        out.println("signup;" + id + ";" + password + ";" + role + ";" + firstName + ";" + lastName);
                         sessionAuthority = combo.getSelectedItem().equals("Teacher");
                         firstMenu();
 
