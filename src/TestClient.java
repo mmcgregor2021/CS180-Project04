@@ -101,4 +101,14 @@ class TestClient {
         }
     }
 
+    public static void sendRequest(String requestPayload, Socket socket) {
+        try {
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            out.println(requestPayload);
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
