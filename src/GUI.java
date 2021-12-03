@@ -22,8 +22,8 @@ public class GUI extends JComponent{
     private static JTextField signUpFirstName;
     private static JTextField signUpLastName;
     private static JTextField signUpPassword;
-    private static JTextField userID;
-    private static JTextField password;
+    private static JTextField logInUserID;
+    private static JTextField logInPassword;
     private static JLabel IDMessage2;
 
     //Main menu buttons
@@ -113,8 +113,8 @@ public class GUI extends JComponent{
 
                 logInContinue.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-                        int log = Integer.parseInt(userID.getText());
-                        String pass = password.getText();
+                        int log = Integer.parseInt(logInUserID.getText());
+                        String pass = logInPassword.getText();
                         out.println("login;" + log + ";" + pass);
                         firstMenu();
                     }
@@ -246,12 +246,12 @@ public class GUI extends JComponent{
         frame.setLayout(new GridLayout(3, 2));
 
         JLabel username = new JLabel("Enter your userID: ");
-        userID = new JTextField(15);
+        logInUserID = new JTextField(15);
         JLabel pass = new JLabel("Enter your password: ");
-        password = new JTextField(15);
+        logInPassword = new JTextField(15);
 
-        frame.add(username);frame.add(userID);
-        frame.add(pass);frame.add(password);
+        frame.add(username);frame.add(logInUserID);
+        frame.add(pass);frame.add(logInPassword);
         frame.add(firstBack);frame.add(signUpContinue);
 
         frame.repaint();
