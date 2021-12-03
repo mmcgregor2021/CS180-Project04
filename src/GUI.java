@@ -10,7 +10,8 @@ public class GUI extends JComponent{
     private static JButton signUpButton = new JButton("Sign Up");
     private static JButton logInButton = new JButton("Log In");
     private static JButton firstBack = new JButton("Back");
-    private static JButton firstContinue = new JButton("Continue");
+    private static JButton signUpContinue = new JButton("Continue");
+    private static JButton logInContinue = new JButton("Continue");
 
     static boolean sessionAuthority;
 
@@ -21,6 +22,8 @@ public class GUI extends JComponent{
     private static JTextField signUpFirstName;
     private static JTextField signUpLastName;
     private static JTextField signUpPassword;
+    private static JTextField userID;
+    private static JTextField password;
     private static JLabel IDMessage2;
 
     //Main menu buttons
@@ -96,7 +99,7 @@ public class GUI extends JComponent{
                 });
 
                 //this is pressed after the user enters their signup information
-                firstContinue.addActionListener(new ActionListener() {
+                signUpContinue.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         String firstName = signUpFirstName.getText();
                         String lastName = signUpLastName.getText();
@@ -104,6 +107,15 @@ public class GUI extends JComponent{
                         String role = (String)combo.getSelectedItem();
                         out.println("signup;" + signupID + ";" + password + ";" + role + ";" + firstName + ";" + lastName);
                         sessionAuthority = combo.getSelectedItem().equals("Teacher");
+                        firstMenu();
+                    }
+                });
+
+                logInContinue.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        int log = Integer.parseInt(userID.getText());
+                        String pass = password.getText();
+                        out.println("login;" + log + ";" + pass);
                         firstMenu();
                     }
                 });
@@ -234,13 +246,13 @@ public class GUI extends JComponent{
         frame.setLayout(new GridLayout(3, 2));
 
         JLabel username = new JLabel("Enter your userID: ");
-        JTextField userID = new JTextField(15);
+        userID = new JTextField(15);
         JLabel pass = new JLabel("Enter your password: ");
-        JTextField password = new JTextField(15);
+        password = new JTextField(15);
 
         frame.add(username);frame.add(userID);
         frame.add(pass);frame.add(password);
-        frame.add(firstBack);frame.add(firstContinue);
+        frame.add(firstBack);frame.add(signUpContinue);
 
         frame.repaint();
         frame.pack();
@@ -268,7 +280,7 @@ public class GUI extends JComponent{
         frame.add(firstMessage); frame.add(signUpFirstName);
         frame.add(lastMessage); frame.add(signUpLastName);
         frame.add(studentTeacher); frame.add(combo);
-        frame.add(firstBack); frame.add(firstContinue);
+        frame.add(firstBack); frame.add(signUpContinue);
 
         frame.repaint();
         frame.pack();
