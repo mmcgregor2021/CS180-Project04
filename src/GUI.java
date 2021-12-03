@@ -106,8 +106,6 @@ public class GUI extends JComponent{
                         if (!areFieldsFull(fields)) {
                             JOptionPane.showMessageDialog(null, "Please make sure there are no empty fields",
                                     "Error", JOptionPane.ERROR_MESSAGE);
-                            //TODO decrement ID here so the user doesn't get a new ID every time there's an error?
-                            signUp();
                         } else {
                             String firstName = signUpFirstName.getText();
                             String lastName = signUpLastName.getText();
