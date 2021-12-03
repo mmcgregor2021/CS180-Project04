@@ -4,7 +4,7 @@ import java.util.*;
 import javax.swing.*;
 
 // Client class
-class TestClient {
+public class TestClient {
 
 	// driver code
 	public static void main(String[] args) {
