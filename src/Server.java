@@ -94,6 +94,13 @@ public class Server {
 									counters[0]++;
 									out.println(counters[0]);
 								}
+                                //TODO create course
+                            case "createCourse":
+                                String name = line.split(";")[1];
+                                //TODO create board
+                            case "createBoard":
+                                //TODO create comment
+                            case "createComment":
 						}
 						//resetting line to null, so requests do not get spammed
 						line = null;
