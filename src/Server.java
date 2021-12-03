@@ -108,12 +108,12 @@ public class Server {
                                 }
                             case "createComment":
                                 String parentID = line.split(";")[1];
-                                String commentID = line.split(";")[1];
-                                int ownerID = Integer.parseInt(line.split(";")[1]);
-                                String content = line.split(";")[1];
-                                int likes = Integer.parseInt(line.split(";")[1]);
-                                int grade = Integer.parseInt(line.split(";")[1]);
-                                String commentDateAndTime = line.split(";")[1];
+                                String commentID = line.split(";")[2];
+                                int ownerID = Integer.parseInt(line.split(";")[3]);
+                                String content = line.split(";")[4];
+                                int likes = Integer.parseInt(line.split(";")[5]);
+                                int grade = Integer.parseInt(line.split(";")[6]);
+                                String commentDateAndTime = line.split(";")[7];
                                 synchronized (comments) {
                                     comments.add(new Comment(parentID, commentID, ownerID, content, likes, grade, commentDateAndTime));
                                     saveComments(comments, "comments.txt");
