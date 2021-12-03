@@ -15,11 +15,13 @@ public class GUI extends JComponent{
     static boolean sessionAuthority;
 
     //Variables for signing up
+    private static signupID = 0;
     private static String[] options = {"Student", "Teacher"};
     private static JComboBox<String> combo = new JComboBox<String>(options);
     private static JTextField signUpFirstName;
     private static JTextField signUpLastName;
     private static JTextField signUpPassword;
+    private static JLabel IDMessage2;
 
     //Main menu buttons
     private static JButton edit = new JButton("Edit account");
@@ -251,7 +253,7 @@ public class GUI extends JComponent{
         frame.setLayout(new GridLayout(6, 2));
 
         JLabel IDMessage1 = new JLabel("Your new ID is: ");
-        JLabel IDMessage2 = new JLabel("This is where the generated ID will go");
+        IDMessage2 = new JLabel("This is where the generated ID will go");
         JLabel passMessage = new JLabel("PLease enter a password: ");
         signUpPassword = new JTextField(15);
         JLabel firstMessage = new JLabel("Please enter your first name: ");

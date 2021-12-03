@@ -1,4 +1,3 @@
-import javax.swing.*;
 import java.net.*;
 import java.io.*;
 import java.util.*;
@@ -7,6 +6,7 @@ public class Server {
 
     private static ArrayList<Comment> comments = readComments("comments.txt");
     private static ArrayList<Board> boards = readBoards("boards.txt");
+    ArrayList<String> courses = populateCourses(boards);
     private static ArrayList<Teacher> teachers = readTeachers("teachers.txt");
     private static ArrayList<Student> students = readStudents("students.txt");
     private HashMap<Integer, Person> users = populateHashMap();
@@ -94,13 +94,6 @@ public class Server {
 									counters[0]++;
 									out.println(counters[0]);
 								}
-                                //TODO create course
-                            case "createCourse":
-                                String name = line.split(";")[1];
-                                //TODO create board
-                            case "createBoard":
-                                //TODO create comment
-                            case "createComment":
 						}
 						//resetting line to null, so requests do not get spammed
 						line = null;
@@ -328,6 +321,7 @@ public class Server {
         return 0;
     }
 
+    //TODO replace print statements with JOptionPane windows
     public static void logIn(Integer userID, String password, Socket socket) {
         try {
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
@@ -336,15 +330,15 @@ public class Server {
             out.println(verificationPayload);
             out.flush();
             switch(Integer.parseInt(in.readLine())) {
+                //TO DO: replace print statements below with JOptionPane messages
                 case 1:
-                    JOptionPane.showMessageDialog(null, "ID DOESN'T EXIST",
-                            "ERROR", JOptionPane.ERROR_MESSAGE);
+                    System.out.println("ID DOESN'T EXIST");
                     break;
                 case 2:
-                    JOptionPane.showMessageDialog(null, "WRONG PASSWORD",
-                            "ERROR", JOptionPane.ERROR_MESSAGE);
+                    System.out.println("WRONG PASSWORD");
                     break;
                 case 3:
+                    System.out.println("SUCCESFUL LOGIN");
                     break;
             }
         } catch (IOException e) {
@@ -360,6 +354,18 @@ public class Server {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    //returns an arraylist of every unique course in String format
+    public static ArrayList<String> populateCourses(ArrayList<Board> boards) {
+        ArrayList<String> courses = new ArrayList<>();
+        for (int i = 0; i < boards.size(); i++) {
+            Board board = boards.get(i);
+            if (!courses.contains(board.getCourse())) {
+                courses.add(board.getCourse());
+            }
+        }
+        return courses;
     }
 
 }
