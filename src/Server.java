@@ -94,9 +94,11 @@ public class Server {
 									counters[0]++;
 									out.println(counters[0]);
 								}
+                                break;
                                 //TODO create course
                             case "createCourse":
                                 String name = line.split(";")[1];
+                                break;
                             case "createBoard":
                                 String course = line.split(";")[1];
                                 String topic = line.split(";")[2];
@@ -106,6 +108,7 @@ public class Server {
                                     boards.add(new Board(course, topic, boardID, dateAndTime));
                                     saveBoards(boards, "boards.txt");
                                 }
+                                break;
                             case "createComment":
                                 String parentID = line.split(";")[1];
                                 String commentID = line.split(";")[2];
@@ -118,6 +121,7 @@ public class Server {
                                     comments.add(new Comment(parentID, commentID, ownerID, content, likes, grade, commentDateAndTime));
                                     saveComments(comments, "comments.txt");
                                 }
+                                break;
 
 						}
 						//resetting line to null, so requests do not get spammed
