@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.net.*;
 import java.io.*;
 import java.util.*;
@@ -329,15 +330,15 @@ public class Server {
             out.println(verificationPayload);
             out.flush();
             switch(Integer.parseInt(in.readLine())) {
-                //TO DO: replace print statements below with JOptionPane messages
                 case 1:
-                    System.out.println("ID DOESN'T EXIST");
+                    JOptionPane.showMessageDialog(null, "ID DOESN'T EXIST",
+                            "ERROR", JOptionPane.ERROR_MESSAGE);
                     break;
                 case 2:
-                    System.out.println("WRONG PASSWORD");
+                    JOptionPane.showMessageDialog(null, "WRONG PASSWORD",
+                            "ERROR", JOptionPane.ERROR_MESSAGE);
                     break;
                 case 3:
-                    System.out.println("SUCCESFUL LOGIN");
                     break;
             }
         } catch (IOException e) {
