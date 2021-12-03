@@ -15,7 +15,7 @@ public class GUI extends JComponent{
     static boolean sessionAuthority;
 
     //Variables for signing up
-    private static signupID = 0;
+    private static Integer signupID = 0;
     private static String[] options = {"Student", "Teacher"};
     private static JComboBox<String> combo = new JComboBox<String>(options);
     private static JTextField signUpFirstName;
