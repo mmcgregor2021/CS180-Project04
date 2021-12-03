@@ -113,9 +113,9 @@ public class GUI extends JComponent{
 
                 logInContinue.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-                        int log = Integer.parseInt(logInUserID.getText());
+                        String user = logInUserID.getText();
                         String pass = logInPassword.getText();
-                        out.println("login;" + log + ";" + pass);
+                        logIn(user, pass, socket); //boob
                         firstMenu();
                     }
                 });
@@ -252,7 +252,7 @@ public class GUI extends JComponent{
 
         frame.add(username);frame.add(logInUserID);
         frame.add(pass);frame.add(logInPassword);
-        frame.add(firstBack);frame.add(signUpContinue);
+        frame.add(firstBack);frame.add(logInContinue);
 
         frame.repaint();
         frame.pack();
@@ -453,7 +453,7 @@ public class GUI extends JComponent{
     }
 
     //TODO replace print statements with JOptionPane windows
-    public static void logIn(Integer userID, String password, Socket socket) {
+    public static void logIn(String userID, String password, Socket socket) {
         try {
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
