@@ -15,8 +15,11 @@ public class GUI extends JComponent{
 
     static boolean sessionAuthority;
 
-    //Variables for signing up
+    //Session variables
     private static Integer signupID = 0;
+    private static Integer sessionID;
+
+    //Variables for signing up
     private static String[] options = {"Student", "Teacher"};
     private static JComboBox<String> combo = new JComboBox<String>(options);
     private static JTextField signUpFirstName;
@@ -122,8 +125,9 @@ public class GUI extends JComponent{
                     public void actionPerformed(ActionEvent e) {
                         String user = logInUserID.getText();
                         String pass = logInPassword.getText();
-                        logIn(user, pass, socket); //boob
-                        firstMenu();
+                        if (logIn(user, pass, socket)) {
+                            firstMenu();
+                        }
                     }
                 });
 
@@ -234,6 +238,7 @@ public class GUI extends JComponent{
     public static void initializeGUI() {
         frame = new JFrame("Discussion Board Application");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 
@@ -459,8 +464,7 @@ public class GUI extends JComponent{
         return 0;
     }
 
-    //TODO replace print statements with JOptionPane windows
-    public static void logIn(String userID, String password, Socket socket) {
+    public static Boolean logIn(String userID, String password, Socket socket) {
         try {
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -468,20 +472,21 @@ public class GUI extends JComponent{
             out.println(verificationPayload);
             out.flush();
             switch(Integer.parseInt(in.readLine())) {
-                //TO DO: replace print statements below with JOptionPane messages
                 case 1:
-                    System.out.println("ID DOESN'T EXIST");
-                    break;
+                    JOptionPane.showMessageDialog(null, "The entered ID does not exist!",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    return false;
                 case 2:
-                    System.out.println("WRONG PASSWORD");
-                    break;
+                    JOptionPane.showMessageDialog(null, "The entered password is incorrect!",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    return false;
                 case 3:
-                    System.out.println("SUCCESFUL LOGIN");
-                    break;
+                    return true;
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return true;
     }
 
     public static void sendRequest(String requestPayload, Socket socket) {
