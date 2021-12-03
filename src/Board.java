@@ -1,7 +1,6 @@
 import java.lang.reflect.Array;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Defines a discussion board.
@@ -9,31 +8,56 @@ import java.util.Date;
  * @version November 8, 2021
  */
 
-public class Board {
+public class Board implements java.io.Serializable {
     private String course;
     private String topic;
     private String boardID;
-    private Date dateAndTime;
+    private String dateAndTime;
     private ArrayList<Comment> comments;
+	private ArrayList<Integer> usersWhoVoted;
 
-    public Board(String course, String topic, String boardID, Date dateAndTime, ArrayList<Comment> comments) {
+    public Board(String course, String topic, String boardID, String dateAndTime,
+           ArrayList<Comment> comments, ArrayList<Integer> usersWhoVoted) {
         this.course = course;
         this.topic = topic;
         this.boardID = boardID;
         this.dateAndTime = dateAndTime;
         this.comments = comments;
+		this.usersWhoVoted = usersWhoVoted;
+    }
+
+	public Board(String course, String topic, String boardID,
+           String dateAndTime, ArrayList<Comment> comments) {
+		this.course = course;
+		this.topic = topic;
+		this.boardID = boardID;
+		this.dateAndTime = dateAndTime;
+		this.comments = comments;
+		ArrayList<Integer> votedUsers = new ArrayList<>();
+		this.usersWhoVoted = votedUsers;
+	}
+
+    //overloaded constructor for when a new board is created and does not have comments or users who voted yet
+    public Board(String course, String topic, String boardID, String dateAndTime) {
+        this.course = course;
+        this.topic = topic;
+        this.boardID = boardID;
+        this.dateAndTime = dateAndTime;
+        ArrayList<Comment> listOfComments = new ArrayList<>();
+        this.comments = listOfComments;
+		ArrayList<Integer> votedUsers = new ArrayList<>();
+		this.usersWhoVoted = votedUsers;
     }
 
     //this creates a comment on the board itself (first level comment)
-    public void createComment(String commentID, int ownerID, String content, int likes, Date theDateAndTime,
-                              ArrayList<Person> usersWhoLiked, ArrayList<Comment> repliesToComment) {
-        comments.add(new Comment(this.boardID, commentID, ownerID, content, likes, theDateAndTime,
-                usersWhoLiked, repliesToComment));
+    public void createComment(String commentID, int ownerID, String content,
+           int likes, String theDateAndTime) {
+        comments.add(new Comment(this.boardID, commentID, ownerID, content, likes, 0, theDateAndTime));
     }
 
     public void deleteComment(String commentID) {
         for (Comment c: comments) {
-            if(c.getCommentID().equals(commentID)) {
+            if (c.getCommentID().equals(commentID)) {
                 comments.remove(c);
             }
         }
@@ -47,13 +71,13 @@ public class Board {
         for (int i = comments.size() - 1; i >= 0; i--) {
             Comment c = comments.get(i);
             //indent
+            toReturn += "\n\tStudent ID: " + c.getOwnerID();
             toReturn += "\n\t" + c.getContent() + " | " + c.getDateAndTime();
-            toReturn += "\n" + c.getLikes() + " likes";
+            toReturn += "\n\t" + c.getLikes() + " votes | Comment ID: " + c.getCommentID();
             for (int j = c.getRepliesToComment().size() - 1; j >= 0; j--) {
                 Comment r = c.getRepliesToComment().get(j);
-                toReturn += "\n\t\t";
-                toReturn += r.getContent() + " | " + r.getDateAndTime();
-                toReturn += "\n" + r.getLikes() + " likes";
+                toReturn += "\n\t\tStudent ID: " + r.getOwnerID();
+                toReturn += "\n\t\t" + r.getContent() + " | " + r.getDateAndTime();
             }
             toReturn += "\n";
         }
@@ -92,11 +116,24 @@ public class Board {
         this.comments = comments;
     }
 
-    public Date getDateAndTime() {
+    public String getDateAndTime() {
         return dateAndTime;
     }
 
-    public void setDateAndTime(Date dateAndTime) {
+    public void setDateAndTime(String dateAndTime) {
         this.dateAndTime = dateAndTime;
     }
+
+	public ArrayList<Integer> getUsersWhoVoted() {
+		return usersWhoVoted;
+	}
+
+	public void setUsersWhoVoted() {
+		this.usersWhoVoted = usersWhoVoted;
+	}
+
+	public void addUsersWhoVoted(int id) {
+		this.usersWhoVoted.add(id);
+	}
+
 }

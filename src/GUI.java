@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
+import java.net.Socket;
 
 public class GUI extends JComponent{
     private static JFrame frame;
@@ -15,7 +17,10 @@ public class GUI extends JComponent{
     //Variables for signing up
     private static String[] options = {"Student", "Teacher"};
     private static JComboBox<String> combo = new JComboBox<String>(options);
-
+    private static JTextField signUpFirstName;
+    private static JTextField signUpLastName;
+    private static JTextField signUpPassword;
+  
     //Main menu buttons
     private static JButton edit = new JButton("Edit account");
     private static JButton delete = new JButton("Delete account");
@@ -49,10 +54,22 @@ public class GUI extends JComponent{
     private static JTextField grade = new JTextField("Enter the grade here");
     private static JButton enterGrade = new JButton("Enter grade");
 
+    private static Socket socket = null;
+    private static PrintWriter out = null;
+    private static BufferedReader in = null;
+  
     public static void main(String[] args) {
 
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
+                try {
+                    out = new PrintWriter(socket.getOutputStream(), true);
+                    socket = new Socket("localhost", 1234);
+                    in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
                 initializeGUI();
                 openMenu();
 
@@ -78,6 +95,16 @@ public class GUI extends JComponent{
                 firstContinue.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         //Add code to make an account.
+
+                //this is pressed after the user enters their signup information
+                firstContinue.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        String firstName = signUpFirstName.getText();
+                        String lastName = signUpLastName.getText();
+                        String password = signUpPassword.getText();
+                        String role = (String)combo.getSelectedItem();
+                        out.write("signup;" + password + ";" + role + ";" + firstName + ";" + lastName);
+
                         sessionAuthority = combo.getSelectedItem().equals("Teacher");
                         firstMenu();
 
@@ -241,6 +268,19 @@ public class GUI extends JComponent{
         frame.add(passMessage); frame.add(password);
         frame.add(firstMessage); frame.add(firstName);
         frame.add(lastMessage); frame.add(lastName);
+
+        signUpPassword = new JTextField(15);
+        JLabel firstMessage = new JLabel("Please enter your first name: ");
+        signUpFirstName = new JTextField(15);
+        JLabel lastMessage = new JLabel("Please enter your last name: ");
+        signUpLastName = new JTextField(15);
+        JLabel studentTeacher = new JLabel ("I am a ");
+
+        frame.add(IDMessage1); frame.add(IDMessage2);
+        frame.add(passMessage); frame.add(signUpPassword);
+        frame.add(firstMessage); frame.add(signUpFirstName);
+        frame.add(lastMessage); frame.add(signUpLastName);
+
         frame.add(studentTeacher); frame.add(combo);
         frame.add(firstBack); frame.add(firstContinue);
 
@@ -436,4 +476,6 @@ public class GUI extends JComponent{
             e.printStackTrace();
         }
     }
+    }
+
 }
