@@ -276,7 +276,7 @@ public class GUI extends JComponent{
         int requestedID = requestNewID(socket);
         IDMessage2 = new JLabel(String.valueOf(requestedID));
         signupID = requestedID;
-        JLabel passMessage = new JLabel("PLease enter a password: ");
+        JLabel passMessage = new JLabel("Please enter a password: ");
         signUpPassword = new JTextField(15);
         JLabel firstMessage = new JLabel("Please enter your first name: ");
         signUpFirstName = new JTextField(15);
