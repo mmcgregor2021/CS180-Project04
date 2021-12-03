@@ -64,8 +64,8 @@ public class GUI extends JComponent{
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    out = new PrintWriter(socket.getOutputStream(), true);
                     socket = new Socket("localhost", 1234);
+                    out = new PrintWriter(socket.getOutputStream(), true);
                     in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 } catch (IOException e) {
                     e.printStackTrace();
