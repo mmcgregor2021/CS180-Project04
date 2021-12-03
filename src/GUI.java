@@ -1,10 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 
 public class GUI extends JComponent{
@@ -23,7 +20,7 @@ public class GUI extends JComponent{
     private static JTextField signUpFirstName;
     private static JTextField signUpLastName;
     private static JTextField signUpPassword;
-
+  
     //Main menu buttons
     private static JButton edit = new JButton("Edit account");
     private static JButton delete = new JButton("Delete account");
@@ -60,8 +57,7 @@ public class GUI extends JComponent{
     private static Socket socket = null;
     private static PrintWriter out = null;
     private static BufferedReader in = null;
-
-
+  
     public static void main(String[] args) {
 
         SwingUtilities.invokeLater(new Runnable() {
@@ -96,6 +92,10 @@ public class GUI extends JComponent{
                     }
                 });
 
+                firstContinue.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        //Add code to make an account.
+
                 //this is pressed after the user enters their signup information
                 firstContinue.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
@@ -104,6 +104,7 @@ public class GUI extends JComponent{
                         String password = signUpPassword.getText();
                         String role = (String)combo.getSelectedItem();
                         out.write("signup;" + password + ";" + role + ";" + firstName + ";" + lastName);
+
                         sessionAuthority = combo.getSelectedItem().equals("Teacher");
                         firstMenu();
 
@@ -256,6 +257,18 @@ public class GUI extends JComponent{
         JLabel IDMessage1 = new JLabel("Your new ID is: ");
         JLabel IDMessage2 = new JLabel("This is where the generated ID will go");
         JLabel passMessage = new JLabel("PLease enter a password: ");
+        JTextField password = new JTextField(15);
+        JLabel firstMessage = new JLabel("Please enter your first name: ");
+        JTextField firstName = new JTextField(15);
+        JLabel lastMessage = new JLabel("Please enter your last name: ");
+        JTextField lastName = new JTextField(15);
+        JLabel studentTeacher = new JLabel ("I am a ");
+
+        frame.add(IDMessage1); frame.add(IDMessage2);
+        frame.add(passMessage); frame.add(password);
+        frame.add(firstMessage); frame.add(firstName);
+        frame.add(lastMessage); frame.add(lastName);
+
         signUpPassword = new JTextField(15);
         JLabel firstMessage = new JLabel("Please enter your first name: ");
         signUpFirstName = new JTextField(15);
@@ -267,6 +280,7 @@ public class GUI extends JComponent{
         frame.add(passMessage); frame.add(signUpPassword);
         frame.add(firstMessage); frame.add(signUpFirstName);
         frame.add(lastMessage); frame.add(signUpLastName);
+
         frame.add(studentTeacher); frame.add(combo);
         frame.add(firstBack); frame.add(firstContinue);
 
@@ -412,10 +426,56 @@ public class GUI extends JComponent{
         frame.pack();
         frame.getContentPane().add(postsAndGrades);
         frame.setSize(500,300);
-
     }
 
+    public static Integer requestNewID(Socket socket) {
+        try {
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            //sending a request to the server for a new ID to be assigned
+            out.println("newID");
+            out.flush();
+            return Integer.parseInt(in.readLine());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 
+    public static void sendRequest(String requestPayload, Socket socket) {
+        try {
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            out.println(requestPayload);
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    //TODO replace all print statements with JoptionPane windows
+    public static void logIn(Integer userID, String password, Socket socket) {
+        try {
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            String verificationPayload = "login;" + userID + ";" + password;
+            out.println(verificationPayload);
+            out.flush();
+            switch(Integer.parseInt(in.readLine())) {
+                //TO DO: replace print statements below with JOptionPane messages
+                case 1:
+                    System.out.println("ID DOESN'T EXIST");
+                    break;
+                case 2:
+                    System.out.println("WRONG PASSWORD");
+                    break;
+                case 3:
+                    System.out.println("SUCCESFUL LOGIN");
+                    break;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    }
 
 }
