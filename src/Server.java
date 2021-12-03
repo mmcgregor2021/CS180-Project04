@@ -321,7 +321,6 @@ public class Server {
         return 0;
     }
 
-    //TODO replace print statements with JOptionPane windows
     public static void logIn(Integer userID, String password, Socket socket) {
         try {
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
