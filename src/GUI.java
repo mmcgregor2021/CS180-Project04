@@ -101,13 +101,22 @@ public class GUI extends JComponent{
                 //this is pressed after the user enters their signup information
                 signUpContinue.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-                        String firstName = signUpFirstName.getText();
-                        String lastName = signUpLastName.getText();
-                        String password = signUpPassword.getText();
-                        String role = (String)combo.getSelectedItem();
-                        out.println("signup;" + signupID + ";" + password + ";" + role + ";" + firstName + ";" + lastName);
-                        sessionAuthority = combo.getSelectedItem().equals("Teacher");
-                        firstMenu();
+                        //if any fields are empty, give the user an error and try again
+                        JTextField[] fields = {signUpFirstName, signUpLastName, signUpPassword};
+                        if (!areFieldsFull(fields)) {
+                            JOptionPane.showMessageDialog(null, "Please make sure there are no empty fields",
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                            //TODO decrement ID here so the user doesn't get a new ID every time there's an error?
+                            signUp();
+                        } else {
+                            String firstName = signUpFirstName.getText();
+                            String lastName = signUpLastName.getText();
+                            String password = signUpPassword.getText();
+                            String role = (String)combo.getSelectedItem();
+                            out.println("signup;" + signupID + ";" + password + ";" + role + ";" + firstName + ";" + lastName);
+                            sessionAuthority = combo.getSelectedItem().equals("Teacher");
+                            firstMenu();
+                        }
                     }
                 });
 
@@ -485,5 +494,14 @@ public class GUI extends JComponent{
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static boolean areFieldsFull(JTextField[] fields) {
+        for(JTextField field: fields) {
+            if(((String)field.getText()).equals("")) {
+                return false;
+            }
+        }
+        return true;
     }
 }
