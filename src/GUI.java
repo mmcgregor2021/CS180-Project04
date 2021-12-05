@@ -132,6 +132,7 @@ public class GUI extends JComponent{
 							//checks to make sure entered ID is an integer
 							try {
 								String user = logInUserID.getText();
+								Integer testID = Integer.parseInt(user);
 		                        String pass = logInPassword.getText();
 		                        if (logIn(user, pass, socket)) {
 		                            firstMenu();
