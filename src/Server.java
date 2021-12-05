@@ -347,4 +347,17 @@ public class Server {
         }
         return arr;
     }
+
+	//returns an arraylist of every unique course in String format
+	public static ArrayList<String> populateCourses(ArrayList<Board> boards) {
+		ArrayList<String> courses = new ArrayList<>();
+		for (int i = 0; i < boards.size(); i++) {
+			Board board = boards.get(i);
+			if (!courses.contains(board.getCourse())) {
+				courses.add(board.getCourse());
+			}
+		}
+		return courses;
+	}
+
 }

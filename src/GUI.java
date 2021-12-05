@@ -106,8 +106,8 @@ public class GUI extends JComponent{
                 signUpContinue.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         //if any fields are empty, give the user an error and try again
-                        JTextField[] fields = {signUpFirstName, signUpLastName, signUpPassword};
-                        if (!areFieldsFull(fields)) {
+                        JTextField[] signUpfields = {signUpFirstName, signUpLastName, signUpPassword};
+                        if (!areFieldsFull(signUpfields)) {
                             JOptionPane.showMessageDialog(null, "Please make sure there are no empty fields",
                                     "Error", JOptionPane.ERROR_MESSAGE);
                         } else {
@@ -124,11 +124,23 @@ public class GUI extends JComponent{
 
                 logInContinue.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-                        String user = logInUserID.getText();
-                        String pass = logInPassword.getText();
-                        if (logIn(user, pass, socket)) {
-                            firstMenu();
-                        }
+						JTextField[] logInfields = {logInUserID, logInPassword};
+						if (!areFieldsFull(logInfields)) {
+                            JOptionPane.showMessageDialog(null, "Please make sure there are no empty fields",
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+						} else {
+							//checks to make sure entered ID is an integer
+							try {
+								String user = logInUserID.getText();
+		                        String pass = logInPassword.getText();
+		                        if (logIn(user, pass, socket)) {
+		                            firstMenu();
+		                        }
+							} catch (NumberFormatException ex) {
+								JOptionPane.showMessageDialog(null, "Please make sure entered ID is an integer",
+	                                    "Error", JOptionPane.ERROR_MESSAGE);
+							}
+						}
                     }
                 });
 
