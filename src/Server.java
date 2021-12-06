@@ -166,6 +166,23 @@ public class Server {
                                     }
                                 }
                                 break;
+                            case "deleteAccount":
+                                Integer idToDelete = Integer.parseInt(line.split(";")[1]);
+                                synchronized (students) {
+                                    for (int i = 0; i < students.size(); i++) {
+                                        if (students.get(i).getID() == idToDelete) {
+                                            students.remove(i);
+                                        }
+                                    }
+                                }
+                                synchronized (teachers) {
+                                    for (int i = 0; i < teachers.size(); i++) {
+                                        if (teachers.get(i).getID() == idToDelete) {
+                                            teachers.remove(i);
+                                        }
+                                    }
+                                }
+                                break;
 						}
 						//resetting line to null, so requests do not get spammed
 						line = null;

@@ -190,8 +190,11 @@ public class GUI extends JComponent{
                             firstMenu();
                         } else {
                             frame.dispose();
-                            //Add code to delete the account
-                            JOptionPane.showMessageDialog(null, "Thank you for using our platform!", "Closing System", JOptionPane.INFORMATION_MESSAGE);
+                            String deletionPayload = "deleteAccount;" + sessionID;
+                            out.println(deletionPayload);
+                            out.flush();
+                            JOptionPane.showMessageDialog(null, "Your account has been deleted. " +
+                                   "Thank you for using our platform!", "Closing System", JOptionPane.INFORMATION_MESSAGE);
                         }
                     }
                 });
