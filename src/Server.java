@@ -87,7 +87,31 @@ public class Server {
 								}
 								break;
                             case "editAccount":
-                                //TODO take in ID, new parameters, and update arrays and files accordingly
+                                Integer id = Integer.parseInt(line.split(";")[1]);
+                                String newFirstName = line.split(";")[2];
+                                String newLastName = line.split(";")[3];
+                                String newPassword = line.split(";")[4];
+                                synchronized(students) {
+                                    for (Student s: students) {
+                                        if(s.getID() == id) {
+                                            s.setFirstName(newFirstName);
+                                            s.setLastName(newLastName);
+                                            s.setPassword(newPassword);
+                                        }
+                                    }
+                                    saveStudents(students, "students.txt");
+                                }
+                                synchronized(teachers) {
+                                    for (Teacher t: teachers) {
+                                        if(t.getID() == id) {
+                                            t.setFirstName(newFirstName);
+                                            t.setLastName(newLastName);
+                                            t.setPassword(newPassword);
+                                        }
+                                    }
+                                    saveTeachers(teachers, "teachers.txt");
+                                }
+                                break;
 							//new ID assignment request
 							case "newID":
 								//locking personCounter for modification
