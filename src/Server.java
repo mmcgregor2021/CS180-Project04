@@ -166,7 +166,7 @@ public class Server {
                                     }
                                 }
                                 break;
-                            case "deleteAccount":
+                            case "deleteAccount":   
                                 Integer idToDelete = Integer.parseInt(line.split(";")[1]);
                                 synchronized (students) {
                                     for (int i = 0; i < students.size(); i++) {
@@ -179,6 +179,24 @@ public class Server {
                                     for (int i = 0; i < teachers.size(); i++) {
                                         if (teachers.get(i).getID() == idToDelete) {
                                             teachers.remove(i);
+                                        }
+                                    }
+                                }
+                                break;
+
+                            case "deleteBoard":
+                                String deleteBoardID = line.split(";")[1];
+                                synchronized(comments) {
+                                    for (int j = 0 ; j < comments.size(); j++) {
+                                        if (comments.get(j).getParentID().equals(deleteBoardID)) {
+                                            comments.remove(j);
+                                        }
+                                    }
+                                }
+                                synchronized(boards) {
+                                    for (int i = 0; i < boards.size(); i++) {
+                                        if (boards.get(i).getBoardID().equals(deleteBoardID)) {
+                                            boards.remove(i);
                                         }
                                     }
                                 }
