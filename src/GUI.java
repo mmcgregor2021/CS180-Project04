@@ -135,6 +135,7 @@ public class GUI extends JComponent{
 								Integer testID = Integer.parseInt(user);
 		                        String pass = logInPassword.getText();
 		                        if (logIn(user, pass, socket)) {
+                                    sessionID = testID;
 		                            firstMenu();
 		                        }
 							} catch (NumberFormatException ex) {
@@ -160,6 +161,7 @@ public class GUI extends JComponent{
                 processEdit.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         //Add code to change user info
+                        //TODO replace template with actual user details here
                         String infoMessage = "This is now your saved user information: \n (Print user details here)";
                         JOptionPane.showMessageDialog(null, infoMessage, "Changes Made", JOptionPane.INFORMATION_MESSAGE);
                         firstMenu();
@@ -284,13 +286,15 @@ public class GUI extends JComponent{
         frame.pack();
     }
 
-    //TODO create a new user profile based on what they entered here
     public static void signUp() {
         frame.getContentPane().removeAll();
         frame.setLayout(new GridLayout(6, 2));
 
         JLabel IDMessage1 = new JLabel("Your new ID is: ");
         int requestedID = requestNewID(socket);
+
+        sessionID = requestedID;
+
         IDMessage2 = new JLabel(String.valueOf(requestedID));
         signupID = requestedID;
         JLabel passMessage = new JLabel("Please enter a password: ");
@@ -329,20 +333,40 @@ public class GUI extends JComponent{
     }
 
     //TODO save this edited account info
-    //TODO update the GUI pop up with the user info
+    //TODO update the GUI pop up with the user info.
+    //TODO: somewhere in here (either client or server side) we need to re-save the files to match the new arrays
+    //TODO: figure out why the userID doesn't increment when new accounts are created
+    //bug: when i use the sign up functionality multiple times on multiple starts of the program, i think multiple users
+    //are created with an ID number of 2.  this is making account editing not work
     public static void editAccount() {
         //The idea here is to print all the current information in the text fields and allow the user to change it.
         frame.getContentPane().removeAll();
         frame.setLayout(new GridLayout(5, 2));
 
+        //request the session name and password from the server
+        out.println("sessionVariable;" + sessionID);
+        out.flush();
+        //read in the name and password.  format: firstname;lastname;password
+        String firstName = "";
+        String lastName = "";
+        String password = "";
+        try {
+            String line = in.readLine();
+            firstName = line.split(";")[0];
+            lastName = line.split(";")[1];
+            password = line.split(";")[2];
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         JLabel message = new JLabel("Enter any changes you would like to make in the text fields below. ");
         JLabel empty = new JLabel("");
         JLabel pass = new JLabel("Password: ");
-        JTextField passwordChange = new JTextField("Current password");
+        JTextField passwordChange = new JTextField(password);
         JLabel first = new JLabel("First Name: ");
-        JTextField firstNameChange = new JTextField("Current first name");
+        JTextField firstNameChange = new JTextField(firstName);
         JLabel last = new JLabel("Last Name: ");
-        JTextField lastNameChange = new JTextField("Current last name");
+        JTextField lastNameChange = new JTextField(lastName);
 
         frame.add(message); frame.add(empty);
         frame.add(pass); frame.add(passwordChange);

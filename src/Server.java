@@ -86,6 +86,8 @@ public class Server {
 									}
 								}
 								break;
+                            case "editAccount":
+                                //TODO take in ID, new parameters, and update arrays and files accordingly
 							//new ID assignment request
 							case "newID":
 								//locking personCounter for modification
@@ -124,8 +126,23 @@ public class Server {
                                 break;
                             //requesting session name and password from server
                             case "sessionVariable":
-
-
+                                String theUserID = line.split(";")[1];
+                                //search through student and teacher arraylists for someone with the given userID
+                                for (Student s: students) {
+                                    if(s.getID() == Integer.parseInt(theUserID)) {
+                                        System.out.println("Writing line");
+                                        out.println(s.getFirstName() + ";" + s.getLastName() + ";" + s.getPassword());
+                                        out.flush();
+                                    }
+                                }
+                                for (Teacher t: teachers) {
+                                    if(t.getID() == Integer.parseInt(theUserID)) {
+                                        System.out.println("Writing line");
+                                        out.println(t.getFirstName() + ";" + t.getLastName() + ";" + t.getPassword());
+                                        out.flush();
+                                    }
+                                }
+                                break;
 						}
 						//resetting line to null, so requests do not get spammed
 						line = null;
