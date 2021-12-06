@@ -86,14 +86,15 @@ public class Server {
 									}
 								}
 								break;
+                            //requesting to modify fields of a student or teacher object
                             case "editAccount":
-                                Integer id = Integer.parseInt(line.split(";")[1]);
+                                String newPassword = line.split(";")[1];
                                 String newFirstName = line.split(";")[2];
                                 String newLastName = line.split(";")[3];
-                                String newPassword = line.split(";")[4];
+                                Integer givenID = Integer.parseInt(line.split(";")[4]);
                                 synchronized(students) {
                                     for (Student s: students) {
-                                        if(s.getID() == id) {
+                                        if(s.getID() == givenID) {
                                             s.setFirstName(newFirstName);
                                             s.setLastName(newLastName);
                                             s.setPassword(newPassword);
@@ -103,7 +104,7 @@ public class Server {
                                 }
                                 synchronized(teachers) {
                                     for (Teacher t: teachers) {
-                                        if(t.getID() == id) {
+                                        if(t.getID() == givenID) {
                                             t.setFirstName(newFirstName);
                                             t.setLastName(newLastName);
                                             t.setPassword(newPassword);
@@ -154,14 +155,12 @@ public class Server {
                                 //search through student and teacher arraylists for someone with the given userID
                                 for (Student s: students) {
                                     if(s.getID() == Integer.parseInt(theUserID)) {
-                                        System.out.println("Writing line");
                                         out.println(s.getFirstName() + ";" + s.getLastName() + ";" + s.getPassword());
                                         out.flush();
                                     }
                                 }
                                 for (Teacher t: teachers) {
                                     if(t.getID() == Integer.parseInt(theUserID)) {
-                                        System.out.println("Writing line");
                                         out.println(t.getFirstName() + ";" + t.getLastName() + ";" + t.getPassword());
                                         out.flush();
                                     }

@@ -6,6 +6,7 @@ import java.net.Socket;
 
 public class GUI extends JComponent{
     private static JFrame frame;
+
     //Variables for opening page
     private static JButton signUpButton = new JButton("Sign Up");
     private static JButton logInButton = new JButton("Log In");
@@ -40,6 +41,9 @@ public class GUI extends JComponent{
     private static JButton viewGrades = new JButton("View posts and grades");
 
     //Variables for edit account
+    private static JTextField passwordChange;
+    private static JTextField firstNameChange;
+    private static JTextField lastNameChange;
     private static JButton processEdit = new JButton("Process changes");
     private static JButton backEdit = new JButton("Back");
 
@@ -162,7 +166,14 @@ public class GUI extends JComponent{
                     public void actionPerformed(ActionEvent e) {
                         //Add code to change user info
                         //TODO replace template with actual user details here
-                        String infoMessage = "This is now your saved user information: \n (Print user details here)";
+                        String password = passwordChange.getText();
+                        String firstName = firstNameChange.getText();
+                        String lastName = lastNameChange.getText();
+                        String modificationPayload = "editAccount;" + password + ";" + firstName + ";" + lastName + ";" + sessionID;
+                        out.println(modificationPayload);
+                        out.flush();
+                        String infoMessage = "This is now your saved user information:\nPassword: " + password +
+                               "\nFirst Name: " + firstName + "\nLast Name: " + lastName;
                         JOptionPane.showMessageDialog(null, infoMessage, "Changes Made", JOptionPane.INFORMATION_MESSAGE);
                         firstMenu();
                     }
@@ -362,11 +373,11 @@ public class GUI extends JComponent{
         JLabel message = new JLabel("Enter any changes you would like to make in the text fields below. ");
         JLabel empty = new JLabel("");
         JLabel pass = new JLabel("Password: ");
-        JTextField passwordChange = new JTextField(password);
+        passwordChange = new JTextField(password);
         JLabel first = new JLabel("First Name: ");
-        JTextField firstNameChange = new JTextField(firstName);
+        firstNameChange = new JTextField(firstName);
         JLabel last = new JLabel("Last Name: ");
-        JTextField lastNameChange = new JTextField(lastName);
+        lastNameChange = new JTextField(lastName);
 
         frame.add(message); frame.add(empty);
         frame.add(pass); frame.add(passwordChange);
