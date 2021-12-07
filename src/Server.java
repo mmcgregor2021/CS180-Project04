@@ -259,6 +259,21 @@ public class Server {
 												         .setLikes(currentNumVotes + 1);
                                 boards.get(boardIndex - 1).setComments(currentBoardComments);
                                 boards.get(boardIndex - 1).addUsersWhoVoted(sessionID);
+                            
+                            case "replyComment": // code to reply to a comment// NOT SURE IF THIS CODE IS VALID
+                                boardIndex = Integer.parseInt(line.split(";")[1]);
+                                commentIndex = Integer.parseInt(line.split(";")[2]);
+                                sessionID = Integer.parseInt(line.split(";")[3]);
+                                String replyToComment = line.split(";")[4];
+                                currentBoardComments = boards.get(boardIndex - 1).getComments();
+                                parentID = currentBoardComments.get(commentIndex).getCommentID();
+                                Date replyDate = new Date();
+								String replyID = "Reply - NO ID";
+							    Comment createdReply = new Comment(parentID, replyID,
+											 sessionID, replyToComment, 0, 0, replyDate.toString());
+								currentBoardComments.get(commentIndex)
+												       .getRepliesToComment().add(createdReply);
+								boards.get(boardIndex - 1).setComments(currentBoardComments);
 						}
 						//resetting line to null, so requests do not get spammed
 						line = null;
