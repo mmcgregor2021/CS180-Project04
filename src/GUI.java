@@ -251,13 +251,22 @@ public class GUI extends JComponent{
                             String method = (String)methodChoice.getSelectedItem();
                             if (method.equals("Direct text")) {
                                 sendRequest("createCourse;" + name + ";" + topic, socket);
+								JOptionPane.showMessageDialog(frame, "The course: " + name + "\nand\nDiscussion Board: " + topic +
+	                                   "\nhave been successfully created", "Course Created", JOptionPane.INFORMATION_MESSAGE);
+								firstMenu();
                             } else {
-                                topic = getTextFromFile(topic);
-                                sendRequest("createCourse;" + name + ";" + topic, socket);
+								try {
+									topic = getTextFromFile(topic);
+	                                sendRequest("createCourse;" + name + ";" + topic, socket);
+									JOptionPane.showMessageDialog(frame, "The course: " + name + "\nand\nDiscussion Board: " + topic +
+		                                   "\nhave been successfully created", "Course Created", JOptionPane.INFORMATION_MESSAGE);
+									firstMenu();
+								} catch (IOException ex) {
+									JOptionPane.showMessageDialog(null, "Error reading file!",
+		                                    "Error", JOptionPane.ERROR_MESSAGE);
+								}
+
                             }
-                            JOptionPane.showMessageDialog(frame, "The course: " + name + "\nand\nDiscussion Board: " + topic +
-                                   "\nhave been successfully created", "Course Created", JOptionPane.INFORMATION_MESSAGE);
-                            firstMenu();
                         }
                     }
                 });
@@ -584,12 +593,12 @@ public class GUI extends JComponent{
         return true;
     }
 
-    public static String getTextFromFile(String fileName) {
+    public static String getTextFromFile(String fileName) throws IOException {
         String line;
         try (BufferedReader bfr = new BufferedReader(new FileReader(fileName))) {
             line = bfr.readLine();
         } catch (IOException e) {
-            return "";
+            throw e;
         }
         return line;
     }
