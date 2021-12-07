@@ -53,7 +53,15 @@ public class Server {
                 out = new PrintWriter(clientSocket.getOutputStream(), true);
                 in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
-                //TO DO
+                /*
+                TODO 
+                Reply to comment
+                View dashboard
+                Vote for comment
+                Create course
+                Grading comments
+
+                */
 				while (true) {
 					String line = in.readLine();
 					while (line != null) {
