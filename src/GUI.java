@@ -14,8 +14,6 @@ public class GUI extends JComponent{
     private static JButton signUpContinue = new JButton("Continue");
     private static JButton logInContinue = new JButton("Continue");
 
-
-
     //Session variables
     private static Integer signupID = 0;
     private static Integer sessionID;
@@ -51,7 +49,10 @@ public class GUI extends JComponent{
     //Variables for creating a course
     private static String[] uploadChoices = {"Direct text", "File path"};
     private static JComboBox<String> methodChoice = new JComboBox<>(uploadChoices);
-    private static JLabel chosenMethod = new JLabel("Type in the forum topic you want: ");
+    private static JLabel chosenMethod = new JLabel("Type in the forum topic for the course's first board: ");
+    private static JTextField forumTopic;
+    private static JLabel chooseMethod;
+    private static JTextField courseName;
     private static JButton createCourse = new JButton("Create course");
     private static JButton newCourseBack = new JButton("Back");
 
@@ -240,6 +241,25 @@ public class GUI extends JComponent{
                     }
                 });
 
+                createCourse.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        JTextField[] fields = {forumTopic, courseName};
+                        if (!areFieldsFull(fields)) {
+                            JOptionPane.showMessageDialog(null, "Please make sure there are no empty fields",
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                        } else {
+                            String name = courseName.getText();
+                            String topic = forumTopic.getText();
+                            String method = (String)methodChoice.getSelectedItem();
+                            if (method.equals("Direct text")) {
+                                //TODO connect to server
+                            } else {
+                                //TODO file processing
+                            }
+                        }
+                    }
+                });
+
                 logout.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         frame.dispose();
@@ -287,7 +307,6 @@ public class GUI extends JComponent{
         frame.pack();
     }
 
-    //TODO check if what the user entered is an accurate login.
     public static void logIn() {
         frame.getContentPane().removeAll();
         frame.setLayout(new GridLayout(3, 2));
@@ -428,12 +447,12 @@ public class GUI extends JComponent{
         frame.getContentPane().removeAll();
         frame.setLayout(new GridLayout(4, 2));
         JLabel newName = new JLabel("Enter the name of the new course");
-        JTextField name = new JTextField();
-        JLabel chooseMethod = new JLabel("How would you like to input the forum topic?");
-        JTextField forumTopic = new JTextField();
+        courseName = new JTextField();
+        chooseMethod = new JLabel("How would you like to input the forum topic?");
+        forumTopic = new JTextField();
 
         frame.add(newName);
-        frame.add(name);
+        frame.add(courseName);
         frame.add(chooseMethod);
         frame.add(methodChoice);
         frame.add(chosenMethod);
