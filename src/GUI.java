@@ -165,7 +165,6 @@ public class GUI extends JComponent{
                 processEdit.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         //Add code to change user info
-                        //TODO replace template with actual user details here
                         String password = passwordChange.getText();
                         String firstName = firstNameChange.getText();
                         String lastName = lastNameChange.getText();
@@ -346,9 +345,6 @@ public class GUI extends JComponent{
         frame.pack();
     }
 
-    //TODO save this edited account info
-    //TODO update the GUI pop up with the user info.
-    //TODO: somewhere in here (either client or server side) we need to re-save the files to match the new arrays
     //TODO: figure out why the userID doesn't increment when new accounts are created
     //bug: when i use the sign up functionality multiple times on multiple starts of the program, i think multiple users
     //are created with an ID number of 2.  this is making account editing not work
