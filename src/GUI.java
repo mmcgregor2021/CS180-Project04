@@ -14,12 +14,13 @@ public class GUI extends JComponent{
     private static JButton signUpContinue = new JButton("Continue");
     private static JButton logInContinue = new JButton("Continue");
 
-    static boolean sessionAuthority;
+
 
     //Session variables
     private static Integer signupID = 0;
     private static Integer sessionID;
     private static String sessionName;
+    private static boolean sessionAuthority;
 
     //Variables for signing up
     private static String[] options = {"Student", "Teacher"};
@@ -140,12 +141,17 @@ public class GUI extends JComponent{
 		                        String pass = logInPassword.getText();
 		                        if (logIn(user, pass, socket)) {
                                     sessionID = testID;
+                                    sendRequest("sessionVariable;" + sessionID, socket);
+                                    //determines session authority
+                                    sessionAuthority = in.readLine().split(";")[3].equals("Teacher");
 		                            firstMenu();
 		                        }
 							} catch (NumberFormatException ex) {
 								JOptionPane.showMessageDialog(null, "Please make sure entered ID is an integer",
 	                                    "Error", JOptionPane.ERROR_MESSAGE);
-							}
+							} catch (IOException ex) {
+                                //DO NOTHING
+                            }
 						}
                     }
                 });
