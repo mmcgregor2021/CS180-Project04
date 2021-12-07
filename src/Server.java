@@ -6,7 +6,7 @@ public class Server {
 
     private static ArrayList<Comment> comments = readComments("comments.txt");
     private static ArrayList<Board> boards = readBoards("boards.txt");
-    ArrayList<String> courses = populateCourses(boards);
+    public static ArrayList<String> courses = populateCourses(boards);
     private static ArrayList<Teacher> teachers = readTeachers("teachers.txt");
     private static ArrayList<Student> students = readStudents("students.txt");
     private HashMap<Integer, Person> users = populateHashMap();
@@ -133,6 +133,7 @@ public class Server {
                                 //TODO create course
                             case "createCourse":
                                 String name = line.split(";")[1];
+                                courses.add(name);
                                 break;
                             case "createBoard":
                                 String course = line.split(";")[1];

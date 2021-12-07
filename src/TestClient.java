@@ -7,6 +7,7 @@ import javax.swing.*;
 public class TestClient {
 
 	// driver code
+	public static Scanner sc = new Scanner(System.in);
 	public static void main(String[] args) {
 		try (Socket socket = new Socket("localhost", 1234)) {
 
@@ -14,7 +15,7 @@ public class TestClient {
 			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
 			// object of scanner class
-			Scanner sc = new Scanner(System.in);
+			
 			String line = null;
 
 			while (!"exit".equalsIgnoreCase(line)) {
@@ -110,5 +111,15 @@ public class TestClient {
             e.printStackTrace();
         }
     }
+
+	public static String createCourse() {
+		String course = sc.nextLine();
+		while (course.equals("")) {
+			System.out.println("Please enter a non-zero character string");
+			course = sc.nextLine();
+		}	
+		return course;
+		
+	}
 
 }
