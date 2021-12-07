@@ -219,7 +219,8 @@ public class GUI extends JComponent{
                 selectCourse.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         //Eventually this array will be replaced with the array that corresponds to the selected course.
-                        String[] discussionBoards = {"Array of all the boards under the selected course", "Option 2"};
+						String selectedCourse = (String)coursesCombo.getSelectedItem();
+                   		String[] discussionBoards = findBoardsByCourse(selectedCourse, socket);
                         viewBoards(discussionBoards);
                     }
                 });
@@ -583,6 +584,19 @@ public class GUI extends JComponent{
             e.printStackTrace();
         }
     }
+
+	public static String[] findBoardsByCourse(String courseName, Socket socket) {
+		String boardsString = "";
+		try {
+			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			String payload = "listAllBoards;" + courseName;
+			sendRequest(payload, socket);
+			boardsString = in.readLine();
+		} catch (IOException e) {
+			//DO NOTHING
+		}
+		return boardsString.split(";");
+	}
 
     public static boolean areFieldsFull(JTextField[] fields) {
         for(JTextField field: fields) {

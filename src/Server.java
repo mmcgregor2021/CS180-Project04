@@ -247,7 +247,18 @@ public class Server {
                                 out.println(coursesToReturn);
                                 out.flush();
                                 break;
-
+							case "listAllBoards":
+								String boardsToReturn = "";
+								String selectedCourse = line.split(";")[1];
+								for (Board b: boards) {
+									if (b.getCourse().equals(selectedCourse)) {
+										boardsToReturn += b.getTopic() + ";";
+									}
+								}
+								boardsToReturn = boardsToReturn.substring(0, boardsToReturn.length() - 1);
+								out.println(boardsToReturn);
+								out.flush();
+								break;
                             case "voteComment": // adding a vote to specific comment through comment ID and sessionID of user
                                 int boardIndex = Integer.parseInt(line.split(";")[1]);
                                 int commentIndex = Integer.parseInt(line.split(";")[2]);
