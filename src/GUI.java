@@ -59,8 +59,7 @@ public class GUI extends JComponent{
     //Variables for viewing all courses
     private static JButton viewCoursesBack = new JButton("Back");
     private static JButton selectCourse = new JButton("Select course");
-    private static String[] coursesArray = {"array of all courses here", "Option 2"};
-    private static JComboBox<String> coursesCombo = new JComboBox<String>(coursesArray);
+    private static JComboBox<String> coursesCombo;
 
     //Variables for grading all of a student's posts
     private static JComboBox<String> studentIDs = new JComboBox<>();
@@ -414,18 +413,21 @@ public class GUI extends JComponent{
         frame.pack();
     }
 
-    //TODO have all courses appear in the combo box
     public static void viewAllCourses() {
         frame.getContentPane().removeAll();
         frame.setLayout(new GridLayout(2, 2));
-
+        String allCourses = "";
+        try {
+            sendRequest("listAllCourses", socket);
+            allCourses = in.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        coursesCombo = new JComboBox<String>(allCourses.split(";"));
         frame.add(coursesCombo);
         frame.add(selectCourse);
         frame.add(viewCoursesBack);
-
         frame.pack();
-
-
     }
 
     //TODO have all corresponding boards appear in the combo box

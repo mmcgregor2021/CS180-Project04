@@ -100,7 +100,7 @@ public class Server {
                                 String newFirstName = line.split(";")[2];
                                 String newLastName = line.split(";")[3];
                                 Integer givenID = Integer.parseInt(line.split(";")[4]);
-                                synchronized(students) {
+                                synchronized (students) {
                                     for (Student s: students) {
                                         if(s.getID() == givenID) {
                                             s.setFirstName(newFirstName);
@@ -128,6 +128,7 @@ public class Server {
 									//counter[0] is personCounter
 									counters[0]++;
 									out.println(counters[0]);
+                                    saveCounters(counters, "counters.txt");
 								}
                                 break;
                                 //TODO create course
@@ -141,11 +142,13 @@ public class Server {
                                 synchronized (counters) {
                                     counters[1]++;
                                     idOfBoard = "B" + counters[1];
+                                    saveCounters(counters, "counters.txt");
                                 }
                                 synchronized (boards) {
                                     Date date = new Date();
                                     boards.add(new Board(courseName, boardTopic,
                                            idOfBoard, date.toString()));
+                                    saveBoards(boards, "boards.txt");
                                 }
                                 break;
                             case "createBoard":
@@ -196,6 +199,7 @@ public class Server {
                                             students.remove(i);
                                         }
                                     }
+                                    saveStudents(students, "students.txt");
                                 }
                                 synchronized (teachers) {
                                     for (int i = 0; i < teachers.size(); i++) {
@@ -203,6 +207,7 @@ public class Server {
                                             teachers.remove(i);
                                         }
                                     }
+                                    saveTeachers(teachers, "teachers.txt");
                                 }
                                 break;
 
@@ -222,6 +227,7 @@ public class Server {
                                             comments.remove(j);
                                         }
                                     }
+                                    saveComments(comments, "comments.txt");
                                 }
                                 synchronized(boards) {
                                     for (int i = 0; i < boards.size(); i++) {
@@ -229,7 +235,19 @@ public class Server {
                                             boards.remove(i);
                                         }
                                     }
+                                    saveBoards(boards, "boards.txt");
                                 }
+                                break;
+                            case "listAllCourses":
+                                String coursesToReturn = "";
+                                if (courses.size() != 0) {
+                                    for (String c: courses) {
+                                        coursesToReturn += c + ";";
+                                    }
+                                    coursesToReturn = coursesToReturn.substring(0, coursesToReturn.length() - 1);
+                                }
+                                out.println(coursesToReturn);
+                                out.flush();
                                 break;
 						}
 						//resetting line to null, so requests do not get spammed
