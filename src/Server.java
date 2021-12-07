@@ -6,7 +6,7 @@ public class Server {
 
     private static ArrayList<Comment> comments = readComments("comments.txt");
     private static ArrayList<Board> boards = readBoards("boards.txt");
-    ArrayList<String> courses = populateCourses(boards);
+    private static ArrayList<String> courses = populateCourses(boards);
     private static ArrayList<Teacher> teachers = readTeachers("teachers.txt");
     private static ArrayList<Student> students = readStudents("students.txt");
     private HashMap<Integer, Person> users = populateHashMap();
@@ -217,6 +217,16 @@ public class Server {
                                     }
                                 }
                                 break;
+                            case "getCourses":
+                                String toWrite = "";
+                                for (int i = 0; i < courses.size(); i++) {
+                                    toWrite += courses.get(i);
+                                    if (i < courses.size() - 1) {
+                                        toWrite += ";";
+                                    }
+                                }
+                                out.print(toWrite);
+                                out.flush();
 						}
 						//resetting line to null, so requests do not get spammed
 						line = null;

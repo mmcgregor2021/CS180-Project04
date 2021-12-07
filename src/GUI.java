@@ -287,7 +287,6 @@ public class GUI extends JComponent{
         frame.pack();
     }
 
-    //TODO check if what the user entered is an accurate login.
     public static void logIn() {
         frame.getContentPane().removeAll();
         frame.setLayout(new GridLayout(3, 2));
