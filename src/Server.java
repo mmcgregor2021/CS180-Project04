@@ -259,6 +259,32 @@ public class Server {
 								out.println(boardsToReturn);
 								out.flush();
 								break;
+							//sends back a string of all student ids
+							case "listAllStudents":
+								String studentsToReturn = "";
+								for (Student s: students) {
+									studentsToReturn += s.getFirstName() + " - ID: " + s.getID() + ";";
+								}
+								studentsToReturn = studentsToReturn.substring(0, studentsToReturn.length() - 1);
+								out.println(studentsToReturn);
+								out.flush();
+								break;
+							case "listAllPostsByStudent":
+								String postsToReturn = "";
+								if (comments.size() == 0) {
+									postsToReturn = "|EMPTY|";
+								} else {
+									Integer requestedStudentID = Integer.parseInt(line.split(";")[1]);
+									for (Comment c: comments) {
+										if (c.getOwnerID() == requestedStudentID) {
+											postsToReturn += c.getCommentID() + ";";
+										}
+									}
+									postsToReturn = postsToReturn.substring(0, postsToReturn.length() - 1);
+								}
+								out.println(postsToReturn);
+								out.flush();
+								break;
                             case "voteComment": // adding a vote to specific comment through comment ID and sessionID of user
                                 int boardIndex = Integer.parseInt(line.split(";")[1]);
                                 int commentIndex = Integer.parseInt(line.split(";")[2]);

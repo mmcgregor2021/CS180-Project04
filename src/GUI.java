@@ -7,6 +7,9 @@ import java.net.Socket;
 public class GUI extends JComponent{
     private static JFrame frame;
 
+	//button to go back to main menu
+	private static JButton mainBack = new JButton("Back");
+
     //Variables for opening page
     private static JButton signUpButton = new JButton("Sign Up");
     private static JButton logInButton = new JButton("Log In");
@@ -44,7 +47,6 @@ public class GUI extends JComponent{
     private static JTextField firstNameChange;
     private static JTextField lastNameChange;
     private static JButton processEdit = new JButton("Process changes");
-    private static JButton backEdit = new JButton("Back");
 
     //Variables for creating a course
     private static String[] uploadChoices = {"Direct text", "File name"};
@@ -63,15 +65,16 @@ public class GUI extends JComponent{
 
     //Variables for grading all of a student's posts
     private static JComboBox<String> studentIDs = new JComboBox<>();
+	private static JComboBox<String> studentPosts = new JComboBox<>();
     private static JButton selectStudent = new JButton("Select this student");
     private static JTextArea studentComment = new JTextArea();
     private static JTextField grade = new JTextField("Enter the grade here");
     private static JButton enterGrade = new JButton("Enter grade");
 
+	//Server Variables
     private static Socket socket = null;
     private static PrintWriter out = null;
     private static BufferedReader in = null;
-
 
     public static void main(String[] args) {
 
@@ -162,7 +165,7 @@ public class GUI extends JComponent{
                     }
                 });
 
-                backEdit.addActionListener(new ActionListener() {
+                mainBack.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         firstMenu();
                     }
@@ -287,10 +290,24 @@ public class GUI extends JComponent{
                 });
 
                 selectStudent.addActionListener(new ActionListener() {
+					//tits
                     public void actionPerformed(ActionEvent e) {
-                        studentComment.setVisible(true);
-                        enterGrade.setVisible(true);
-                        grade.setVisible(true);
+						String idToGrade = (String)studentIDs.getSelectedItem();
+						idToGrade = idToGrade.split("ID: ")[1];
+						String[] postsOfStudent = findPostsByStudent(idToGrade, socket);
+						if (postsOfStudent[0].equals("|EMPTY|")) {
+							JOptionPane.showMessageDialog(null, "This student has not posted anything yet!",
+							       "Error", JOptionPane.ERROR_MESSAGE);
+						} else {
+							studentPosts.removeAllItems();
+							for (String s: postsOfStudent) {
+								studentPosts.addItem(s);
+							}
+						    frame.repaint();
+							frame.pack();
+	                        enterGrade.setVisible(true);
+	                        grade.setVisible(true);
+						}
                     }
                 });
 
@@ -417,7 +434,7 @@ public class GUI extends JComponent{
         frame.add(pass); frame.add(passwordChange);
         frame.add(first); frame.add(firstNameChange);
         frame.add(last); frame.add(lastNameChange);
-        frame.add(backEdit); frame.add(processEdit);
+        frame.add(mainBack); frame.add(processEdit);
 
         frame.repaint();
         frame.pack();
@@ -473,7 +490,7 @@ public class GUI extends JComponent{
         frame.add(methodChoice);
         frame.add(chosenMethod);
         frame.add(forumTopic);
-        frame.add(backEdit);
+        frame.add(mainBack);
         frame.add(createCourse);
 
         frame.pack();
@@ -487,16 +504,16 @@ public class GUI extends JComponent{
         frame.getContentPane().removeAll();
         frame.setLayout(new GridLayout(3,2));
 
-        studentComment.setEditable(false);
-
+		//tits
+		studentIDs = new JComboBox<String>(listAllStudents(socket));
         frame.add(studentIDs);
         frame.add(selectStudent);
-        frame.add(studentComment);
+        frame.add(studentPosts);
         frame.add(grade);
         frame.add(enterGrade);
+		frame.add(mainBack);
 
         grade.setVisible(false);
-        studentComment.setVisible(false);
         enterGrade.setVisible(false);
 
         frame.pack();
@@ -585,6 +602,19 @@ public class GUI extends JComponent{
         }
     }
 
+	public static String[] findPostsByStudent(String studentID, Socket socket) {
+		String postsString = "";
+		try {
+			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			String payload = "listAllPostsByStudent;" + studentID;
+			sendRequest(payload, socket);
+			postsString = in.readLine();
+		} catch (IOException e) {
+			//DO NOTHING
+		}
+		return postsString.split(";");
+	}
+
 	public static String[] findBoardsByCourse(String courseName, Socket socket) {
 		String boardsString = "";
 		try {
@@ -596,6 +626,19 @@ public class GUI extends JComponent{
 			//DO NOTHING
 		}
 		return boardsString.split(";");
+	}
+
+	public static String[] listAllStudents(Socket socket) {
+		String studentsString = "";
+		try {
+			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			String payload = "listAllStudents";
+			sendRequest(payload, socket);
+			studentsString = in.readLine();
+		} catch (IOException e) {
+			//DO NOTHING
+		}
+		return studentsString.split(";");
 	}
 
     public static boolean areFieldsFull(JTextField[] fields) {
