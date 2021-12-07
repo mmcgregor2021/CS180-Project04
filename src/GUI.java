@@ -345,9 +345,6 @@ public class GUI extends JComponent{
         frame.pack();
     }
 
-    //TODO: figure out why the userID doesn't increment when new accounts are created
-    //bug: when i use the sign up functionality multiple times on multiple starts of the program, i think multiple users
-    //are created with an ID number of 2.  this is making account editing not work
     public static void editAccount() {
         //The idea here is to print all the current information in the text fields and allow the user to change it.
         frame.getContentPane().removeAll();
