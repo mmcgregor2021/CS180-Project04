@@ -184,7 +184,15 @@ public class Server {
                                 }
                                 break;
 
-                            case "deleteBoard":
+                            case "addTopic": //assigns/edits topic for a current board
+                                String newTopic = line.split(";")[1];
+                                String currentBoardID = line.split(";")[2];
+                                for (int i = 0; i < boards.size(); i++) {
+                                    if (currentBoardID.equals(boards.get(i).getBoardID()))
+                                        boards.get(i).setTopic(newTopic);
+                                }
+
+                            case "deleteBoard": //deletes board and all comments associated with board
                                 String deleteBoardID = line.split(";")[1];
                                 synchronized(comments) {
                                     for (int j = 0 ; j < comments.size(); j++) {
