@@ -55,9 +55,7 @@ public class Server {
 
                 /*
                 TODO
-                Reply to comment
                 View dashboard //idk if we have to do this in server or GUI side
-                Grading comments
 
                 */
 				while (true) {
@@ -311,6 +309,11 @@ public class Server {
 								currentBoardComments.get(commentIndex)
 								       .getRepliesToComment().add(createdReply);
 								boards.get(boardIndex - 1).setComments(currentBoardComments);
+
+                            case "gradeComment": // sets grade for individual comment, in client side iterate through all comments of a specific student and pass through student id
+                                commentIndex = Integer.parseInt(line.split(";")[1]);
+                                grade = Integer.parseInt(line.split(";")[2]);
+                                comments.get(commentIndex).setGrade(grade);
 						}
 						//resetting line to null, so requests do not get spammed
 						line = null;
