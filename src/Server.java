@@ -58,7 +58,6 @@ public class Server {
                 Reply to comment
                 View dashboard
                 Vote for comment
-                Create course
                 Grading comments
 
                 */
@@ -249,6 +248,18 @@ public class Server {
                                 out.println(coursesToReturn);
                                 out.flush();
                                 break;
+
+                            case "voteComment": // adding a vote to specific comment through comment ID and sessionID of user
+                                int boardIndex = Integer.parseInt(line.split(";")[1]);
+                                int commentIndex = Integer.parseInt(line.split(";")[2]);
+                                int sessionID = Integer.parseInt(line.split(";")[3]);
+                                ArrayList<Comment> currentBoardComments = boards.get(boardIndex - 1).getComments();
+                                int currentNumVotes = currentBoardComments
+												       .get(commentIndex).getLikes();
+								currentBoardComments.get(commentIndex)
+												         .setLikes(currentNumVotes + 1);
+                                boards.get(boardIndex - 1).setComments(currentBoardComments);
+                                boards.get(boardIndex - 1).addUsersWhoVoted(sessionID);
 						}
 						//resetting line to null, so requests do not get spammed
 						line = null;
