@@ -155,18 +155,18 @@ public class Server {
                                 //search through student and teacher arraylists for someone with the given userID
                                 for (Student s: students) {
                                     if(s.getID() == Integer.parseInt(theUserID)) {
-                                        out.println(s.getFirstName() + ";" + s.getLastName() + ";" + s.getPassword());
+                                        out.println(s.getFirstName() + ";" + s.getLastName() + ";" + s.getPassword() + ";Student");
                                         out.flush();
                                     }
                                 }
                                 for (Teacher t: teachers) {
                                     if(t.getID() == Integer.parseInt(theUserID)) {
-                                        out.println(t.getFirstName() + ";" + t.getLastName() + ";" + t.getPassword());
+                                        out.println(t.getFirstName() + ";" + t.getLastName() + ";" + t.getPassword() + ";Teacher");
                                         out.flush();
                                     }
                                 }
                                 break;
-                            case "deleteAccount":   
+                            case "deleteAccount":
                                 Integer idToDelete = Integer.parseInt(line.split(";")[1]);
                                 synchronized (students) {
                                     for (int i = 0; i < students.size(); i++) {
