@@ -47,7 +47,7 @@ public class GUI extends JComponent{
     private static JButton backEdit = new JButton("Back");
 
     //Variables for creating a course
-    private static String[] uploadChoices = {"Direct text", "File path"};
+    private static String[] uploadChoices = {"Direct text", "File name"};
     private static JComboBox<String> methodChoice = new JComboBox<>(uploadChoices);
     private static JLabel chosenMethod = new JLabel("Type in the forum topic for the course's first board: ");
     private static JTextField forumTopic;
@@ -228,10 +228,9 @@ public class GUI extends JComponent{
                 methodChoice.addActionListener (new ActionListener () {
                     public void actionPerformed(ActionEvent e) {
                         if(methodChoice.getSelectedItem().equals("Direct text"))
-                            chosenMethod.setText("Type in the forum topic you want: ");
+                            chosenMethod.setText("Type in the initial first board topic: ");
                         else
-                            chosenMethod.setText("Enter the file path to the forum topic you want: ");
-
+                            chosenMethod.setText("Enter the file name: ");
                     }
                 });
 
@@ -252,10 +251,14 @@ public class GUI extends JComponent{
                             String topic = forumTopic.getText();
                             String method = (String)methodChoice.getSelectedItem();
                             if (method.equals("Direct text")) {
-                                //TODO connect to server
+                                sendRequest("createCourse;" + name + ";" + topic, socket);
                             } else {
-                                //TODO file processing
+                                topic = getTextFromFile(topic);
+                                sendRequest("createCourse;" + name + ";" + topic, socket);
                             }
+                            JOptionPane.showMessageDialog(frame, "The course: " + name + "\nand\nDiscussion Board: " + topic +
+                                   "\nhave been successfully created", "Course Created", JOptionPane.INFORMATION_MESSAGE);
+                            firstMenu();
                         }
                     }
                 });
@@ -263,7 +266,8 @@ public class GUI extends JComponent{
                 logout.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         frame.dispose();
-                        JOptionPane.showMessageDialog(frame, "Thank you for using our platform!", "Logout", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(frame, "Thank you for using our platform!",
+                               "Logout", JOptionPane.INFORMATION_MESSAGE);
                     }
                 });
 
@@ -576,5 +580,15 @@ public class GUI extends JComponent{
             }
         }
         return true;
+    }
+
+    public static String getTextFromFile(String fileName) {
+        String line;
+        try (BufferedReader bfr = new BufferedReader(new FileReader(fileName))) {
+            line = bfr.readLine();
+        } catch (IOException e) {
+            return "";
+        }
+        return line;
     }
 }

@@ -54,7 +54,7 @@ public class Server {
                 in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
                 /*
-                TODO 
+                TODO
                 Reply to comment
                 View dashboard
                 Vote for comment
@@ -132,8 +132,21 @@ public class Server {
                                 break;
                                 //TODO create course
                             case "createCourse":
-                                String name = line.split(";")[1];
-                                courses.add(name);
+                                String courseName = line.split(";")[1];
+                                String boardTopic = line.split(";")[2];
+                                String idOfBoard;
+                                synchronized (courses) {
+                                    courses.add(courseName);
+                                }
+                                synchronized (counters) {
+                                    counters[1]++;
+                                    idOfBoard = "B" + counters[1];
+                                }
+                                synchronized (boards) {
+                                    Date date = new Date();
+                                    boards.add(new Board(courseName, boardTopic,
+                                           idOfBoard, date.toString()));
+                                }
                                 break;
                             case "createBoard":
                                 String course = line.split(";")[1];
