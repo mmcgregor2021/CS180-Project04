@@ -148,12 +148,17 @@ public class Server {
                                 }
                                 break;
                             case "createBoard":
+								String boardID = "";
                                 String course = line.split(";")[1];
                                 String topic = line.split(";")[2];
-                                String boardID = line.split(";")[3];
-                                String dateAndTime = line.split(";")[4];
+								synchronized (counters) {
+									counters[1]++;
+									boardID = "B" + counters[1];
+									saveCounters(counters, "counters.txt");
+								}
+                                Date boardCreationDate = new Date();
                                 synchronized (boards) {
-                                    boards.add(new Board(course, topic, boardID, dateAndTime));
+                                    boards.add(new Board(course, topic, boardID, boardCreationDate.toString()));
                                     saveBoards(boards, "boards.txt");
                                 }
                                 break;

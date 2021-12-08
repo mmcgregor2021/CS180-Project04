@@ -69,7 +69,6 @@ public class GUI extends JComponent{
     private static JLabel boardTopicLabel = new JLabel("Type in the topic of the discussion board: ");
     private static JTextField boardTopicField = new JTextField();
     private static JButton createBoard = new JButton("Create Discussion Board");
-    //tits
 
     //Variables for viewing all courses
     private static JButton viewCoursesBack = new JButton("Back");
@@ -207,6 +206,39 @@ public class GUI extends JComponent{
                 addBoard.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         addBoard();
+                    }
+                });
+
+				createBoard.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        if (boardTopicField.getText().equals("")) {
+							JOptionPane.showMessageDialog(null, "Please make sure there are no empty fields",
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+						} else {
+							boolean boardCreationError = false;
+							String topic = "";
+							String course = (String)coursesCombo.getSelectedItem();
+							String method = (String)methodChoice.getSelectedItem();
+							if (method.equals("Direct text")) {
+								topic = boardTopicField.getText();
+							} else {
+								String fileName = boardTopicField.getText();
+								try {
+									topic = getTextFromFile(fileName);
+								} catch (IOException ex) {
+									boardCreationError = true;
+									JOptionPane.showMessageDialog(null, "Error reading file!",
+		                                    "Error", JOptionPane.ERROR_MESSAGE);
+								}
+							}
+							if (!boardCreationError) {
+								String payload = "createBoard;" + course + ";" + topic;
+								sendRequest(payload, socket);
+								JOptionPane.showMessageDialog(null, "The board with topic: " + topic +
+								       "\nhas been added to course: " + course, "Board Added", JOptionPane.INFORMATION_MESSAGE);
+							}
+							boardTopicField.setText("");
+						}
                     }
                 });
 
@@ -546,7 +578,6 @@ public class GUI extends JComponent{
     }
 
     public static void addBoard() {
-        //tits
         frame.getContentPane().removeAll();
         frame.setLayout(new GridLayout(8, 1));
         String allCourses = "";
@@ -557,14 +588,14 @@ public class GUI extends JComponent{
             e.printStackTrace();
         }
         coursesCombo = new JComboBox<String>(allCourses.split(";"));
-        frame.add(courseSelectionLabel);
-        frame.add(coursesCombo);
-        frame.add(chooseMethod);
-        frame.add(methodChoice);
-        frame.add(boardTopicLabel);
-        frame.add(boardTopicField);
-        frame.add(createBoard);
-        frame.add(mainBack);
+        frame.add(courseSelectionLabel); //JLabel
+        frame.add(coursesCombo); //JComboBox
+        frame.add(chooseMethod); //JLabel
+        frame.add(methodChoice); //JComboBox
+        frame.add(boardTopicLabel); //JLabel
+        frame.add(boardTopicField); //JTextField
+        frame.add(createBoard); //JButton
+        frame.add(mainBack); //JButton
 
         frame.pack();
     }
