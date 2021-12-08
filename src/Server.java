@@ -55,9 +55,7 @@ public class Server {
 
                 /*
                 TODO
-                Reply to comment
                 View dashboard //idk if we have to do this in server or GUI side
-                Grading comments
 
                 */
 				while (true) {
