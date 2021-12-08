@@ -294,19 +294,21 @@ public class GUI extends JComponent{
 				viewContent.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                     	String commentID = (String)studentPosts.getSelectedItem();
-						String payload = "commentContent;" + commentID;
-						sendRequest(payload, socket);
-						try {
-							String line = in.readLine();
-							String course = line.split(";")[0];
-							String topic = line.split(";")[1];
-							String post = line.split(";")[2];
-							String grade = line.split(";")[3];
-							String content = "Course: " + course + "\nForum Topic: " + topic +
-							       "\nContent: " + post + "\nCurrent Grade: " + grade;
-						    JOptionPane.showMessageDialog(null, content, "Post Content", JOptionPane.INFORMATION_MESSAGE);
-						} catch (IOException ex) {
-							//DO NOTHING
+						if (commentID != null) {
+							String payload = "commentContent;" + commentID;
+							sendRequest(payload, socket);
+							try {
+								String line = in.readLine();
+								String course = line.split(";")[0];
+								String topic = line.split(";")[1];
+								String post = line.split(";")[2];
+								String grade = line.split(";")[3];
+								String content = "Course: " + course + "\nForum Topic: " + topic +
+								       "\nContent: " + post + "\nCurrent Grade: " + grade;
+							    JOptionPane.showMessageDialog(null, content, "Post Content", JOptionPane.INFORMATION_MESSAGE);
+							} catch (IOException ex) {
+								//DO NOTHING
+							}
 						}
                     }
                 });
