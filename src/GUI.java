@@ -64,12 +64,13 @@ public class GUI extends JComponent{
     private static JComboBox<String> coursesCombo;
 
     //Variables for grading all of a student's posts
+	private static JButton viewContent = new JButton("View Content of Comment");
     private static JComboBox<String> studentIDs = new JComboBox<>();
 	private static JComboBox<String> studentPosts = new JComboBox<>();
     private static JButton selectStudent = new JButton("Select this student");
     private static JTextArea studentComment = new JTextArea();
     private static JTextField grade = new JTextField("Enter the grade here");
-    private static JButton enterGrade = new JButton("Enter grade");
+    private static JButton enterGrade = new JButton("Assign Grade");
 
 	//Server Variables
     private static Socket socket = null;
@@ -167,6 +168,9 @@ public class GUI extends JComponent{
 
                 mainBack.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
+						studentPosts.removeAllItems();
+						grade.setVisible(false);
+				        enterGrade.setVisible(false);
                         firstMenu();
                     }
                 });
@@ -186,8 +190,6 @@ public class GUI extends JComponent{
                         firstMenu();
                     }
                 });
-
-
 
                 delete.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
@@ -289,8 +291,27 @@ public class GUI extends JComponent{
                     }
                 });
 
+				viewContent.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                    	String commentID = (String)studentPosts.getSelectedItem();
+						String payload = "commentContent;" + commentID;
+						sendRequest(payload, socket);
+						try {
+							String line = in.readLine();
+							String course = line.split(";")[0];
+							String topic = line.split(";")[1];
+							String post = line.split(";")[2];
+							String grade = line.split(";")[3];
+							String content = "Course: " + course + "\nForum Topic: " + topic +
+							       "\nContent: " + post + "\nCurrent Grade: " + grade;
+						    JOptionPane.showMessageDialog(null, content, "Post Content", JOptionPane.INFORMATION_MESSAGE);
+						} catch (IOException ex) {
+							//DO NOTHING
+						}
+                    }
+                });
+
                 selectStudent.addActionListener(new ActionListener() {
-					//tits
                     public void actionPerformed(ActionEvent e) {
 						String idToGrade = (String)studentIDs.getSelectedItem();
 						idToGrade = idToGrade.split("ID: ")[1];
@@ -316,6 +337,30 @@ public class GUI extends JComponent{
                         gradeStudentPosts();
                     }
                 });
+
+				enterGrade.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+						String commentID = (String)studentPosts.getSelectedItem();
+						Integer gradeAssigned = 0;
+						try {
+							gradeAssigned = Integer.parseInt(grade.getText());
+							if (gradeAssigned < 0 || gradeAssigned > 100) {
+								JOptionPane.showMessageDialog(null, "Please enter an integer between 0 and 100 inclusive.",
+			                            "Error", JOptionPane.ERROR_MESSAGE);
+							} else {
+								String payload = "gradeComment;" + commentID + ";" + gradeAssigned;
+								sendRequest(payload, socket);
+								String confirmMessage = "The grade for comment ID: " + commentID + " has been set to: " + gradeAssigned;
+								JOptionPane.showMessageDialog(null, confirmMessage, "Grade Set!", JOptionPane.INFORMATION_MESSAGE);
+							}
+						} catch (Exception ex) {
+							JOptionPane.showMessageDialog(null, "Please enter a valid integer!",
+		                            "Error", JOptionPane.ERROR_MESSAGE);
+						}
+						grade.setText("");
+                    }
+                });
+
             }
         });
     }
@@ -502,15 +547,16 @@ public class GUI extends JComponent{
     //TODO save the grades the teacher puts in
     public static void gradeStudentPosts() {
         frame.getContentPane().removeAll();
-        frame.setLayout(new GridLayout(3,2));
+        frame.setLayout(new GridLayout(4,2));
 
-		//tits
+		grade.setText("Enter the grade here");
 		studentIDs = new JComboBox<String>(listAllStudents(socket));
         frame.add(studentIDs);
         frame.add(selectStudent);
         frame.add(studentPosts);
         frame.add(grade);
-        frame.add(enterGrade);
+        frame.add(viewContent);
+		frame.add(enterGrade);
 		frame.add(mainBack);
 
         grade.setVisible(false);

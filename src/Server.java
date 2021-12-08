@@ -216,7 +216,7 @@ public class Server {
                                     if (currentBoardID.equals(boards.get(i).getBoardID()))
                                         boards.get(i).setTopic(newTopic);
                                 }
-
+								break;
                             case "deleteBoard": //deletes board and all comments associated with board
                                 String deleteBoardID = line.split(";")[1];
                                 synchronized(comments) {
@@ -285,6 +285,27 @@ public class Server {
 								out.println(postsToReturn);
 								out.flush();
 								break;
+							case "commentContent":
+								String cContent = "";
+								Integer cGrade = 0;
+								String cCourse = "";
+								String cTopic = "";
+								for (Comment c: comments) {
+									if (c.getCommentID().equals(line.split(";")[1])) {
+										cContent = c.getContent();
+										cGrade = c.getGrade();
+										for (Board b: boards) {
+											if (b.getBoardID().equals(c.getParentID())) {
+												cCourse = b.getCourse();
+												cTopic = b.getTopic();
+											}
+										}
+									}
+								}
+								String contentToReturn = cCourse + ";" + cTopic + ";" + cContent + ";" + cGrade;
+								out.println(contentToReturn);
+								out.flush();
+								break;
                             case "voteComment": // adding a vote to specific comment through comment ID and sessionID of user
                                 int boardIndex = Integer.parseInt(line.split(";")[1]);
                                 int commentIndex = Integer.parseInt(line.split(";")[2]);
@@ -296,7 +317,7 @@ public class Server {
 												         .setLikes(currentNumVotes + 1);
                                 boards.get(boardIndex - 1).setComments(currentBoardComments);
                                 boards.get(boardIndex - 1).addUsersWhoVoted(sessionID);
-
+								break;
                             case "replyComment": // code to reply to a comment// NOT SURE IF THIS CODE IS VALID
                                 boardIndex = Integer.parseInt(line.split(";")[1]);
                                 commentIndex = Integer.parseInt(line.split(";")[2]);
@@ -311,6 +332,21 @@ public class Server {
 								currentBoardComments.get(commentIndex)
 								       .getRepliesToComment().add(createdReply);
 								boards.get(boardIndex - 1).setComments(currentBoardComments);
+							case "gradeComment":
+								String selectedCommentID = line.split(";")[1];
+								int gradeAssigned = Integer.parseInt(line.split(";")[2]);
+								synchronized (comments) {
+									commentSearchingLoop:
+									for (Comment c: comments) {
+										if (c.getCommentID().equals(selectedCommentID)) {
+											c.setGrade(gradeAssigned);
+											saveComments(comments, "comments.txt");
+											break commentSearchingLoop;
+										}
+									}
+								}
+								break;
+
 						}
 						//resetting line to null, so requests do not get spammed
 						line = null;
@@ -333,8 +369,6 @@ public class Server {
             }
         }
     }
-
-
 
     public static String getSessionVariable(String payload, ArrayList<Student> students, ArrayList<Teacher> teachers) {
         Integer sentSessionID = Integer.parseInt(payload.split(";")[1]);
