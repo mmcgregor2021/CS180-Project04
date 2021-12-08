@@ -41,6 +41,7 @@ public class GUI extends JComponent{
     private static JButton newCourses = new JButton("Create new course");
     private static JButton gradePosts = new JButton("Grade student posts");
     private static JButton viewGrades = new JButton("View posts and grades");
+    private static JButton addBoard = new JButton("Add Discussion Board");
 
     //Variables for edit account
     private static JTextField passwordChange;
@@ -53,10 +54,22 @@ public class GUI extends JComponent{
     private static JComboBox<String> methodChoice = new JComboBox<>(uploadChoices);
     private static JLabel chosenMethod = new JLabel("Type in the forum topic for the course's first board: ");
     private static JTextField forumTopic;
-    private static JLabel chooseMethod;
+    private static JLabel chooseMethod = new JLabel("How would you like to input the forum topic?");
     private static JTextField courseName;
     private static JButton createCourse = new JButton("Create course");
     private static JButton newCourseBack = new JButton("Back");
+
+    //variables for adding boards
+    /*
+    Reusing coursesCombo selection box
+    Reusing methodChoice selection box
+    Reusing chooseMethod label
+    */
+    private static JLabel courseSelectionLabel = new JLabel("Select a course: ");
+    private static JLabel boardTopicLabel = new JLabel("Type in the topic of the discussion board: ");
+    private static JTextField boardTopicField = new JTextField();
+    private static JButton createBoard = new JButton("Create Discussion Board");
+    //tits
 
     //Variables for viewing all courses
     private static JButton viewCoursesBack = new JButton("Back");
@@ -191,6 +204,12 @@ public class GUI extends JComponent{
                     }
                 });
 
+                addBoard.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        addBoard();
+                    }
+                });
+
                 delete.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         int result = JOptionPane.showConfirmDialog(frame,"Are you sure you want to delete your account?", "Delete Account",
@@ -232,10 +251,13 @@ public class GUI extends JComponent{
 
                 methodChoice.addActionListener (new ActionListener () {
                     public void actionPerformed(ActionEvent e) {
-                        if(methodChoice.getSelectedItem().equals("Direct text"))
+                        if (methodChoice.getSelectedItem().equals("Direct text")) {
                             chosenMethod.setText("Type in the initial first board topic: ");
-                        else
+                            boardTopicLabel.setText("Type in the topic of the discussion board: ");
+                        } else {
                             chosenMethod.setText("Enter the file name: ");
+                            boardTopicLabel.setText("Enter the file name: ");
+                        }
                     }
                 });
 
@@ -438,8 +460,10 @@ public class GUI extends JComponent{
         frame.add(viewCourses); frame.add(logout);
 
         if(sessionAuthority) {
+            frame.setLayout(new GridLayout(4, 2));
             frame.add(newCourses);
             frame.add(gradePosts);
+            frame.add(addBoard);
         } else
             frame.add(viewGrades);
 
@@ -521,12 +545,35 @@ public class GUI extends JComponent{
         frame.pack();
     }
 
+    public static void addBoard() {
+        //tits
+        frame.getContentPane().removeAll();
+        frame.setLayout(new GridLayout(8, 1));
+        String allCourses = "";
+        try {
+            sendRequest("listAllCourses", socket);
+            allCourses = in.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        coursesCombo = new JComboBox<String>(allCourses.split(";"));
+        frame.add(courseSelectionLabel);
+        frame.add(coursesCombo);
+        frame.add(chooseMethod);
+        frame.add(methodChoice);
+        frame.add(boardTopicLabel);
+        frame.add(boardTopicField);
+        frame.add(createBoard);
+        frame.add(mainBack);
+
+        frame.pack();
+    }
+
     public static void createNewCourse() {
         frame.getContentPane().removeAll();
         frame.setLayout(new GridLayout(4, 2));
         JLabel newName = new JLabel("Enter the name of the new course");
         courseName = new JTextField();
-        chooseMethod = new JLabel("How would you like to input the forum topic?");
         forumTopic = new JTextField();
 
         frame.add(newName);
