@@ -504,7 +504,6 @@ public class GUI extends JComponent{
         frame.pack();
     }
 
-    //TODO have all corresponding boards appear in the combo box
     //TODO have the selectBoard button take you to the next page
     public static void viewBoards(String[] boards) {
         frame.getContentPane().removeAll();
@@ -522,7 +521,6 @@ public class GUI extends JComponent{
         frame.pack();
     }
 
-    //TODO save the created course
     public static void createNewCourse() {
         frame.getContentPane().removeAll();
         frame.setLayout(new GridLayout(4, 2));
@@ -544,9 +542,6 @@ public class GUI extends JComponent{
 
     }
 
-    //TODO populate combo box with all student IDs
-    //TODO iterate through all of a student's posts, print each in the text field one at a time
-    //TODO save the grades the teacher puts in
     public static void gradeStudentPosts() {
         frame.getContentPane().removeAll();
         frame.setLayout(new GridLayout(4,2));
