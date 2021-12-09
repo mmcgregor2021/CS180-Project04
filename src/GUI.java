@@ -45,7 +45,7 @@ public class GUI extends JComponent{
     private static JButton addBoard = new JButton("Add Discussion Board");
 
     //Variables for displaying boards and comments
-    private static JLabel boardTitleLabel;
+    private static JLabel boardTitleLabel = new JLabel("This is where the forum topic will go");
     private static JButton viewBoardBackButton = new JButton("Back");
     private static JButton replyButton;
     private static JButton voteButton;
@@ -662,12 +662,12 @@ public class GUI extends JComponent{
     public static void viewDiscussionPage() {
         frame.getContentPane().removeAll();
         frame.setLayout(new GridLayout(3,1));
-
         String boardID = (String)discussionBoardsCombo.getSelectedItem();
+        boardID = boardID.split(" - ID: ")[1];
         String boardInfo = findBoardInfo(boardID, socket);
         int numberOfComments = Integer.parseInt(boardInfo.split(";")[0]);
         String topic = boardInfo.split(";")[1];
-        boardTitleLabel = new JLabel(topic);
+        boardTitleLabel.setText(topic);
         //ArrayList<Comment> boardComments = findCommentsByBoardID(boardID, socket);
 
         JPanel panel = new JPanel();
@@ -682,6 +682,7 @@ public class GUI extends JComponent{
         frame.add(viewBoardBackButton);
         //frame.add(commentsPane)
 
+        frame.repaint();
         frame.pack();
         //kris
     }
@@ -743,6 +744,7 @@ public class GUI extends JComponent{
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String payload = "boardInfo;" + boardID;
             sendRequest(payload, socket);
+            infoToReturn = in.readLine();
         } catch (IOException e) {
             e.printStackTrace();
         }

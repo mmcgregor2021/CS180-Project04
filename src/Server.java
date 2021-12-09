@@ -258,7 +258,7 @@ public class Server {
 								String selectedCourse = line.split(";")[1];
 								for (Board b: boards) {
 									if (b.getCourse().equals(selectedCourse)) {
-										boardsToReturn += b.getTopic() + ";";
+										boardsToReturn += b.getTopic() + " - ID: " + b.getBoardID() + ";";
 									}
 								}
 								boardsToReturn = boardsToReturn.substring(0, boardsToReturn.length() - 1);
@@ -371,8 +371,10 @@ public class Server {
                                         commentsToReturn.add(c);
                                     }
                                 }
-                                //oos.writeObject(commentsToReturn);
-                                //oos.flush();
+                                ObjectOutputStream oos = new ObjectOutputStream(clientSocket.getOutputStream());
+                                oos = null;
+                                oos.writeObject(commentsToReturn);
+                                oos.flush();
                                 break;
 						}
 						//resetting line to null, so requests do not get spammed
