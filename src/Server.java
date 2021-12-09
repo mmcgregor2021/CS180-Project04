@@ -371,10 +371,14 @@ public class Server {
                                         commentsToReturn.add(c);
                                     }
                                 }
+								out.println(commentsToReturn.size());
                                 ObjectOutputStream oos = new ObjectOutputStream(clientSocket.getOutputStream());
+								for (Comment c: commentsToReturn) {
+									oos.writeObject(commentsToReturn);
+	                                oos.flush();
+								}
                                 oos = null;
-                                oos.writeObject(commentsToReturn);
-                                oos.flush();
+								out = new PrintWriter(clientSocket.getOutputStream(), true);
                                 break;
 						}
 						//resetting line to null, so requests do not get spammed
