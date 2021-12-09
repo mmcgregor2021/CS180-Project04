@@ -661,14 +661,19 @@ public class GUI extends JComponent{
 
     public static void viewDiscussionPage() {
         frame.getContentPane().removeAll();
-        frame.setLayout(new GridLayout(3,1));
+		if (sessionAuthority) {
+			frame.setLayout(new GridLayout(3,1));
+		} else {
+			frame.setLayout(new GridLayout(4,1));
+		}
         String boardID = (String)discussionBoardsCombo.getSelectedItem();
         boardID = boardID.split(" - ID: ")[1];
         String boardInfo = findBoardInfo(boardID, socket);
         int numberOfComments = Integer.parseInt(boardInfo.split(";")[0]);
         String topic = boardInfo.split(";")[1];
         boardTitleLabel.setText(topic);
-        //ArrayList<Comment> boardComments = findCommentsByBoardID(boardID, socket);
+        ArrayList<Comment> boardComments = findCommentsByBoardID(boardID, socket);
+
 
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(4 * numberOfComments, 1));
@@ -676,14 +681,17 @@ public class GUI extends JComponent{
         //panel.add(replyButton)
         //panel.add(voteButton)
         //panel.add(repliesLabel)
-        //JScrollPane commentsPane = new JScrollPane(panel);
-
+        JScrollPane commentsPane = new JScrollPane(panel);
+		commentsPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         frame.add(boardTitleLabel);
+		boardTitleLabel.setHorizontalAlignment(JLabel.CENTER);
+		boardTitleLabel.setFont(new Font("Serif", Font.PLAIN, 20));
         frame.add(viewBoardBackButton);
-        //frame.add(commentsPane)
+        frame.add(commentsPane);
 
         frame.repaint();
         frame.pack();
+		frame.setSize(500,300);
         //kris
     }
 
@@ -721,22 +729,39 @@ public class GUI extends JComponent{
         }
     }
 
-    /*
+	public static int getNumComments(String boardID, Socket socket) {
+		int size = 0;
+		try {
+			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			String payload = "getComments;" + boardID;
+	        sendRequest(payload, socket);
+			size = Integer.parseInt(in.readLine());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return size;
+	}
+
     public static ArrayList<Comment> findCommentsByBoardID(String boardID, Socket socket) {
-        String payload = "getComments;" + boardID;
-        sendRequest(payload, socket);
+
         ArrayList<Comment> comments = new ArrayList<>();
         try {
-            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-            comments =(ArrayList<Comment>)ois.readObject();
+			int size = getNumComments(boardID, socket);
+			if (size != 0) {
+				//this block of code doesn't run for some reason.
+				ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+				for (int i = 0; i < size; i++) {
+					Comment commentToAdd = (Comment)ois.readObject();
+					comments.add(commentToAdd);
+				}
+			}
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (ClassCastException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return comments;
     }
-    */
 
     public static String findBoardInfo(String boardID, Socket socket) {
         String infoToReturn = "";

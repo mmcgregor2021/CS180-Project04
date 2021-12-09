@@ -372,13 +372,9 @@ public class Server {
                                     }
                                 }
 								out.println(commentsToReturn.size());
-                                ObjectOutputStream oos = new ObjectOutputStream(clientSocket.getOutputStream());
-								for (Comment c: commentsToReturn) {
-									oos.writeObject(commentsToReturn);
-	                                oos.flush();
+								if (commentsToReturn.size() != 0) {
+									sendComments(commentsToReturn, clientSocket);
 								}
-                                oos = null;
-								out = new PrintWriter(clientSocket.getOutputStream(), true);
                                 break;
 						}
 						//resetting line to null, so requests do not get spammed
@@ -402,6 +398,18 @@ public class Server {
             }
         }
     }
+
+	public static void sendComments(ArrayList<Comment> comments, Socket clientSocket) {
+		try {
+			ObjectOutputStream oos = new ObjectOutputStream(clientSocket.getOutputStream());
+			for (Comment c: comments) {
+				oos.writeObject(comments);
+				oos.flush();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
     public static String getSessionVariable(String payload, ArrayList<Student> students, ArrayList<Teacher> teachers) {
         Integer sentSessionID = Integer.parseInt(payload.split(";")[1]);
