@@ -47,9 +47,11 @@ public class Server {
         }
 
         public void run() {
+            //ObjectOutputStream oos = null;
             PrintWriter out = null;
             BufferedReader in = null;
             try {
+                //oos = new ObjectOutputStream(clientSocket.getOutputStream());
                 out = new PrintWriter(clientSocket.getOutputStream(), true);
                 in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
@@ -59,6 +61,7 @@ public class Server {
 
                 */
 				while (true) {
+                    String selectedBoardID = "";
 					String line = in.readLine();
 					while (line != null) {
 						switch (line.split(";")[0]) {
@@ -349,7 +352,28 @@ public class Server {
 									}
 								}
 								break;
-
+                            case "boardInfo":
+                                selectedBoardID = line.split(";")[1];
+                                for (Board b: boards) {
+                                    if (b.getBoardID().equals(selectedBoardID)) {
+                                        String infoToReturn = b.getComments().size() + ";" + b.getTopic();
+                                        out.println(infoToReturn);
+                                        out.flush();
+                                        break;
+                                    }
+                                }
+                                break;
+                            case "getComments":
+                                ArrayList<Comment> commentsToReturn = new ArrayList<>();
+                                selectedBoardID = line.split(";")[1];
+                                for (Comment c: comments) {
+                                    if (c.getParentID().equals(selectedBoardID)) {
+                                        commentsToReturn.add(c);
+                                    }
+                                }
+                                //oos.writeObject(commentsToReturn);
+                                //oos.flush();
+                                break;
 						}
 						//resetting line to null, so requests do not get spammed
 						line = null;

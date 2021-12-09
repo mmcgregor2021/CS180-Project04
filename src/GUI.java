@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class GUI extends JComponent{
     private static JFrame frame;
@@ -43,6 +44,14 @@ public class GUI extends JComponent{
     private static JButton viewGrades = new JButton("View posts and grades");
     private static JButton addBoard = new JButton("Add Discussion Board");
 
+    //Variables for displaying boards and comments
+    private static JLabel boardTitleLabel;
+    private static JButton viewBoardBackButton = new JButton("Back");
+    private static JButton replyButton;
+    private static JButton voteButton;
+    private static JLabel repliesLabel;
+    //kris
+
     //Variables for edit account
     private static JTextField passwordChange;
     private static JTextField firstNameChange;
@@ -73,7 +82,9 @@ public class GUI extends JComponent{
     //Variables for viewing all courses
     private static JButton viewCoursesBack = new JButton("Back");
     private static JButton selectCourse = new JButton("Select course");
+    private static JButton selectBoard = new JButton("Select Board");
     private static JComboBox<String> coursesCombo;
+    private static JComboBox<String> discussionBoardsCombo;
 
     //Variables for grading all of a student's posts
 	private static JButton viewContent = new JButton("View Content of Comment");
@@ -187,6 +198,12 @@ public class GUI extends JComponent{
                     }
                 });
 
+                viewBoardBackButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        viewAllCourses();
+                    }
+                });
+
                 processEdit.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         //Add code to change user info
@@ -274,10 +291,15 @@ public class GUI extends JComponent{
 
                 selectCourse.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-                        //Eventually this array will be replaced with the array that corresponds to the selected course.
 						String selectedCourse = (String)coursesCombo.getSelectedItem();
                    		String[] discussionBoards = findBoardsByCourse(selectedCourse, socket);
                         viewBoards(discussionBoards);
+                    }
+                });
+
+                selectBoard.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        viewDiscussionPage();
                     }
                 });
 
@@ -564,10 +586,7 @@ public class GUI extends JComponent{
     public static void viewBoards(String[] boards) {
         frame.getContentPane().removeAll();
         frame.setLayout(new GridLayout(3,2));
-
-        JButton selectBoard = new JButton("Select Board");
-        JComboBox<String> discussionBoardsCombo = new JComboBox<String>(boards);
-
+        discussionBoardsCombo = new JComboBox<String>(boards);
         frame.add(coursesCombo);
         frame.add(selectCourse);
         frame.add(discussionBoardsCombo);
@@ -640,6 +659,33 @@ public class GUI extends JComponent{
         frame.pack();
     }
 
+    public static void viewDiscussionPage() {
+        frame.getContentPane().removeAll();
+        frame.setLayout(new GridLayout(3,1));
+
+        String boardID = (String)discussionBoardsCombo.getSelectedItem();
+        String boardInfo = findBoardInfo(boardID, socket);
+        int numberOfComments = Integer.parseInt(boardInfo.split(";")[0]);
+        String topic = boardInfo.split(";")[1];
+        boardTitleLabel = new JLabel(topic);
+        //ArrayList<Comment> boardComments = findCommentsByBoardID(boardID, socket);
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(4 * numberOfComments, 1));
+        //panel.add(comment)
+        //panel.add(replyButton)
+        //panel.add(voteButton)
+        //panel.add(repliesLabel)
+        //JScrollPane commentsPane = new JScrollPane(panel);
+
+        frame.add(boardTitleLabel);
+        frame.add(viewBoardBackButton);
+        //frame.add(commentsPane)
+
+        frame.pack();
+        //kris
+    }
+
     //TODO populate the scrollPane with all the relative comments
     public static void viewPostsAndGrades() {
         frame.getContentPane().removeAll();
@@ -672,6 +718,35 @@ public class GUI extends JComponent{
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /*
+    public static ArrayList<Comment> findCommentsByBoardID(String boardID, Socket socket) {
+        String payload = "getComments;" + boardID;
+        sendRequest(payload, socket);
+        ArrayList<Comment> comments = new ArrayList<>();
+        try {
+            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+            comments =(ArrayList<Comment>)ois.readObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassCastException e) {
+            e.printStackTrace();
+        }
+        return comments;
+    }
+    */
+
+    public static String findBoardInfo(String boardID, Socket socket) {
+        String infoToReturn = "";
+        try {
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            String payload = "boardInfo;" + boardID;
+            sendRequest(payload, socket);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return infoToReturn;
     }
 
     public static Integer requestNewID(Socket socket) {
