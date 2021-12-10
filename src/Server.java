@@ -368,10 +368,18 @@ public class Server {
                                         commentsToReturn.add(c);
                                     }
                                 }
-								out.println(commentsToReturn.size());
-								if (commentsToReturn.size() != 0) {
-									sendComments(commentsToReturn, clientSocket);
-								}
+                                out.println(commentsToReturn.size());
+                                out.flush();
+                                for (Comment c: commentsToReturn) {
+                                    out.println(deconstructComment(c));
+                                    out.flush();
+                                    out.println(c.getRepliesToComment().size());
+                                    out.flush();
+                                    for (Comment r: c.getRepliesToComment()) {
+                                        out.println(deconstructComment(r));
+                                        out.flush();
+                                    }
+                                }
                                 break;
 						}
 						//resetting line to null, so requests do not get spammed
@@ -396,19 +404,25 @@ public class Server {
         }
     }
 
-	public static void sendComments(ArrayList<Comment> comments, Socket clientSocket) {
-		try {
-			ObjectOutputStream oos = new ObjectOutputStream(clientSocket.getOutputStream());
-			Comment[] commentArr = new Comment[comments.size()];
-			for (int i = 0; i < comments.size(); i++) {
-				commentArr[i] = comments.get(i);
-			}
-			oos.writeObject(commentArr);
-			oos.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+    public static String deconstructComment(Comment comment) {
+        //dc = deconstructed comment
+        String dc = "";
+        String parentID = comment.getParentID();
+        dc += parentID + ";";
+        String id = comment.getCommentID();
+        dc += id + ";";
+        int ownerID = comment.getOwnerID();
+        dc += ownerID + ";";
+        String content = comment.getContent();
+        dc += content + ";";
+        int likes = comment.getLikes();
+        dc += likes + ";";
+        int grade = comment.getGrade();
+        dc += grade + ";";
+        String dateAndTime = comment.getDateAndTime();
+        dc += dateAndTime;
+        return dc;
+    }
 
     public static String getSessionVariable(String payload, ArrayList<Student> students, ArrayList<Teacher> teachers) {
         Integer sentSessionID = Integer.parseInt(payload.split(";")[1]);

@@ -636,7 +636,6 @@ public class GUI extends JComponent{
         frame.add(createCourse);
 
         frame.pack();
-
     }
 
     public static void gradeStudentPosts() {
@@ -747,19 +746,45 @@ public class GUI extends JComponent{
         try {
 			int size = getNumComments(boardID, socket);
 			if (size != 0) {
-				ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-				Comment[] commentArr = (Comment[])ois.readObject();
-				for (Comment c: commentArr) {
-					comments.add(c);
-					System.out.println(c.getContent()); //DELETE
-				}
+				BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+				for (int i = 0; i < size; i++) {
+                    String commentInfo = in.readLine();
+                    int replySize = Integer.parseInt(in.readLine());
+                    ArrayList<Comment> replies = new ArrayList<>();
+                    if (replySize != 0) {
+                        for (int r = 0; i < replySize; i++) {
+                            String replyInfo = in.readLine();
+                            replies.add(constructReply(replyInfo));
+                        }
+                    }
+                    comments.add(constructComment(commentInfo, replies));
+                }
+                return comments;
 			}
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         return comments;
+    }
+
+    public static Comment constructComment(String commentString, ArrayList<Comment> replies) {
+        Comment comment = constructReply(commentString);
+        comment.setRepliesToComment(replies);
+        return comment;
+    }
+
+    public static Comment constructReply(String replyString) {
+        String[] replyInfo = replyString.split(";");
+        String parentID = replyInfo[0];
+        String id = replyInfo[1];
+        int ownerID = Integer.parseInt(replyInfo[2]);
+        String content = replyInfo[3];
+        int likes = Integer.parseInt(replyInfo[4]);
+        int grade = Integer.parseInt(replyInfo[5]);
+        String dateAndTime = replyInfo[6];
+        Comment reply = new Comment(parentID, id, ownerID, content,
+               likes, grade, dateAndTime);
+        return reply;
     }
 
     public static String findBoardInfo(String boardID, Socket socket) {
