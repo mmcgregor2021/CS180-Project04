@@ -47,6 +47,7 @@ public class GUI extends JComponent{
     //Variables for displaying boards and comments
     private static JLabel boardTitleLabel = new JLabel("This is where the forum topic will go");
     private static JButton viewBoardBackButton = new JButton("Back");
+    private static JLabel commentLabel;
     private static JButton replyButton;
     private static JButton voteButton;
     private static JLabel repliesLabel;
@@ -661,9 +662,9 @@ public class GUI extends JComponent{
     public static void viewDiscussionPage() {
         frame.getContentPane().removeAll();
 		if (sessionAuthority) {
-			frame.setLayout(new GridLayout(3,1));
+			frame.setLayout(new BorderLayout());
 		} else {
-			frame.setLayout(new GridLayout(4,1));
+			frame.setLayout(new BorderLayout());
 		}
         String boardID = (String)discussionBoardsCombo.getSelectedItem();
         boardID = boardID.split(" - ID: ")[1];
@@ -673,24 +674,35 @@ public class GUI extends JComponent{
         boardTitleLabel.setText(topic);
         ArrayList<Comment> boardComments = findCommentsByBoardID(boardID, socket);
 
-
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(4 * numberOfComments, 1));
-        //panel.add(comment)
-        //panel.add(replyButton)
-        //panel.add(voteButton)
-        //panel.add(repliesLabel)
+        for (Comment c: boardComments) {
+            commentLabel = new JLabel("<html>User ID: " + c.getOwnerID() + " | " +
+                   c.getDateAndTime() + " | " + c.getLikes() + " votes<br/>"
+                          + c.getContent() + "</html>");
+            panel.add(commentLabel);
+            JPanel commentInteract = new JPanel();
+            commentInteract.setLayout(new GridLayout(1, 2));
+            replyButton = new JButton("Reply to comment ID: " + c.getCommentID());
+            commentInteract.add(replyButton);
+            voteButton = new JButton("Vote for comment ID: " + c.getCommentID());
+            commentInteract.add(voteButton);
+            panel.add(commentInteract);
+        }
         JScrollPane commentsPane = new JScrollPane(panel);
 		commentsPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        frame.add(boardTitleLabel);
+        JPanel boardInfoPanel = new JPanel();
+        boardInfoPanel.setLayout(new GridLayout(2, 1));
+        boardInfoPanel.add(boardTitleLabel);
+        boardInfoPanel.add(viewBoardBackButton);
+        frame.add(boardInfoPanel, BorderLayout.NORTH);
 		boardTitleLabel.setHorizontalAlignment(JLabel.CENTER);
-		boardTitleLabel.setFont(new Font("Serif", Font.PLAIN, 20));
-        frame.add(viewBoardBackButton);
-        frame.add(commentsPane);
+		boardTitleLabel.setFont(new Font("Calibri", Font.PLAIN, 20));
+        frame.add(commentsPane, BorderLayout.CENTER);
 
         frame.repaint();
         frame.pack();
-		frame.setSize(500,300);
+		frame.setSize(500,600);
         //kris
     }
 
