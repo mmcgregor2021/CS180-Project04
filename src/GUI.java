@@ -743,16 +743,16 @@ public class GUI extends JComponent{
 	}
 
     public static ArrayList<Comment> findCommentsByBoardID(String boardID, Socket socket) {
-
         ArrayList<Comment> comments = new ArrayList<>();
         try {
 			int size = getNumComments(boardID, socket);
 			if (size != 0) {
 				//this block of code doesn't run for some reason.
 				ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-				for (int i = 0; i < size; i++) {
-					Comment commentToAdd = (Comment)ois.readObject();
-					comments.add(commentToAdd);
+				Comment[] commentArr = (Comment[])ois.readObject();
+				for (Comment c: commentArr) {
+					comments.add(c);
+					System.out.println(c.getContent()); //DELETE
 				}
 			}
         } catch (IOException e) {
