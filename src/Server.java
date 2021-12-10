@@ -22,7 +22,6 @@ public class Server {
             while (true) {
                 Socket client = server.accept();
                 System.out.println("Client connected: " + client.getInetAddress().getHostAddress());
-
                 ClientHandler clientSock = new ClientHandler(client);
                 new Thread(clientSock).start();
             }
@@ -402,10 +401,12 @@ public class Server {
 	public static void sendComments(ArrayList<Comment> comments, Socket clientSocket) {
 		try {
 			ObjectOutputStream oos = new ObjectOutputStream(clientSocket.getOutputStream());
-			for (Comment c: comments) {
-				oos.writeObject(comments);
-				oos.flush();
+			Comment[] commentArr = new Comment[comments.size()];
+			for (int i = 0; i < comments.size(); i++) {
+				commentArr[i] = comments.get(i);
 			}
+			oos.writeObject(commentArr);
+			oos.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
