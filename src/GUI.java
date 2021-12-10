@@ -747,7 +747,6 @@ public class GUI extends JComponent{
         try {
 			int size = getNumComments(boardID, socket);
 			if (size != 0) {
-				//this block of code doesn't run for some reason.
 				ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 				Comment[] commentArr = (Comment[])ois.readObject();
 				for (Comment c: commentArr) {

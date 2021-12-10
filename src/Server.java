@@ -46,11 +46,9 @@ public class Server {
         }
 
         public void run() {
-            //ObjectOutputStream oos = null;
             PrintWriter out = null;
             BufferedReader in = null;
             try {
-                //oos = new ObjectOutputStream(clientSocket.getOutputStream());
                 out = new PrintWriter(clientSocket.getOutputStream(), true);
                 in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
