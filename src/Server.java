@@ -175,6 +175,21 @@ public class Server {
                                     saveComments(comments, "comments.txt");
                                 }
                                 break;
+
+							case "createReply":
+								String parentCommentID = line.split(";")[1];
+								String replyToComment = line.split(";")[2];
+								Date replyDate = new Date();
+								synchronized (counters) {
+									//kris
+								}
+								synchronized (comments) {
+									for (Comment c: comments) {
+										if (c.getCommentID().equals(parentCommentID)) {
+											c.getRepliesToComment().add()
+										}
+									}
+								}
                             //requesting session name and password from server
                             case "sessionVariable":
                                 String theUserID = line.split(";")[1];
@@ -387,7 +402,7 @@ public class Server {
 					}
 				}
             } catch (IOException e) {
-                e.printStackTrace();
+                //DO NOTHING
             } finally {
                 try {
                     if (out != null) {

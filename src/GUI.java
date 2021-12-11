@@ -48,9 +48,9 @@ public class GUI extends JComponent{
     private static JLabel boardTitleLabel = new JLabel("This is where the forum topic will go");
     private static JButton viewBoardBackButton = new JButton("Back");
     private static JLabel commentLabel;
-    private static JButton replyButton;
-    private static JButton voteButton;
-    private static JLabel repliesLabel;
+    private static JButton replyButton = new JButton("Reply Button");
+    private static JButton voteButton = new JButton("Vote Button");
+    private static JLabel repliesLabel = new JLabel("This is where the replies will go");
     //kris
 
     //Variables for edit account
@@ -681,9 +681,35 @@ public class GUI extends JComponent{
                    c.getDateAndTime() + " | " + c.getLikes() + " votes<br/>"
                           + c.getContent() + "</html>");
             panel.add(commentLabel);
+			if (c.getRepliesToComment().size() != 0) {
+				repliesLabel.setText(createReplyLabel(c.getRepliesToComment()));
+				panel.add(repliesLabel);
+			}
             JPanel commentInteract = new JPanel();
             commentInteract.setLayout(new GridLayout(1, 2));
+
             replyButton = new JButton("Reply to comment ID: " + c.getCommentID());
+			//action listener has to appear here to be unique to each button
+			replyButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					String commentID = "C" + String.valueOf(e).charAt(70);
+					Boolean repeat = false;
+					do {
+						repeat = false;
+						String reply = JOptionPane.showInputDialog(null, "Enter your reply:", "Add Reply", JOptionPane.QUESTION_MESSAGE);
+						if (reply != null && reply.equals("")) {
+							JOptionPane.showMessageDialog(null, "Your reply cannot be empty",
+									"Error", JOptionPane.ERROR_MESSAGE);
+							repeat = true;
+						} else {
+							if (reply != null) {
+								System.out.println(reply);
+							}
+						}
+					} while (repeat);
+				}
+			});
+
             commentInteract.add(replyButton);
             voteButton = new JButton("Vote for comment ID: " + c.getCommentID());
             commentInteract.add(voteButton);
@@ -691,13 +717,16 @@ public class GUI extends JComponent{
         }
         JScrollPane commentsPane = new JScrollPane(panel);
 		commentsPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
         JPanel boardInfoPanel = new JPanel();
         boardInfoPanel.setLayout(new GridLayout(2, 1));
         boardInfoPanel.add(boardTitleLabel);
         boardInfoPanel.add(viewBoardBackButton);
         frame.add(boardInfoPanel, BorderLayout.NORTH);
+
 		boardTitleLabel.setHorizontalAlignment(JLabel.CENTER);
 		boardTitleLabel.setFont(new Font("Calibri", Font.PLAIN, 20));
+
         frame.add(commentsPane, BorderLayout.CENTER);
 
         frame.repaint();
@@ -727,6 +756,18 @@ public class GUI extends JComponent{
         frame.getContentPane().add(postsAndGrades);
         frame.setSize(500,300);
     }
+
+	public static String createReplyLabel(ArrayList<Comment> replies) {
+		String label = "<html>";
+		for (Comment r: replies) {
+			String line1 = "    User ID: " + r.getOwnerID() + " | " + r.getDateAndTime() + "<br/>";
+			String line2 = "    " + r.getContent() + "<br/>";
+			String replyString = line1 + line2;
+			label += replyString;
+		}
+		label = label.substring(0, label.length() - 5) + "</html>";
+		return label;
+	}
 
     public static void signUp(Integer userID, String firstName, String lastName, String password, String role, Socket socket) {
         try {
@@ -766,7 +807,6 @@ public class GUI extends JComponent{
                     if (replySize != 0) {
                         for (int r = 0; i < replySize; i++) {
                             String replyInfo = in.readLine();
-                            replies.add(constructReply(replyInfo));
                         }
                     }
                     comments.add(constructComment(commentInfo, replies));
