@@ -164,32 +164,38 @@ public class Server {
                                 break;
                             case "createComment":
                                 String parentID = line.split(";")[1];
-                                String commentID = line.split(";")[2];
-                                int ownerID = Integer.parseInt(line.split(";")[3]);
-                                String content = line.split(";")[4];
-                                int likes = Integer.parseInt(line.split(";")[5]);
-                                int grade = Integer.parseInt(line.split(";")[6]);
-                                String commentDateAndTime = line.split(";")[7];
+                                int ownerID = Integer.parseInt(line.split(";")[2]);
+                                String content = line.split(";")[3];
+                                String commentID = "";
+                                Date commentDate = new Date();
+                                synchronized (counters) {
+                                    counters[2]++;
+                                    commentID = "C" + counters[2];
+                                    saveCounters(counters, "counters.txt");
+                                }
                                 synchronized (comments) {
-                                    comments.add(new Comment(parentID, commentID, ownerID, content, likes, grade, commentDateAndTime));
+                                    comments.add(new Comment(parentID, commentID, ownerID,
+                                           content, 0, 0, commentDate.toString()));
                                     saveComments(comments, "comments.txt");
                                 }
                                 break;
-
 							case "createReply":
 								String parentCommentID = line.split(";")[1];
-								String replyToComment = line.split(";")[2];
+                                int replyOwnerID = Integer.parseInt(line.split(";")[2]);
+								String replyToComment = line.split(";")[3];
 								Date replyDate = new Date();
-								synchronized (counters) {
-									//kris
-								}
 								synchronized (comments) {
 									for (Comment c: comments) {
 										if (c.getCommentID().equals(parentCommentID)) {
-											c.getRepliesToComment().add()
+											c.getRepliesToComment().add(new Comment(parentCommentID,
+                                                   "REPLY", replyOwnerID, replyToComment, 0, 0,
+                                                          replyDate.toString()));
+                                            break;
 										}
 									}
+                                    saveComments(comments, "comments.txt");
 								}
+                                break;
                             //requesting session name and password from server
                             case "sessionVariable":
                                 String theUserID = line.split(";")[1];
@@ -336,20 +342,6 @@ public class Server {
                                 boards.get(boardIndex - 1).setComments(currentBoardComments);
                                 boards.get(boardIndex - 1).addUsersWhoVoted(sessionID);
 								break;
-                            case "replyComment": // code to reply to a comment// NOT SURE IF THIS CODE IS VALID
-                                boardIndex = Integer.parseInt(line.split(";")[1]);
-                                commentIndex = Integer.parseInt(line.split(";")[2]);
-                                sessionID = Integer.parseInt(line.split(";")[3]);
-                                String replyToComment = line.split(";")[4];
-                                currentBoardComments = boards.get(boardIndex - 1).getComments();
-                                parentID = currentBoardComments.get(commentIndex).getCommentID();
-                                Date replyDate = new Date();
-								String replyID = "Reply - NO ID";
-							    Comment createdReply = new Comment(parentID, replyID,
-								       sessionID, replyToComment, 0, 0, replyDate.toString());
-								currentBoardComments.get(commentIndex)
-								       .getRepliesToComment().add(createdReply);
-								boards.get(boardIndex - 1).setComments(currentBoardComments);
 							case "gradeComment":
 								String selectedCommentID = line.split(";")[1];
 								int gradeAssigned = Integer.parseInt(line.split(";")[2]);

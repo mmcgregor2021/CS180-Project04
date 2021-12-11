@@ -19,6 +19,7 @@ public class GUI extends JComponent{
     private static JButton logInContinue = new JButton("Continue");
 
     //Session variables
+    private static String currentBoard = "";
     private static Integer signupID = 0;
     private static Integer sessionID;
     private static String sessionName;
@@ -51,6 +52,8 @@ public class GUI extends JComponent{
     private static JButton replyButton = new JButton("Reply Button");
     private static JButton voteButton = new JButton("Vote Button");
     private static JLabel repliesLabel = new JLabel("This is where the replies will go");
+    private static JButton addCommentButton = new JButton("Add Comment");
+    private static JButton sortButton = new JButton("Sort by votes");
     //kris
 
     //Variables for edit account
@@ -202,6 +205,32 @@ public class GUI extends JComponent{
                 viewBoardBackButton.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         viewAllCourses();
+                    }
+                });
+
+                addCommentButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        boolean repeat = false;
+                        do {
+                            repeat = false;
+                            String content = JOptionPane.showInputDialog(null, "Type in your comment: ",
+                                   "Add a comment", JOptionPane.QUESTION_MESSAGE);
+                            if (content != null && content.equals("")) {
+                                JOptionPane.showMessageDialog(null, "Your reply cannot be empty",
+                                        "Error", JOptionPane.ERROR_MESSAGE);
+                                repeat = true;
+                            } else {
+                                if (content != null) {
+                                    String payload = "createComment;" + currentBoard +
+                                           ";" + sessionID + ";" + content;
+                                    sendRequest(payload, socket);
+                                    JOptionPane.showMessageDialog(null, "Your comment has been added.",
+                                            "Comment Addded", JOptionPane.INFORMATION_MESSAGE);
+                                    viewAllCourses();
+                                    //kris
+                                }
+                            }
+                        } while (repeat);
                     }
                 });
 
@@ -668,6 +697,7 @@ public class GUI extends JComponent{
 		}
         String boardID = (String)discussionBoardsCombo.getSelectedItem();
         boardID = boardID.split(" - ID: ")[1];
+        currentBoard = boardID;
         String boardInfo = findBoardInfo(boardID, socket);
         int numberOfComments = Integer.parseInt(boardInfo.split(";")[0]);
         String topic = boardInfo.split(";")[1];
@@ -682,7 +712,7 @@ public class GUI extends JComponent{
                           + c.getContent() + "</html>");
             panel.add(commentLabel);
 			if (c.getRepliesToComment().size() != 0) {
-				repliesLabel.setText(createReplyLabel(c.getRepliesToComment()));
+				repliesLabel = new JLabel(createReplyLabel(c.getRepliesToComment()));
 				panel.add(repliesLabel);
 			}
             JPanel commentInteract = new JPanel();
@@ -703,13 +733,18 @@ public class GUI extends JComponent{
 							repeat = true;
 						} else {
 							if (reply != null) {
-								System.out.println(reply);
+                                String replyPayload = "createReply;" + commentID +
+                                       ";" + sessionID + ";" + reply;
+                                sendRequest(replyPayload, socket);
+                                JOptionPane.showMessageDialog(null, "Your reply has been added.",
+    									"Reply Added!", JOptionPane.INFORMATION_MESSAGE);
+                                viewDiscussionPage();
+                                //TODO fix error that occurs when viewDiscussionPage() gets called.
 							}
 						}
 					} while (repeat);
 				}
 			});
-
             commentInteract.add(replyButton);
             voteButton = new JButton("Vote for comment ID: " + c.getCommentID());
             commentInteract.add(voteButton);
@@ -721,7 +756,15 @@ public class GUI extends JComponent{
         JPanel boardInfoPanel = new JPanel();
         boardInfoPanel.setLayout(new GridLayout(2, 1));
         boardInfoPanel.add(boardTitleLabel);
-        boardInfoPanel.add(viewBoardBackButton);
+        JPanel boardButtonPanel = new JPanel();
+        boardButtonPanel.setLayout(new GridLayout(1, 2));
+        boardButtonPanel.add(viewBoardBackButton);
+        if (sessionAuthority) {
+            boardButtonPanel.add(sortButton);
+        } else {
+            boardButtonPanel.add(addCommentButton);
+        }
+        boardInfoPanel.add(boardButtonPanel);
         frame.add(boardInfoPanel, BorderLayout.NORTH);
 
 		boardTitleLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -750,7 +793,6 @@ public class GUI extends JComponent{
         panel.add(test2);
 
         panel.add(Box.createVerticalGlue());
-
 
         frame.pack();
         frame.getContentPane().add(postsAndGrades);
