@@ -51,7 +51,6 @@ public class GUI extends JComponent{
     private static JLabel commentLabel;
     private static JButton replyButton = new JButton("Reply Button");
     private static JButton voteButton = new JButton("Vote Button");
-    private static JLabel repliesLabel = new JLabel("This is where the replies will go");
     private static JButton addCommentButton = new JButton("Add Comment");
     private static JButton sortButton = new JButton("Sort by votes");
     //kris
@@ -113,6 +112,7 @@ public class GUI extends JComponent{
                     out = new PrintWriter(socket.getOutputStream(), true);
                     in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 } catch (IOException e) {
+					//TODO terminate program here
                     e.printStackTrace();
                 }
 
@@ -612,7 +612,6 @@ public class GUI extends JComponent{
         frame.pack();
     }
 
-    //TODO have the selectBoard button take you to the next page
     public static void viewBoards(String[] boards) {
         frame.getContentPane().removeAll();
         frame.setLayout(new GridLayout(3,2));
@@ -707,14 +706,15 @@ public class GUI extends JComponent{
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(4 * numberOfComments, 1));
         for (Comment c: boardComments) {
-            commentLabel = new JLabel("<html>User ID: " + c.getOwnerID() + " | " +
-                   c.getDateAndTime() + " | " + c.getLikes() + " votes<br/>"
-                          + c.getContent() + "</html>");
-            panel.add(commentLabel);
+			String commentInfo = "<html>User ID: " + c.getOwnerID() + " | " +
+			       c.getDateAndTime() + " | " + c.getLikes() + " votes<br/>"
+                          + c.getContent();
 			if (c.getRepliesToComment().size() != 0) {
-				repliesLabel = new JLabel(createReplyLabel(c.getRepliesToComment()));
-				panel.add(repliesLabel);
-			}
+  				commentInfo += createReplyLabel(c.getRepliesToComment());
+  			}
+			commentInfo += "</html>";
+            commentLabel = new JLabel(commentInfo);
+            panel.add(commentLabel);
             JPanel commentInteract = new JPanel();
             commentInteract.setLayout(new GridLayout(1, 2));
 
@@ -825,14 +825,15 @@ public class GUI extends JComponent{
     }
 
 	public static String createReplyLabel(ArrayList<Comment> replies) {
-		String label = "<html>";
+		String label = "";
 		for (Comment r: replies) {
-			String line1 = "    User ID: " + r.getOwnerID() + " | " + r.getDateAndTime() + "<br/>";
-			String line2 = "    " + r.getContent() + "<br/>";
+			String line1 = "<br/>&emsp;&emsp;&emsp;User ID: " + r.getOwnerID() +
+			       " | " + r.getDateAndTime() + "<br/>";
+			String line2 = "&emsp;&emsp;&emsp;" + r.getContent();
 			String replyString = line1 + line2;
 			label += replyString;
 		}
-		label = label.substring(0, label.length() - 5) + "</html>";
+		label = label.substring(0, label.length());
 		return label;
 	}
 
@@ -874,6 +875,7 @@ public class GUI extends JComponent{
                     if (replySize != 0) {
                         for (int r = 0; i < replySize; i++) {
                             String replyInfo = in.readLine();
+							replies.add(constructReply(replyInfo));
                         }
                     }
                     comments.add(constructComment(commentInfo, replies));
