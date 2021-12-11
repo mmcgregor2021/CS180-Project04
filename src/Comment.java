@@ -79,7 +79,7 @@ public class Comment implements java.io.Serializable {
     }
 
 	//adds a vote/like to a comment
-    public void addLike(Person user) {
+    public void addLike() {
         likes++;
     }
 

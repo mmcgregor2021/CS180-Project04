@@ -331,16 +331,40 @@ public class Server {
 								out.flush();
 								break;
                             case "voteComment": // adding a vote to specific comment through comment ID and sessionID of user
-                                int boardIndex = Integer.parseInt(line.split(";")[1]);
-                                int commentIndex = Integer.parseInt(line.split(";")[2]);
-                                int sessionID = Integer.parseInt(line.split(";")[3]);
-                                ArrayList<Comment> currentBoardComments = boards.get(boardIndex - 1).getComments();
-                                int currentNumVotes = currentBoardComments
-												       .get(commentIndex).getLikes();
-								currentBoardComments.get(commentIndex)
-												         .setLikes(currentNumVotes + 1);
-                                boards.get(boardIndex - 1).setComments(currentBoardComments);
-                                boards.get(boardIndex - 1).addUsersWhoVoted(sessionID);
+								int voterID = Integer.parseInt(line.split(";")[1]);
+								String voteCommentID = line.split(";")[2];
+								String voteBoardID = line.split(";")[3];
+								boolean alreadyVoted = false;
+								//checking to see if user has already voted; if yes, sets alreadyVoted to true.
+								synchronized (boards) {
+									for (Board b: boards) {
+										if (b.getBoardID().equals(voteBoardID)) {
+											if (b.getUsersWhoVoted().contains(voterID)) {
+												alreadyVoted = true;
+											} else {
+												b.getUsersWhoVoted().add(voterID);
+												saveBoards(boards, "boards.txt");
+											}
+											break;
+										}
+									}
+								}
+								if (!alreadyVoted) {
+									synchronized (comments) {
+										for (Comment c: comments) {
+											if (c.getCommentID().equals(voteCommentID)) {
+												c.addLike();
+												break;
+											}
+										}
+										saveComments(comments, "comments.txt");
+										out.println("voted");
+										out.flush();
+									}
+								} else {
+									out.println("already voted");
+									out.flush();
+								}
 								break;
 							case "gradeComment":
 								String selectedCommentID = line.split(";")[1];
