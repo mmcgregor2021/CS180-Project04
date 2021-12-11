@@ -226,8 +226,8 @@ public class GUI extends JComponent{
                                     sendRequest(payload, socket);
                                     JOptionPane.showMessageDialog(null, "Your comment has been added.",
                                             "Comment Addded", JOptionPane.INFORMATION_MESSAGE);
-                                    viewAllCourses();
-                                    //kris
+                                    viewAllCourses(); //fixes view discussion page bug.
+                                    viewDiscussionPage();
                                 }
                             }
                         } while (repeat);
@@ -738,6 +738,7 @@ public class GUI extends JComponent{
                                 sendRequest(replyPayload, socket);
                                 JOptionPane.showMessageDialog(null, "Your reply has been added.",
     									"Reply Added!", JOptionPane.INFORMATION_MESSAGE);
+								viewAllCourses(); //fixes view discussion page bug.
                                 viewDiscussionPage();
                                 //TODO fix error that occurs when viewDiscussionPage() gets called.
 							}
@@ -747,7 +748,31 @@ public class GUI extends JComponent{
 			});
             commentInteract.add(replyButton);
             voteButton = new JButton("Vote for comment ID: " + c.getCommentID());
-            commentInteract.add(voteButton);
+			//action listener has to appear here to be unique to each button
+			voteButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					String commentID = "C" + String.valueOf(e).charAt(70);
+					String payload = "voteComment;" + sessionID + ";" + commentID + ";" + currentBoard;
+					sendRequest(payload, socket);
+					try {
+						String response = in.readLine();
+						if (response.equals("already voted")) {
+							JOptionPane.showMessageDialog(null, "You have already voted on this board!",
+									"Error", JOptionPane.ERROR_MESSAGE);
+						} else {
+							JOptionPane.showMessageDialog(null, "Your vote has been added.",
+									"Vote Added!", JOptionPane.INFORMATION_MESSAGE);
+							viewAllCourses(); //fixes view discussion page bug.
+							viewDiscussionPage();
+						}
+					} catch (IOException ex) {
+						//DO NOTHING
+					}
+				}
+			});
+			if (!sessionAuthority) {
+				commentInteract.add(voteButton);
+			}
             panel.add(commentInteract);
         }
         JScrollPane commentsPane = new JScrollPane(panel);
