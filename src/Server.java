@@ -397,10 +397,39 @@ public class Server {
                                     }
                                 }
                                 break;
+							case "getPostsOnBoard":
+								postsToReturn = "<html>";
+								String postBoardID = line.split(";")[1];
+								String sortType = line.split(";")[2];
+								ArrayList<Comment> unsortedComments = new ArrayList<>();
+								for (Comment c: comments) {
+                                    if (c.getParentID().equals(postBoardID)) {
+                                        unsortedComments.add(c);
+                                    }
+                                }
+								//sorts by descending by default
+								ArrayList<Comment> sortedComments = sortComments(unsortedComments);
+								if (sortType.equals("Sort by ascending order")) {
+									Collections.reverse(sortedComments);
+								}
+								for (Comment c: sortedComments) {
+									String postContent = c.getContent();
+									String postDate = c.getDateAndTime();
+									int postVotes = c.getLikes();
+									int idOfPoster = c.getOwnerID();
+									postsToReturn += "Comment: " + postContent + "<br/>" + "Votes: "
+								           + postVotes + "<br/>" + "Student ID: " + idOfPoster +
+										          "<br/>" + "Date Posted: " + postDate + "<br/><br/>";
+								}
+								postsToReturn += "</html>";
+
+								out.println(postsToReturn);
+								out.flush();
+								break;
                             case "getComments":
                                 ArrayList<Comment> commentsToReturn = new ArrayList<>();
                                 selectedBoardID = line.split(";")[1];
-                                for (Comment c: comments) {
+								for (Comment c: comments) {
                                     if (c.getParentID().equals(selectedBoardID)) {
                                         commentsToReturn.add(c);
                                     }
@@ -421,16 +450,17 @@ public class Server {
 							case "getPostsAndGrades":
 								postsToReturn = "<html>";
 								int postStudentID = Integer.parseInt(line.split(";")[1]);
+
 								for (Comment c: comments) {
 									if (c.getOwnerID() == postStudentID) {
 										String postComment = c.getContent();
 										int postGrade = c.getGrade();
 										String[] boardAndCourseName = findBoardAndCourseName(boards,
 										       c.getParentID());
-									    String postCourse = boardAndCourseName[0];
+										String postCourse = boardAndCourseName[0];
 										String postTopic = boardAndCourseName[1];
 										postsToReturn += "Course: " + postCourse + "<br/>" + "Topic: "
-										       + postTopic + "<br/>" + "Comment: " + postComment +
+									           + postTopic + "<br/>" + "Comment: " + postComment +
 											          "<br/>" + "Grade Assigned: " + postGrade + "<br/><br/>";
 									}
 								}
@@ -460,6 +490,27 @@ public class Server {
             }
         }
     }
+
+	public static ArrayList<Comment> sortComments(ArrayList<Comment> comments) {
+		boolean done = true;
+		ArrayList<Comment> currentBoardComments = comments;
+		ArrayList<Comment> sortedComments = currentBoardComments;
+		for (int x = 1; x < currentBoardComments.size(); x++) {
+			done = true;
+			for (int y = 0; y < currentBoardComments.size() - 1 - x; y++) {
+				if (sortedComments.get(y).getLikes()
+					   < sortedComments.get(y + 1).getLikes()) {
+					done = false;
+					Collections.swap(sortedComments, y, y + 1);
+				}
+			}
+			if (done) {
+				break;
+			}
+			sortedComments.add(currentBoardComments.get(x));
+		}
+		return sortedComments;
+	}
 
 	public static String[] findBoardAndCourseName(ArrayList<Board> boards,
 	       String boardID) {

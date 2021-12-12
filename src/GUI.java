@@ -58,7 +58,10 @@ public class GUI extends JComponent{
     private static JButton addCommentButton = new JButton("Add Comment");
     private static JButton viewDashboardButton = new JButton("View Dashboard");
 	private static JButton deleteBoardButton = new JButton("Delete Board");
-    //kris
+
+	//Variables for displaying teacher dashboard
+	private static JButton sortButton = new JButton("Sort by descending order");
+	private static JButton dashboardBack = new JButton("Back");
 
     //Variables for edit account
     private static JTextField passwordChange;
@@ -226,10 +229,27 @@ public class GUI extends JComponent{
 
 				viewDashboardButton.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-                        //TODO
+                        viewDashboard("Sort by descending order");
                     }
                 });
 
+				dashboardBack.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        viewDiscussionPage();
+                    }
+                });
+
+				sortButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        if (sortButton.getText().equals("Sort by descending order")) {
+							sortButton.getText().equals("Sort by ascending order");
+							viewDashboard("Sort by descending order");
+						} else {
+							sortButton.getText().equals("Sort by descending order");
+							viewDashboard("Sort by ascending order");
+						}
+                    }
+                });
 
                 addCommentButton.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
@@ -712,9 +732,51 @@ public class GUI extends JComponent{
         frame.pack();
     }
 
-	public static void viewDashboard() {
+	public static void viewDashboard(String sortType) {
 		frame.getContentPane().removeAll();
 		frame.setLayout(new BorderLayout());
+
+		String boardInfo = findBoardInfo(currentBoard, socket);
+		JLabel boardTitleLabel = new JLabel(boardInfo.split(";")[1]);
+		boardTitleLabel.setHorizontalAlignment(JLabel.CENTER);
+		boardTitleLabel.setFont(new Font("Calibri", Font.PLAIN, 20));
+
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new GridLayout(1, 2));
+		buttonPanel.add(dashboardBack);
+		if (sortType.equals("Sort by descending order")) {
+			sortButton.setText("Sort by ascending order");
+		} else {
+			sortButton.setText("Sort by descending order");
+		}
+		buttonPanel.add(sortButton);
+
+		JPanel topPanel = new JPanel();
+		topPanel.setLayout(new GridLayout(2, 1));
+		topPanel.add(boardTitleLabel);
+		topPanel.add(buttonPanel);
+
+		JPanel mainPanel = new JPanel();
+		mainPanel.setLayout(new GridLayout(1, 1));
+		String payload = "getPostsOnBoard;" + currentBoard + ";" + sortType;
+		sendRequest(payload, socket);
+		String dashboardText = "";
+		try {
+			dashboardText = in.readLine();
+		} catch (IOException e) {
+			//DO NOTHING
+		}
+		JLabel postLabel = new JLabel(dashboardText);
+		mainPanel.add(postLabel);
+
+		JScrollPane scrollPane = new JScrollPane(mainPanel);
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+		frame.add(topPanel, BorderLayout.NORTH);
+		frame.add(scrollPane);
+
+		frame.pack();
+		frame.setSize(500,600);
 	}
 
 	//TODO show date and time with board title
@@ -829,14 +891,13 @@ public class GUI extends JComponent{
         frame.repaint();
         frame.pack();
 		frame.setSize(500,600);
-        //kris
     }
 
     //TODO populate the scrollPane with all the relative comments
     public static void viewPostsAndGrades() {
         frame.getContentPane().removeAll();
         frame.setLayout(new BorderLayout());
-		frame.add(firstBack, BorderLayout.NORTH);
+		frame.add(mainBack, BorderLayout.NORTH);
 
 		String payload = "getPostsAndGrades;" + sessionID;
 		sendRequest(payload, socket);
