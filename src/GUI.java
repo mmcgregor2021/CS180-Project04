@@ -3,7 +3,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 /**
  * GUI for a learning management discussion board system
  * @author Astrid Popovici, Grant McCord, Jainam Doshi, Kathryn McGregor, Kris Leungwattanakij
@@ -29,6 +30,7 @@ public class GUI extends JComponent{
     private static Integer sessionID;
     private static String sessionName;
     private static boolean sessionAuthority;
+    private static String currentPage = "";
 
     //Variables for signing up
     private static String[] options = {"Student", "Teacher"};
@@ -97,6 +99,9 @@ public class GUI extends JComponent{
     private static JButton selectBoard = new JButton("Select Board");
     private static JComboBox<String> coursesCombo;
     private static JComboBox<String> discussionBoardsCombo;
+
+    //Variables for viewing student posts and their grades
+    private static JLabel postsAndGradesLabel = new JLabel("Posts and Grades");
 
     //Variables for grading all of a student's posts
 	private static JButton viewContent = new JButton("View Content of Comment");
@@ -520,7 +525,6 @@ public class GUI extends JComponent{
 					       "\nTerminating Program.", "Error", JOptionPane.ERROR_MESSAGE);
                     running = false;
                 }
-                running = false;
             }
         });
     }
@@ -532,13 +536,23 @@ public class GUI extends JComponent{
 
         public void run() {
             try {
-                socket = new Socket("localhost", 1234);
-                out = new PrintWriter(socket.getOutputStream(), true);
-                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 while (running) {
-                    //TODO
+                    TimeUnit.SECONDS.sleep(5);
+                    //TODO finish this
+                    switch (currentPage) {
+                        case "viewAllCourses":
+                            //add an update method
+                            viewAllCourses();
+                            break;
+                        case "viewPostsAndGrades":
+                            updatePostsAndGrades();
+                            break;
+                        case "gradeStudentPosts":
+                            //updateStudentPosts();
+                            break;
+                    }
                 }
-            } catch (IOException e) {
+            } catch (Exception e) {
                 //DO NOTHING
             }
         }
@@ -627,7 +641,6 @@ public class GUI extends JComponent{
     }
 
     public static void editAccount() {
-        //The idea here is to print all the current information in the text fields and allow the user to change it.
         frame.getContentPane().removeAll();
         frame.setLayout(new GridLayout(5, 2));
 
@@ -667,6 +680,7 @@ public class GUI extends JComponent{
     }
 
     public static void viewAllCourses() {
+        currentPage = "viewAllCourses";
         frame.getContentPane().removeAll();
         frame.setLayout(new GridLayout(2, 2));
         String allCourses = "";
@@ -738,7 +752,23 @@ public class GUI extends JComponent{
         frame.pack();
     }
 
+    public static void updateStudentPosts() {
+        //TODO fix bugs
+        studentIDs.removeAllItems();
+        String[] students = listAllStudents(socket);
+        for (String s: students) {
+            studentIDs.addItem(s);
+        }
+        String idToGrade = (String)studentIDs.getSelectedItem();
+        String[] postsOfStudent = findPostsByStudent(idToGrade, socket);
+        studentPosts.removeAllItems();
+        for (String s: postsOfStudent) {
+            studentPosts.addItem(s);
+        }
+    }
+
     public static void gradeStudentPosts() {
+        currentPage = "gradeStudentPosts";
         frame.getContentPane().removeAll();
         frame.setLayout(new GridLayout(4,2));
 
@@ -855,7 +885,6 @@ public class GUI extends JComponent{
     									"Reply Added!", JOptionPane.INFORMATION_MESSAGE);
 								viewAllCourses(); //fixes view discussion page bug.
                                 viewDiscussionPage();
-                                //TODO fix error that occurs when viewDiscussionPage() gets called.
 							}
 						}
 					} while (repeat);
@@ -919,7 +948,20 @@ public class GUI extends JComponent{
 		frame.setSize(500,600);
     }
 
+    public static void updatePostsAndGrades() {
+        String payload = "getPostsAndGrades;" + sessionID;
+		sendRequest(payload, socket);
+		String postsAndGradesText = "";
+		try {
+			postsAndGradesText = in.readLine();
+		} catch (IOException e) {
+			//DO NOTHING
+		}
+        postsAndGradesLabel.setText(postsAndGradesText);
+    }
+
     public static void viewPostsAndGrades() {
+        currentPage = "viewPostsAndGrades";
         frame.getContentPane().removeAll();
         frame.setLayout(new BorderLayout());
 		frame.add(mainBack, BorderLayout.NORTH);
@@ -934,7 +976,7 @@ public class GUI extends JComponent{
 		}
 
         JPanel panel = new JPanel();
-		JLabel postsAndGradesLabel = new JLabel(postsAndGradesText);
+		postsAndGradesLabel.setText(postsAndGradesText);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		panel.add(postsAndGradesLabel);
 		panel.add(Box.createVerticalGlue());
