@@ -16,6 +16,13 @@ public class GUI extends JComponent{
 	//button to go back to main menu
 	private static JButton mainBack = new JButton("Back");
 
+	//Update variables
+	private static String lastFetchedCourses = "";
+	private static String[] lastFetchedBoards;
+	private static String lastSelectedCourse = "";
+	private static String lastDashboardText = "";
+	//kris
+
     //Variables for opening page
     private static JButton signUpButton = new JButton("Sign Up");
     private static JButton logInButton = new JButton("Log In");
@@ -65,6 +72,7 @@ public class GUI extends JComponent{
 	//Variables for displaying teacher dashboard
 	private static JButton sortButton = new JButton("Sort by descending order");
 	private static JButton dashboardBack = new JButton("Back");
+	private static JLabel postLabel = new JLabel("comments go here");
 
     //Variables for edit account
     private static JTextField passwordChange;
@@ -210,6 +218,7 @@ public class GUI extends JComponent{
 
 					mainBack.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
+							currentPage = "mainMenu";
 							studentPosts.removeAllItems();
 							grade.setVisible(false);
 							enterGrade.setVisible(false);
@@ -371,6 +380,7 @@ public class GUI extends JComponent{
 					selectCourse.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
 							String selectedCourse = (String)coursesCombo.getSelectedItem();
+							lastSelectedCourse = selectedCourse;
 							if (!selectedCourse.equals("")) {
 								String[] discussionBoards = findBoardsByCourse(selectedCourse, socket);
 								viewBoards(discussionBoards);
@@ -541,15 +551,24 @@ public class GUI extends JComponent{
                     //TODO finish this
                     switch (currentPage) {
                         case "viewAllCourses":
-                            //add an update method
-                            viewAllCourses();
+                            updateAddBoard(); //addBoard and viewAllCourse use the same combobox
                             break;
+						case "viewBoards":
+							updateAddBoard();
+							updateViewBoards();
+							break;
+						case "viewDashboard":
+							updateViewDashboard();
+							break;
                         case "viewPostsAndGrades":
                             updatePostsAndGrades();
                             break;
                         case "gradeStudentPosts":
                             //updateStudentPosts();
                             break;
+						case "addBoard":
+							updateAddBoard();
+							break;
                     }
                 }
             } catch (Exception e) {
@@ -690,6 +709,7 @@ public class GUI extends JComponent{
         } catch (IOException e) {
             //DO NOTHING;
         }
+		lastFetchedCourses = allCourses;
         coursesCombo = new JComboBox<String>(allCourses.split(";"));
         frame.add(coursesCombo);
         frame.add(selectCourse);
@@ -697,7 +717,22 @@ public class GUI extends JComponent{
         frame.pack();
     }
 
+	public static void updateViewBoards() {
+		String selectedCourse = lastSelectedCourse;
+		if (!selectedCourse.equals("")) {
+			String[] discussionBoards = findBoardsByCourse(selectedCourse, socket);
+			if (lastFetchedBoards != discussionBoards) {
+				discussionBoardsCombo.removeAllItems();
+				for (String board: discussionBoards) {
+					discussionBoardsCombo.addItem(board);
+				}
+			}
+		}
+	}
+
     public static void viewBoards(String[] boards) {
+		currentPage = "viewBoards";
+		lastFetchedBoards = boards;
         frame.getContentPane().removeAll();
         frame.setLayout(new GridLayout(3,2));
         discussionBoardsCombo = new JComboBox<String>(boards);
@@ -710,7 +745,25 @@ public class GUI extends JComponent{
         frame.pack();
     }
 
+	public static void updateAddBoard() {
+		String allCourses = "";
+        try {
+            sendRequest("listAllCourses", socket);
+            allCourses = in.readLine();
+        } catch (IOException e) {
+            //DO NOTHING;
+        }
+		if (!lastFetchedCourses.equals(allCourses)) {
+			lastFetchedCourses = allCourses;
+			coursesCombo.removeAllItems();
+			for (String course: allCourses.split(";")) {
+				coursesCombo.addItem(course);
+			}
+		}
+	}
+
     public static void addBoard() {
+		currentPage = "addBoard";
         frame.getContentPane().removeAll();
         frame.setLayout(new GridLayout(8, 1));
         String allCourses = "";
@@ -720,6 +773,7 @@ public class GUI extends JComponent{
         } catch (IOException e) {
             //DO NOTHING;
         }
+		lastFetchedCourses = allCourses;
         coursesCombo = new JComboBox<String>(allCourses.split(";"));
         frame.add(courseSelectionLabel); //JLabel
         frame.add(coursesCombo); //JComboBox
@@ -788,7 +842,30 @@ public class GUI extends JComponent{
         frame.pack();
     }
 
+	public static void updateViewDashboard() {
+		String sortType = "";
+		if (sortButton.getText().equals("Sort by descending order")) {
+			sortType = "Sort by ascending order";
+		} else {
+			sortType = ("Sort by descending order");
+		}
+
+		String payload = "getPostsOnBoard;" + currentBoard + ";" + sortType;
+		sendRequest(payload, socket);
+		String dashboardText = "";
+		try {
+			dashboardText = in.readLine();
+		} catch (IOException e) {
+			//DO NOTHING
+		}
+		if (!lastDashboardText.equals(dashboardText)) {
+			lastDashboardText = dashboardText;
+			postLabel.setText(dashboardText);
+		}
+	}
+
 	public static void viewDashboard(String sortType) {
+		currentPage = "viewDashboard";
 		frame.getContentPane().removeAll();
 		frame.setLayout(new BorderLayout());
 
@@ -822,7 +899,8 @@ public class GUI extends JComponent{
 		} catch (IOException e) {
 			//DO NOTHING
 		}
-		JLabel postLabel = new JLabel(dashboardText);
+		lastDashboardText = dashboardText;
+		postLabel.setText(dashboardText);
 		mainPanel.add(postLabel);
 
 		JScrollPane scrollPane = new JScrollPane(mainPanel);
@@ -1034,7 +1112,7 @@ public class GUI extends JComponent{
 				BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				for (int i = 0; i < size; i++) {
                     String commentInfo = in.readLine();
-                    int replySize = Integer.parseInt(in.readLine());
+					int	replySize = Integer.parseInt(in.readLine());
                     ArrayList<Comment> replies = new ArrayList<>();
                     if (replySize != 0) {
                         for (int r = 0; r < replySize; r++) {
@@ -1106,7 +1184,7 @@ public class GUI extends JComponent{
             String verificationPayload = "login;" + userID + ";" + password;
             out.println(verificationPayload);
             out.flush();
-            switch(Integer.parseInt(in.readLine())) {
+            switch (Integer.parseInt(in.readLine())) {
                 case 1:
                     JOptionPane.showMessageDialog(null, "The entered ID does not exist!",
                             "Error", JOptionPane.ERROR_MESSAGE);

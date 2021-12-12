@@ -433,8 +433,9 @@ public class Server {
                                 for (Comment c: commentsToReturn) {
 									out.println(deconstructComment(c));
 									out.flush();
-                                    out.println(c.getRepliesToComment().size());
-                                    out.flush();
+                                    out.println(c.getRepliesToComment().size()); //potential delete
+                                    out.flush(); //potential delete
+									String commentReplyLabel = "<html>";
                                     for (Comment r: c.getRepliesToComment()) {
                                         out.println(deconstructComment(r));
                                         out.flush();
