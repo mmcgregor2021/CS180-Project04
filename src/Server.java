@@ -1,7 +1,11 @@
 import java.net.*;
 import java.io.*;
 import java.util.*;
-
+/**
+ * Multi-threaded server for a learning management discussion board system
+ * @author Astrid Popovici, Grant McCord, Jainam Doshi, Kathryn McGregor, Kris Leungwattanakij
+ * @version December 11, 2021
+ */
 public class Server {
 
     private static ArrayList<Comment> comments = readComments("comments.txt");
@@ -414,6 +418,26 @@ public class Server {
                                     }
                                 }
                                 break;
+							case "getPostsAndGrades":
+								postsToReturn = "<html>";
+								int postStudentID = Integer.parseInt(line.split(";")[1]);
+								for (Comment c: comments) {
+									if (c.getOwnerID() == postStudentID) {
+										String postComment = c.getContent();
+										int postGrade = c.getGrade();
+										String[] boardAndCourseName = findBoardAndCourseName(boards,
+										       c.getParentID());
+									    String postCourse = boardAndCourseName[0];
+										String postTopic = boardAndCourseName[1];
+										postsToReturn += "Course: " + postCourse + "<br/>" + "Topic: "
+										       + postTopic + "<br/>" + "Comment: " + postComment +
+											          "<br/>" + "Grade Assigned: " + postGrade + "<br/><br/>";
+									}
+								}
+								postsToReturn += "</html>";
+								out.println(postsToReturn);
+								out.flush();
+								break;
 						}
 						//resetting line to null, so requests do not get spammed
 						line = null;
@@ -436,6 +460,19 @@ public class Server {
             }
         }
     }
+
+	public static String[] findBoardAndCourseName(ArrayList<Board> boards,
+	       String boardID) {
+		String[] boardAndCourseName = new String[2];
+		for (Board b: boards) {
+			if (b.getBoardID().equals(boardID)) {
+				boardAndCourseName[0] = b.getCourse();
+				boardAndCourseName[1] = b.getTopic();
+				break;
+			}
+		}
+		return boardAndCourseName;
+	}
 
     public static String deconstructComment(Comment comment) {
         //dc = deconstructed comment

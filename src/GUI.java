@@ -4,7 +4,11 @@ import java.awt.event.*;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
-
+/**
+ * GUI for a learning management discussion board system
+ * @author Astrid Popovici, Grant McCord, Jainam Doshi, Kathryn McGregor, Kris Leungwattanakij
+ * @version December 11, 2021
+ */
 public class GUI extends JComponent{
     private static JFrame frame;
 
@@ -219,6 +223,13 @@ public class GUI extends JComponent{
 						viewAllCourses();
                     }
                 });
+
+				viewDashboardButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        //TODO
+                    }
+                });
+
 
                 addCommentButton.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
@@ -701,13 +712,15 @@ public class GUI extends JComponent{
         frame.pack();
     }
 
+	public static void viewDashboard() {
+		frame.getContentPane().removeAll();
+		frame.setLayout(new BorderLayout());
+	}
+
+	//TODO show date and time with board title
     public static void viewDiscussionPage() {
         frame.getContentPane().removeAll();
-		if (sessionAuthority) {
-			frame.setLayout(new BorderLayout());
-		} else {
-			frame.setLayout(new BorderLayout());
-		}
+		frame.setLayout(new BorderLayout());
         String boardID = (String)discussionBoardsCombo.getSelectedItem();
         boardID = boardID.split(" - ID: ")[1];
         currentBoard = boardID;
@@ -822,22 +835,29 @@ public class GUI extends JComponent{
     //TODO populate the scrollPane with all the relative comments
     public static void viewPostsAndGrades() {
         frame.getContentPane().removeAll();
-        frame.setLayout(new FlowLayout());
+        frame.setLayout(new BorderLayout());
+		frame.add(firstBack, BorderLayout.NORTH);
+
+		String payload = "getPostsAndGrades;" + sessionID;
+		sendRequest(payload, socket);
+		String postsAndGradesText = "";
+		try {
+			postsAndGradesText = in.readLine();
+		} catch (IOException e) {
+			//DO NOTHING
+		}
 
         JPanel panel = new JPanel();
+		JLabel postsAndGradesLabel = new JLabel(postsAndGradesText);
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.add(postsAndGradesLabel);
+		panel.add(Box.createVerticalGlue());
         JScrollPane postsAndGrades = new JScrollPane(panel);
-        JLabel test = new JLabel("Test        Test");
-        JLabel test2 = new JLabel("Test 2");
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         postsAndGrades.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        panel.add(test);
-        panel.add(test2);
-
-        panel.add(Box.createVerticalGlue());
 
         frame.pack();
-        frame.getContentPane().add(postsAndGrades);
-        frame.setSize(500,300);
+		frame.add(postsAndGrades, BorderLayout.CENTER);
+        frame.setSize(400,300);
     }
 
 	public static String createReplyLabel(ArrayList<Comment> replies) {
