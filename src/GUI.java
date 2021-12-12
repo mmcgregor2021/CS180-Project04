@@ -52,7 +52,8 @@ public class GUI extends JComponent{
     private static JButton replyButton = new JButton("Reply Button");
     private static JButton voteButton = new JButton("Vote Button");
     private static JButton addCommentButton = new JButton("Add Comment");
-    private static JButton sortButton = new JButton("Sort by votes");
+    private static JButton viewDashboardButton = new JButton("View Dashboard");
+	private static JButton deleteBoardButton = new JButton("Delete Board");
     //kris
 
     //Variables for edit account
@@ -206,6 +207,16 @@ public class GUI extends JComponent{
                 viewBoardBackButton.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         viewAllCourses();
+                    }
+                });
+
+				deleteBoardButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        String payload = "deleteBoard;" + currentBoard;
+						sendRequest(payload, socket);
+						JOptionPane.showMessageDialog(null, "The discussion board has been deleted!",
+								"Board Deleted", JOptionPane.INFORMATION_MESSAGE);
+						viewAllCourses();
                     }
                 });
 
@@ -788,7 +799,9 @@ public class GUI extends JComponent{
         boardButtonPanel.setLayout(new GridLayout(1, 2));
         boardButtonPanel.add(viewBoardBackButton);
         if (sessionAuthority) {
-            boardButtonPanel.add(sortButton);
+			boardButtonPanel.setLayout(new GridLayout(1, 3));
+            boardButtonPanel.add(viewDashboardButton);
+			boardButtonPanel.add(deleteBoardButton);
         } else {
             boardButtonPanel.add(addCommentButton);
         }
@@ -869,7 +882,6 @@ public class GUI extends JComponent{
         ArrayList<Comment> comments = new ArrayList<>();
         try {
 			int size = getNumComments(boardID, socket);
-			System.out.println("Num Comments: " + size);
 			if (size != 0) {
 				BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				for (int i = 0; i < size; i++) {
