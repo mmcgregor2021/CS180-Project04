@@ -433,13 +433,15 @@ public class Server {
                                 for (Comment c: commentsToReturn) {
 									out.println(deconstructComment(c));
 									out.flush();
-                                    out.println(c.getRepliesToComment().size()); //potential delete
-                                    out.flush(); //potential delete
-									String commentReplyLabel = "<html>";
+									String commentReplies = "";
                                     for (Comment r: c.getRepliesToComment()) {
-                                        out.println(deconstructComment(r));
-                                        out.flush();
+										commentReplies += deconstructComment(r) + "/br/";
                                     }
+									if (!commentReplies.equals("")) {
+										commentReplies.substring(0, commentReplies.length() - 4);
+									}
+									out.println(commentReplies);
+									out.flush();
                                 }
                                 break;
 							case "getPostsAndGrades":

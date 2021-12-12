@@ -1112,11 +1112,12 @@ public class GUI extends JComponent{
 				BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				for (int i = 0; i < size; i++) {
                     String commentInfo = in.readLine();
-					int	replySize = Integer.parseInt(in.readLine());
                     ArrayList<Comment> replies = new ArrayList<>();
-                    if (replySize != 0) {
-                        for (int r = 0; r < replySize; r++) {
-                            String replyInfo = in.readLine();
+					String repliesString = in.readLine();
+                    if (!repliesString.equals("")) {
+						String[] repliesArr = repliesString.split("/br/");
+                        for (int r = 0; r < repliesArr.length; r++) {
+                            String replyInfo = repliesArr[r];
 							replies.add(constructReply(replyInfo));
                         }
                     }
