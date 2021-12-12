@@ -49,7 +49,7 @@ public class Server {
             PrintWriter out = null;
             BufferedReader in = null;
             try {
-                out = new PrintWriter(clientSocket.getOutputStream(), true);
+                out = new PrintWriter(clientSocket.getOutputStream());
                 in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
                 /*
@@ -68,6 +68,7 @@ public class Server {
 								String password = line.split(";")[2];
 								Integer loginResult = logIn(userID, password, students, teachers);
 								out.println(loginResult);
+								out.flush();
 								break;
 							//signup request
 							case "signup":
@@ -124,6 +125,7 @@ public class Server {
 									//counter[0] is personCounter
 									counters[0]++;
 									out.println(counters[0]);
+									out.flush();
                                     saveCounters(counters, "counters.txt");
 								}
                                 break;
@@ -402,8 +404,8 @@ public class Server {
                                 out.println(commentsToReturn.size());
                                 out.flush();
                                 for (Comment c: commentsToReturn) {
-                                    out.println(deconstructComment(c));
-                                    out.flush();
+									out.println(deconstructComment(c));
+									out.flush();
                                     out.println(c.getRepliesToComment().size());
                                     out.flush();
                                     for (Comment r: c.getRepliesToComment()) {

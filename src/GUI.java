@@ -152,6 +152,7 @@ public class GUI extends JComponent{
                             String password = signUpPassword.getText();
                             String role = (String)combo.getSelectedItem();
                             out.println("signup;" + signupID + ";" + password + ";" + role + ";" + firstName + ";" + lastName);
+							out.flush();
                             sessionAuthority = combo.getSelectedItem().equals("Teacher");
                             firstMenu();
                         }
@@ -322,8 +323,10 @@ public class GUI extends JComponent{
                 selectCourse.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
 						String selectedCourse = (String)coursesCombo.getSelectedItem();
-                   		String[] discussionBoards = findBoardsByCourse(selectedCourse, socket);
-                        viewBoards(discussionBoards);
+						if (!selectedCourse.equals("")) {
+							String[] discussionBoards = findBoardsByCourse(selectedCourse, socket);
+		                    viewBoards(discussionBoards);
+						}
                     }
                 });
 
@@ -866,6 +869,7 @@ public class GUI extends JComponent{
         ArrayList<Comment> comments = new ArrayList<>();
         try {
 			int size = getNumComments(boardID, socket);
+			System.out.println("Num Comments: " + size);
 			if (size != 0) {
 				BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				for (int i = 0; i < size; i++) {
@@ -873,7 +877,7 @@ public class GUI extends JComponent{
                     int replySize = Integer.parseInt(in.readLine());
                     ArrayList<Comment> replies = new ArrayList<>();
                     if (replySize != 0) {
-                        for (int r = 0; i < replySize; i++) {
+                        for (int r = 0; r < replySize; r++) {
                             String replyInfo = in.readLine();
 							replies.add(constructReply(replyInfo));
                         }
