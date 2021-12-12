@@ -113,407 +113,407 @@ public class GUI extends JComponent{
 
     public static void main(String[] args) {
 
+		//GUI related code running in EDT
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 try {
                     socket = new Socket("localhost", 1234);
                     out = new PrintWriter(socket.getOutputStream(), true);
                     in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                } catch (IOException e) {
-					//TODO terminate program here
-                    e.printStackTrace();
-                }
 
-                initializeGUI();
-                openMenu();
+					initializeGUI();
+	                openMenu();
 
-                logInButton.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        //Add code to make sure user has put in valid info.
-                        logIn();
-                    }
-                });
-
-                signUpButton.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        signUp();
-                    }
-                });
-
-                firstBack.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        openMenu();
-                    }
-                });
-
-                //this is pressed after the user enters their signup information
-                signUpContinue.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        //if any fields are empty, give the user an error and try again
-                        JTextField[] signUpfields = {signUpFirstName, signUpLastName, signUpPassword};
-                        if (!areFieldsFull(signUpfields)) {
-                            JOptionPane.showMessageDialog(null, "Please make sure there are no empty fields",
-                                    "Error", JOptionPane.ERROR_MESSAGE);
-                        } else {
-                            String firstName = signUpFirstName.getText();
-                            String lastName = signUpLastName.getText();
-                            String password = signUpPassword.getText();
-                            String role = (String)combo.getSelectedItem();
-                            out.println("signup;" + signupID + ";" + password + ";" + role + ";" + firstName + ";" + lastName);
-							out.flush();
-                            sessionAuthority = combo.getSelectedItem().equals("Teacher");
-                            firstMenu();
-                        }
-                    }
-                });
-
-                logInContinue.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-						JTextField[] logInfields = {logInUserID, logInPassword};
-						if (!areFieldsFull(logInfields)) {
-                            JOptionPane.showMessageDialog(null, "Please make sure there are no empty fields",
-                                    "Error", JOptionPane.ERROR_MESSAGE);
-						} else {
-							//checks to make sure entered ID is an integer
-							try {
-								String user = logInUserID.getText();
-								Integer testID = Integer.parseInt(user);
-		                        String pass = logInPassword.getText();
-		                        if (logIn(user, pass, socket)) {
-                                    sessionID = testID;
-                                    sendRequest("sessionVariable;" + sessionID, socket);
-                                    //determines session authority
-                                    sessionAuthority = in.readLine().split(";")[3].equals("Teacher");
-		                            firstMenu();
-		                        }
-							} catch (NumberFormatException ex) {
-								JOptionPane.showMessageDialog(null, "Please make sure entered ID is an integer",
-	                                    "Error", JOptionPane.ERROR_MESSAGE);
-							} catch (IOException ex) {
-                                //DO NOTHING
-                            }
+					logInButton.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							//Add code to make sure user has put in valid info.
+							logIn();
 						}
-                    }
-                });
+					});
 
-                edit.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        editAccount();
-                    }
-                });
-
-                mainBack.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-						studentPosts.removeAllItems();
-						grade.setVisible(false);
-				        enterGrade.setVisible(false);
-                        firstMenu();
-                    }
-                });
-
-                viewBoardBackButton.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        viewAllCourses();
-                    }
-                });
-
-				deleteBoardButton.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        String payload = "deleteBoard;" + currentBoard;
-						sendRequest(payload, socket);
-						JOptionPane.showMessageDialog(null, "The discussion board has been deleted!",
-								"Board Deleted", JOptionPane.INFORMATION_MESSAGE);
-						viewAllCourses();
-                    }
-                });
-
-				viewDashboardButton.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        viewDashboard("Sort by descending order");
-                    }
-                });
-
-				dashboardBack.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        viewDiscussionPage();
-                    }
-                });
-
-				sortButton.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        if (sortButton.getText().equals("Sort by descending order")) {
-							sortButton.getText().equals("Sort by ascending order");
-							viewDashboard("Sort by descending order");
-						} else {
-							sortButton.getText().equals("Sort by descending order");
-							viewDashboard("Sort by ascending order");
+					signUpButton.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							signUp();
 						}
-                    }
-                });
+					});
 
-                addCommentButton.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        boolean repeat = false;
-                        do {
-                            repeat = false;
-                            String content = JOptionPane.showInputDialog(null, "Type in your comment: ",
-                                   "Add a comment", JOptionPane.QUESTION_MESSAGE);
-                            if (content != null && content.equals("")) {
-                                JOptionPane.showMessageDialog(null, "Your reply cannot be empty",
-                                        "Error", JOptionPane.ERROR_MESSAGE);
-                                repeat = true;
-                            } else {
-                                if (content != null) {
-                                    String payload = "createComment;" + currentBoard +
-                                           ";" + sessionID + ";" + content;
-                                    sendRequest(payload, socket);
-                                    JOptionPane.showMessageDialog(null, "Your comment has been added.",
-                                            "Comment Addded", JOptionPane.INFORMATION_MESSAGE);
-                                    viewAllCourses(); //fixes view discussion page bug.
-                                    viewDiscussionPage();
-                                }
-                            }
-                        } while (repeat);
-                    }
-                });
+					firstBack.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							openMenu();
+						}
+					});
 
-                processEdit.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        //Add code to change user info
-                        String password = passwordChange.getText();
-                        String firstName = firstNameChange.getText();
-                        String lastName = lastNameChange.getText();
-                        String modificationPayload = "editAccount;" + password + ";" + firstName + ";" + lastName + ";" + sessionID;
-                        out.println(modificationPayload);
-                        out.flush();
-                        String infoMessage = "This is now your saved user information:\nPassword: " + password +
-                               "\nFirst Name: " + firstName + "\nLast Name: " + lastName;
-                        JOptionPane.showMessageDialog(null, infoMessage, "Changes Made", JOptionPane.INFORMATION_MESSAGE);
-                        firstMenu();
-                    }
-                });
-
-                addBoard.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        addBoard();
-                    }
-                });
-
-				createBoard.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        if (boardTopicField.getText().equals("")) {
-							JOptionPane.showMessageDialog(null, "Please make sure there are no empty fields",
-                                    "Error", JOptionPane.ERROR_MESSAGE);
-						} else {
-							boolean boardCreationError = false;
-							String topic = "";
-							String course = (String)coursesCombo.getSelectedItem();
-							String method = (String)methodChoice.getSelectedItem();
-							if (method.equals("Direct text")) {
-								topic = boardTopicField.getText();
+					//this is pressed after the user enters their signup information
+					signUpContinue.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							//if any fields are empty, give the user an error and try again
+							JTextField[] signUpfields = {signUpFirstName, signUpLastName, signUpPassword};
+							if (!areFieldsFull(signUpfields)) {
+								JOptionPane.showMessageDialog(null, "Please make sure there are no empty fields",
+										"Error", JOptionPane.ERROR_MESSAGE);
 							} else {
-								String fileName = boardTopicField.getText();
-								try {
-									topic = getTextFromFile(fileName);
-								} catch (IOException ex) {
-									boardCreationError = true;
-									JOptionPane.showMessageDialog(null, "Error reading file!",
-		                                    "Error", JOptionPane.ERROR_MESSAGE);
-								}
-							}
-							if (!boardCreationError) {
-								String payload = "createBoard;" + course + ";" + topic;
-								sendRequest(payload, socket);
-								JOptionPane.showMessageDialog(null, "The board with topic: " + topic +
-								       "\nhas been added to course: " + course, "Board Added", JOptionPane.INFORMATION_MESSAGE);
-							}
-							boardTopicField.setText("");
-						}
-                    }
-                });
-
-                delete.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        int result = JOptionPane.showConfirmDialog(frame,"Are you sure you want to delete your account?", "Delete Account",
-                                JOptionPane.YES_NO_OPTION,
-                                JOptionPane.QUESTION_MESSAGE);
-                        if(result == JOptionPane.NO_OPTION) {
-                            firstMenu();
-                        } else {
-                            frame.dispose();
-                            String deletionPayload = "deleteAccount;" + sessionID;
-                            out.println(deletionPayload);
-                            out.flush();
-                            JOptionPane.showMessageDialog(null, "Your account has been deleted. " +
-                                   "Thank you for using our platform!", "Closing System", JOptionPane.INFORMATION_MESSAGE);
-                        }
-                    }
-                });
-
-                viewCourses.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        viewAllCourses();
-                    }
-                });
-
-                viewCoursesBack.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        firstMenu();
-                    }
-                });
-
-                selectCourse.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-						String selectedCourse = (String)coursesCombo.getSelectedItem();
-						if (!selectedCourse.equals("")) {
-							String[] discussionBoards = findBoardsByCourse(selectedCourse, socket);
-		                    viewBoards(discussionBoards);
-						}
-                    }
-                });
-
-                selectBoard.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        viewDiscussionPage();
-                    }
-                });
-
-                methodChoice.addActionListener (new ActionListener () {
-                    public void actionPerformed(ActionEvent e) {
-                        if (methodChoice.getSelectedItem().equals("Direct text")) {
-                            chosenMethod.setText("Type in the initial first board topic: ");
-                            boardTopicLabel.setText("Type in the topic of the discussion board: ");
-                        } else {
-                            chosenMethod.setText("Enter the file name: ");
-                            boardTopicLabel.setText("Enter the file name: ");
-                        }
-                    }
-                });
-
-                newCourses.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        createNewCourse();
-                    }
-                });
-
-                createCourse.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        JTextField[] fields = {forumTopic, courseName};
-                        if (!areFieldsFull(fields)) {
-                            JOptionPane.showMessageDialog(null, "Please make sure there are no empty fields",
-                                    "Error", JOptionPane.ERROR_MESSAGE);
-                        } else {
-                            String name = courseName.getText();
-                            String topic = forumTopic.getText();
-                            String method = (String)methodChoice.getSelectedItem();
-                            if (method.equals("Direct text")) {
-                                sendRequest("createCourse;" + name + ";" + topic, socket);
-								JOptionPane.showMessageDialog(frame, "The course: " + name + "\nand\nDiscussion Board: " + topic +
-	                                   "\nhave been successfully created", "Course Created", JOptionPane.INFORMATION_MESSAGE);
+								String firstName = signUpFirstName.getText();
+								String lastName = signUpLastName.getText();
+								String password = signUpPassword.getText();
+								String role = (String)combo.getSelectedItem();
+								out.println("signup;" + signupID + ";" + password + ";" + role + ";" + firstName + ";" + lastName);
+								out.flush();
+								sessionAuthority = combo.getSelectedItem().equals("Teacher");
 								firstMenu();
-                            } else {
-								try {
-									topic = getTextFromFile(topic);
-	                                sendRequest("createCourse;" + name + ";" + topic, socket);
-									JOptionPane.showMessageDialog(frame, "The course: " + name + "\nand\nDiscussion Board: " + topic +
-		                                   "\nhave been successfully created", "Course Created", JOptionPane.INFORMATION_MESSAGE);
-									firstMenu();
-								} catch (IOException ex) {
-									JOptionPane.showMessageDialog(null, "Error reading file!",
-		                                    "Error", JOptionPane.ERROR_MESSAGE);
-								}
-
-                            }
-                        }
-                    }
-                });
-
-                logout.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        frame.dispose();
-                        JOptionPane.showMessageDialog(frame, "Thank you for using our platform!",
-                               "Logout", JOptionPane.INFORMATION_MESSAGE);
-                    }
-                });
-
-                viewGrades.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        viewPostsAndGrades();
-                    }
-                });
-
-				viewContent.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                    	String commentID = (String)studentPosts.getSelectedItem();
-						if (commentID != null) {
-							String payload = "commentContent;" + commentID;
-							sendRequest(payload, socket);
-							try {
-								String line = in.readLine();
-								String course = line.split(";")[0];
-								String topic = line.split(";")[1];
-								String post = line.split(";")[2];
-								String grade = line.split(";")[3];
-								String content = "Course: " + course + "\nForum Topic: " + topic +
-								       "\nContent: " + post + "\nCurrent Grade: " + grade;
-							    JOptionPane.showMessageDialog(null, content, "Post Content", JOptionPane.INFORMATION_MESSAGE);
-							} catch (IOException ex) {
-								//DO NOTHING
 							}
 						}
-                    }
-                });
+					});
 
-                selectStudent.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-						String idToGrade = (String)studentIDs.getSelectedItem();
-						idToGrade = idToGrade.split("ID: ")[1];
-						String[] postsOfStudent = findPostsByStudent(idToGrade, socket);
-						if (postsOfStudent[0].equals("|EMPTY|")) {
-							JOptionPane.showMessageDialog(null, "This student has not posted anything yet!",
-							       "Error", JOptionPane.ERROR_MESSAGE);
-						} else {
-							studentPosts.removeAllItems();
-							for (String s: postsOfStudent) {
-								studentPosts.addItem(s);
-							}
-						    frame.repaint();
-							frame.pack();
-	                        enterGrade.setVisible(true);
-	                        grade.setVisible(true);
-						}
-                    }
-                });
-
-                gradePosts.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        gradeStudentPosts();
-                    }
-                });
-
-				enterGrade.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-						String commentID = (String)studentPosts.getSelectedItem();
-						Integer gradeAssigned = 0;
-						try {
-							gradeAssigned = Integer.parseInt(grade.getText());
-							if (gradeAssigned < 0 || gradeAssigned > 100) {
-								JOptionPane.showMessageDialog(null, "Please enter an integer between 0 and 100 inclusive.",
-			                            "Error", JOptionPane.ERROR_MESSAGE);
+					logInContinue.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							JTextField[] logInfields = {logInUserID, logInPassword};
+							if (!areFieldsFull(logInfields)) {
+								JOptionPane.showMessageDialog(null, "Please make sure there are no empty fields",
+										"Error", JOptionPane.ERROR_MESSAGE);
 							} else {
-								String payload = "gradeComment;" + commentID + ";" + gradeAssigned;
-								sendRequest(payload, socket);
-								String confirmMessage = "The grade for comment ID: " + commentID + " has been set to: " + gradeAssigned;
-								JOptionPane.showMessageDialog(null, confirmMessage, "Grade Set!", JOptionPane.INFORMATION_MESSAGE);
+								//checks to make sure entered ID is an integer
+								try {
+									String user = logInUserID.getText();
+									Integer testID = Integer.parseInt(user);
+									String pass = logInPassword.getText();
+									if (logIn(user, pass, socket)) {
+										sessionID = testID;
+										sendRequest("sessionVariable;" + sessionID, socket);
+										//determines session authority
+										sessionAuthority = in.readLine().split(";")[3].equals("Teacher");
+										firstMenu();
+									}
+								} catch (NumberFormatException ex) {
+									JOptionPane.showMessageDialog(null, "Please make sure entered ID is an integer",
+											"Error", JOptionPane.ERROR_MESSAGE);
+								} catch (IOException ex) {
+									//DO NOTHING
+								}
 							}
-						} catch (Exception ex) {
-							JOptionPane.showMessageDialog(null, "Please enter a valid integer!",
-		                            "Error", JOptionPane.ERROR_MESSAGE);
 						}
-						grade.setText("");
-                    }
-                });
+					});
 
+					edit.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							editAccount();
+						}
+					});
+
+					mainBack.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							studentPosts.removeAllItems();
+							grade.setVisible(false);
+							enterGrade.setVisible(false);
+							firstMenu();
+						}
+					});
+
+					viewBoardBackButton.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							viewAllCourses();
+						}
+					});
+
+					deleteBoardButton.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							String payload = "deleteBoard;" + currentBoard;
+							sendRequest(payload, socket);
+							JOptionPane.showMessageDialog(null, "The discussion board has been deleted!",
+									"Board Deleted", JOptionPane.INFORMATION_MESSAGE);
+							viewAllCourses();
+						}
+					});
+
+					viewDashboardButton.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							viewDashboard("Sort by descending order");
+						}
+					});
+
+					dashboardBack.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							viewDiscussionPage();
+						}
+					});
+
+					sortButton.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							if (sortButton.getText().equals("Sort by descending order")) {
+								sortButton.getText().equals("Sort by ascending order");
+								viewDashboard("Sort by descending order");
+							} else {
+								sortButton.getText().equals("Sort by descending order");
+								viewDashboard("Sort by ascending order");
+							}
+						}
+					});
+
+					addCommentButton.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							boolean repeat = false;
+							do {
+								repeat = false;
+								String content = JOptionPane.showInputDialog(null, "Type in your comment: ",
+									   "Add a comment", JOptionPane.QUESTION_MESSAGE);
+								if (content != null && content.equals("")) {
+									JOptionPane.showMessageDialog(null, "Your reply cannot be empty",
+											"Error", JOptionPane.ERROR_MESSAGE);
+									repeat = true;
+								} else {
+									if (content != null) {
+										String payload = "createComment;" + currentBoard +
+											   ";" + sessionID + ";" + content;
+										sendRequest(payload, socket);
+										JOptionPane.showMessageDialog(null, "Your comment has been added.",
+												"Comment Addded", JOptionPane.INFORMATION_MESSAGE);
+										viewAllCourses(); //fixes view discussion page bug.
+										viewDiscussionPage();
+									}
+								}
+							} while (repeat);
+						}
+					});
+
+					processEdit.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							//Add code to change user info
+							String password = passwordChange.getText();
+							String firstName = firstNameChange.getText();
+							String lastName = lastNameChange.getText();
+							String modificationPayload = "editAccount;" + password + ";" + firstName + ";" + lastName + ";" + sessionID;
+							out.println(modificationPayload);
+							out.flush();
+							String infoMessage = "This is now your saved user information:\nPassword: " + password +
+								   "\nFirst Name: " + firstName + "\nLast Name: " + lastName;
+							JOptionPane.showMessageDialog(null, infoMessage, "Changes Made", JOptionPane.INFORMATION_MESSAGE);
+							firstMenu();
+						}
+					});
+
+					addBoard.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							addBoard();
+						}
+					});
+
+					createBoard.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							if (boardTopicField.getText().equals("")) {
+								JOptionPane.showMessageDialog(null, "Please make sure there are no empty fields",
+										"Error", JOptionPane.ERROR_MESSAGE);
+							} else {
+								boolean boardCreationError = false;
+								String topic = "";
+								String course = (String)coursesCombo.getSelectedItem();
+								String method = (String)methodChoice.getSelectedItem();
+								if (method.equals("Direct text")) {
+									topic = boardTopicField.getText();
+								} else {
+									String fileName = boardTopicField.getText();
+									try {
+										topic = getTextFromFile(fileName);
+									} catch (IOException ex) {
+										boardCreationError = true;
+										JOptionPane.showMessageDialog(null, "Error reading file!",
+												"Error", JOptionPane.ERROR_MESSAGE);
+									}
+								}
+								if (!boardCreationError) {
+									String payload = "createBoard;" + course + ";" + topic;
+									sendRequest(payload, socket);
+									JOptionPane.showMessageDialog(null, "The board with topic: " + topic +
+										   "\nhas been added to course: " + course, "Board Added", JOptionPane.INFORMATION_MESSAGE);
+								}
+								boardTopicField.setText("");
+							}
+						}
+					});
+
+					delete.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							int result = JOptionPane.showConfirmDialog(frame,"Are you sure you want to delete your account?", "Delete Account",
+									JOptionPane.YES_NO_OPTION,
+									JOptionPane.QUESTION_MESSAGE);
+							if(result == JOptionPane.NO_OPTION) {
+								firstMenu();
+							} else {
+								frame.dispose();
+								String deletionPayload = "deleteAccount;" + sessionID;
+								out.println(deletionPayload);
+								out.flush();
+								JOptionPane.showMessageDialog(null, "Your account has been deleted. " +
+									   "Thank you for using our platform!", "Closing System", JOptionPane.INFORMATION_MESSAGE);
+							}
+						}
+					});
+
+					viewCourses.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							viewAllCourses();
+						}
+					});
+
+					viewCoursesBack.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							firstMenu();
+						}
+					});
+
+					selectCourse.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							String selectedCourse = (String)coursesCombo.getSelectedItem();
+							if (!selectedCourse.equals("")) {
+								String[] discussionBoards = findBoardsByCourse(selectedCourse, socket);
+								viewBoards(discussionBoards);
+							}
+						}
+					});
+
+					selectBoard.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							viewDiscussionPage();
+						}
+					});
+
+					methodChoice.addActionListener (new ActionListener () {
+						public void actionPerformed(ActionEvent e) {
+							if (methodChoice.getSelectedItem().equals("Direct text")) {
+								chosenMethod.setText("Type in the initial first board topic: ");
+								boardTopicLabel.setText("Type in the topic of the discussion board: ");
+							} else {
+								chosenMethod.setText("Enter the file name: ");
+								boardTopicLabel.setText("Enter the file name: ");
+							}
+						}
+					});
+
+					newCourses.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							createNewCourse();
+						}
+					});
+
+					createCourse.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							JTextField[] fields = {forumTopic, courseName};
+							if (!areFieldsFull(fields)) {
+								JOptionPane.showMessageDialog(null, "Please make sure there are no empty fields",
+										"Error", JOptionPane.ERROR_MESSAGE);
+							} else {
+								String name = courseName.getText();
+								String topic = forumTopic.getText();
+								String method = (String)methodChoice.getSelectedItem();
+								if (method.equals("Direct text")) {
+									sendRequest("createCourse;" + name + ";" + topic, socket);
+									JOptionPane.showMessageDialog(frame, "The course: " + name + "\nand\nDiscussion Board: " + topic +
+										   "\nhave been successfully created", "Course Created", JOptionPane.INFORMATION_MESSAGE);
+									firstMenu();
+								} else {
+									try {
+										topic = getTextFromFile(topic);
+										sendRequest("createCourse;" + name + ";" + topic, socket);
+										JOptionPane.showMessageDialog(frame, "The course: " + name + "\nand\nDiscussion Board: " + topic +
+											   "\nhave been successfully created", "Course Created", JOptionPane.INFORMATION_MESSAGE);
+										firstMenu();
+									} catch (IOException ex) {
+										JOptionPane.showMessageDialog(null, "Error reading file!",
+												"Error", JOptionPane.ERROR_MESSAGE);
+									}
+
+								}
+							}
+						}
+					});
+
+					logout.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							frame.dispose();
+							JOptionPane.showMessageDialog(frame, "Thank you for using our platform!",
+								   "Logout", JOptionPane.INFORMATION_MESSAGE);
+						}
+					});
+
+					viewGrades.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							viewPostsAndGrades();
+						}
+					});
+
+					viewContent.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							String commentID = (String)studentPosts.getSelectedItem();
+							if (commentID != null) {
+								String payload = "commentContent;" + commentID;
+								sendRequest(payload, socket);
+								try {
+									String line = in.readLine();
+									String course = line.split(";")[0];
+									String topic = line.split(";")[1];
+									String post = line.split(";")[2];
+									String grade = line.split(";")[3];
+									String content = "Course: " + course + "\nForum Topic: " + topic +
+										   "\nContent: " + post + "\nCurrent Grade: " + grade;
+									JOptionPane.showMessageDialog(null, content, "Post Content", JOptionPane.INFORMATION_MESSAGE);
+								} catch (IOException ex) {
+									//DO NOTHING
+								}
+							}
+						}
+					});
+
+					selectStudent.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							String idToGrade = (String)studentIDs.getSelectedItem();
+							idToGrade = idToGrade.split("ID: ")[1];
+							String[] postsOfStudent = findPostsByStudent(idToGrade, socket);
+							if (postsOfStudent[0].equals("|EMPTY|")) {
+								JOptionPane.showMessageDialog(null, "This student has not posted anything yet!",
+									   "Error", JOptionPane.ERROR_MESSAGE);
+							} else {
+								studentPosts.removeAllItems();
+								for (String s: postsOfStudent) {
+									studentPosts.addItem(s);
+								}
+								frame.repaint();
+								frame.pack();
+								enterGrade.setVisible(true);
+								grade.setVisible(true);
+							}
+						}
+					});
+
+					gradePosts.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							gradeStudentPosts();
+						}
+					});
+
+					enterGrade.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							String commentID = (String)studentPosts.getSelectedItem();
+							Integer gradeAssigned = 0;
+							try {
+								gradeAssigned = Integer.parseInt(grade.getText());
+								if (gradeAssigned < 0 || gradeAssigned > 100) {
+									JOptionPane.showMessageDialog(null, "Please enter an integer between 0 and 100 inclusive.",
+											"Error", JOptionPane.ERROR_MESSAGE);
+								} else {
+									String payload = "gradeComment;" + commentID + ";" + gradeAssigned;
+									sendRequest(payload, socket);
+									String confirmMessage = "The grade for comment ID: " + commentID + " has been set to: " + gradeAssigned;
+									JOptionPane.showMessageDialog(null, confirmMessage, "Grade Set!", JOptionPane.INFORMATION_MESSAGE);
+								}
+							} catch (Exception ex) {
+								JOptionPane.showMessageDialog(null, "Please enter a valid integer!",
+										"Error", JOptionPane.ERROR_MESSAGE);
+							}
+							grade.setText("");
+						}
+					});
+                } catch (IOException e) {
+					JOptionPane.showMessageDialog(null, "Cannot establish connection with server." +
+					       "\nTerminating Program.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
     }
@@ -618,7 +618,7 @@ public class GUI extends JComponent{
             lastName = line.split(";")[1];
             password = line.split(";")[2];
         } catch (IOException e) {
-            e.printStackTrace();
+            //DO NOTHING;
         }
 
         JLabel message = new JLabel("Enter any changes you would like to make in the text fields below. ");
@@ -648,7 +648,7 @@ public class GUI extends JComponent{
             sendRequest("listAllCourses", socket);
             allCourses = in.readLine();
         } catch (IOException e) {
-            e.printStackTrace();
+            //DO NOTHING;
         }
         coursesCombo = new JComboBox<String>(allCourses.split(";"));
         frame.add(coursesCombo);
@@ -678,7 +678,7 @@ public class GUI extends JComponent{
             sendRequest("listAllCourses", socket);
             allCourses = in.readLine();
         } catch (IOException e) {
-            e.printStackTrace();
+            //DO NOTHING;
         }
         coursesCombo = new JComboBox<String>(allCourses.split(";"));
         frame.add(courseSelectionLabel); //JLabel
@@ -893,7 +893,6 @@ public class GUI extends JComponent{
 		frame.setSize(500,600);
     }
 
-    //TODO populate the scrollPane with all the relative comments
     public static void viewPostsAndGrades() {
         frame.getContentPane().removeAll();
         frame.setLayout(new BorderLayout());
@@ -942,7 +941,7 @@ public class GUI extends JComponent{
             out.println(signUpPayload);
             out.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            //DO NOTHING;
         }
     }
 
@@ -954,7 +953,7 @@ public class GUI extends JComponent{
 	        sendRequest(payload, socket);
 			size = Integer.parseInt(in.readLine());
 		} catch (IOException e) {
-			e.printStackTrace();
+			//DO NOTHING;
 		}
 		return size;
 	}
@@ -980,7 +979,7 @@ public class GUI extends JComponent{
                 return comments;
 			}
         } catch (IOException e) {
-            e.printStackTrace();
+            //DO NOTHING;
         }
         return comments;
     }
@@ -1013,7 +1012,7 @@ public class GUI extends JComponent{
             sendRequest(payload, socket);
             infoToReturn = in.readLine();
         } catch (IOException e) {
-            e.printStackTrace();
+            //DO NOTHING;
         }
         return infoToReturn;
     }
@@ -1027,7 +1026,7 @@ public class GUI extends JComponent{
             out.flush();
             return Integer.parseInt(in.readLine());
         } catch (IOException e) {
-            e.printStackTrace();
+            //DO NOTHING;
         }
         return 0;
     }
@@ -1052,7 +1051,7 @@ public class GUI extends JComponent{
                     return true;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            //DO NOTHING;
         }
         return true;
     }
@@ -1063,7 +1062,7 @@ public class GUI extends JComponent{
             out.println(requestPayload);
             out.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            //DO NOTHING;
         }
     }
 
