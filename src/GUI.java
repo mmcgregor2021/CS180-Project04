@@ -23,6 +23,7 @@ public class GUI extends JComponent{
     private static JButton logInContinue = new JButton("Continue");
 
     //Session variables
+    private static boolean running = true;
     private static String currentBoard = "";
     private static Integer signupID = 0;
     private static Integer sessionID;
@@ -112,6 +113,9 @@ public class GUI extends JComponent{
     private static BufferedReader in = null;
 
     public static void main(String[] args) {
+
+        UpdateListener listener = new UpdateListener();
+        new Thread(listener).start();
 
 		//GUI related code running in EDT
         SwingUtilities.invokeLater(new Runnable() {
@@ -430,6 +434,7 @@ public class GUI extends JComponent{
 							frame.dispose();
 							JOptionPane.showMessageDialog(frame, "Thank you for using our platform!",
 								   "Logout", JOptionPane.INFORMATION_MESSAGE);
+                            running = false;
 						}
 					});
 
@@ -513,9 +518,30 @@ public class GUI extends JComponent{
                 } catch (IOException e) {
 					JOptionPane.showMessageDialog(null, "Cannot establish connection with server." +
 					       "\nTerminating Program.", "Error", JOptionPane.ERROR_MESSAGE);
+                    running = false;
                 }
+                running = false;
             }
         });
+    }
+
+    private static class UpdateListener implements Runnable {
+
+        public UpdateListener() {
+        }
+
+        public void run() {
+            try {
+                socket = new Socket("localhost", 1234);
+                out = new PrintWriter(socket.getOutputStream(), true);
+                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                while (running) {
+                    //TODO
+                }
+            } catch (IOException e) {
+                //DO NOTHING
+            }
+        }
     }
 
     public static void initializeGUI() {

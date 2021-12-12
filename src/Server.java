@@ -15,6 +15,7 @@ public class Server {
     private static ArrayList<Student> students = readStudents("students.txt");
     private HashMap<Integer, Person> users = populateHashMap();
     private static Integer[] counters = readCounters("counters.txt");
+    private static ArrayList<Socket> clientSockets = new ArrayList<>();
 
     public static void main(String[] args) {
         ServerSocket server = null;
@@ -23,9 +24,15 @@ public class Server {
             server = new ServerSocket(1234);
             server.setReuseAddress(true);
 
+            int clientCounter = 0;
             while (true) {
                 Socket client = server.accept();
-                System.out.println("Client connected: " + client.getInetAddress().getHostAddress());
+                clientCounter++;
+                if (clientCounter % 2 == 0) {
+                    clientSockets.add(client);
+                }   
+                System.out.println("Client " + clientCounter +
+                       "connected: " + client.getInetAddress().getHostAddress());
                 ClientHandler clientSock = new ClientHandler(client);
                 new Thread(clientSock).start();
             }
