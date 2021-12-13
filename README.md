@@ -20,6 +20,11 @@
 ### Server
 A multi-threaded server class which is able to process requests from multiple clients simultaneously.
 - Has a nested class called ClientHandler
+- Instantiates objects of types:
+  - Student
+  - Teacher
+  - Board 
+  - Comment
 
 ### ClientHandler
 A client handler thread class that is instantiated and started by the Server class every time a client connects to the server.  Handles individual client requests.
@@ -30,6 +35,8 @@ A client handler thread class that is instantiated and started by the Server cla
 A client class that connects to and allows the user to interact with the server by providing them with a GUI.  Uses JFrames and JOptionPanes from Swing to provide users with a GUI.  Runs GUI related code within the Event Dispatch Thread (EDT).
 - Extends the JComponent class
 - Has a nested class called UpdateListener
+- Instantiates objects of type:
+  - Comment
 
 ### UpdateListener
 A GUI updater thread class that is instantiated and started by the GUI class when it is compiled and ran.  Checks what page the user is on every five seconds and runs the corresponding update method to provide the user with real-time updates.
