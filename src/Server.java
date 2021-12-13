@@ -18,13 +18,11 @@ public class Server {
 
     public static void main(String[] args) {
         ServerSocket server = null;
-        System.out.println("Server Starting up...");
         try {
             server = new ServerSocket(1234);
             server.setReuseAddress(true);
             while (true) {
                 Socket client = server.accept();
-                System.out.println("Client connected: " + client.getInetAddress().getHostAddress());
                 ClientHandler clientSock = new ClientHandler(client);
                 new Thread(clientSock).start();
             }
@@ -623,7 +621,7 @@ public class Server {
                 out.writeObject(comments.get(i));
             }
         } catch (Exception e) {
-            System.out.println("Failed to save comments to file!");
+            //DO NOTHING
         }
     }
 
@@ -635,7 +633,7 @@ public class Server {
                 out.writeObject(boards.get(i));
             }
         } catch (Exception e) {
-            System.out.println("Failed to save boards to file!");
+            //DO NOTHING
         }
     }
 
@@ -647,7 +645,7 @@ public class Server {
                 out.writeObject(students.get(i));
             }
         } catch (Exception e) {
-            System.out.println("Failed to save students to file!");
+            //DO NOTHING
         }
     }
 
@@ -659,7 +657,7 @@ public class Server {
                 out.writeObject(teachers.get(i));
             }
         } catch (Exception e) {
-            System.out.println("Failed to save teachers to file!");
+            //DO NOTHING
         }
     }
 
@@ -731,7 +729,7 @@ public class Server {
 			Integer commentCounter = counters[2];
             pw.println(personCounter + ";" + boardCounter + ";" + commentCounter);
         } catch (Exception e) {
-            System.out.println("Failed to save counter!");
+            //DO NOTHING
         }
     }
 
