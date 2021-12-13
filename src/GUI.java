@@ -138,6 +138,10 @@ public class GUI extends JComponent{
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 try {
+                    /*
+                        Please replace localhost with the IP address of the server when
+                        using this system.
+                    */
                     socket = new Socket("localhost", 1234);
                     out = new PrintWriter(socket.getOutputStream(), true);
                     in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
