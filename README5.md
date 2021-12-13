@@ -8,6 +8,13 @@
 - Kris Leungwattanakij 
 
 
+## How to Compile and Run the Project
+Compile and run the Server.java class in the command line interface of your choice. Then compile and run GUI.java to begin running the project.
+
+## Project Submission
+- Jainam Doshi: submitted report on Brightspace
+- Kris Leungwattanakij: submitted Vocareum workspace
+
 ## Descriptions of classes
 ### Person
 Defines a person with a first name, last name, password, and ID.  
