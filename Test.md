@@ -81,7 +81,7 @@ Test Procedures for Project 5
   
   Expected Result: The reply is displayed under the comment on the discussion board 
   
-  Test Status: Not passed 
+  Test Status: Passed 
   
   
   Test 8: Add comment
@@ -92,7 +92,7 @@ Test Procedures for Project 5
   
   Expected Result: The comment is displayed on the discussion board and added to the comments ArrayList
   
-  Test Status: Not passed
+  Test Status: Passed
   
   
   Test 9: Vote for a comment
@@ -131,7 +131,7 @@ Test Procedures for Project 5
   
   Expected Result: A JOptionPane containing the comment ID and the grade assigned opens. The grade is updated for the comment.
   
-  Test Status: Not passed 
+  Test Status: Passed 
   
   
   Test 12: Teacher adds a discussion board 
@@ -141,6 +141,13 @@ Test Procedures for Project 5
   3. User clicks "Create Discussion Board"
   
   Expected Result: A JOptionPane containing the topic of the board and the course it belongs to opens up
+  
+  Test Status: Passed 
+  
+  
+  Test 13: User runs the program without the server running
+  
+  Expected Result: A JOptionPane opens telling the user they are trying to run the program without being connected to the server.]
   
   Test Status: Passed 
   
