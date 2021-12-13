@@ -57,7 +57,6 @@ public class GUI extends JComponent{
     private static JButton edit = new JButton("Edit account");
     private static JButton delete = new JButton("Delete account");
     private static JButton viewCourses = new JButton("View courses");
-    private static JButton logout = new JButton("Logout");
     private static JButton newCourses = new JButton("Create new course");
     private static JButton gradePosts = new JButton("Grade student posts");
     private static JButton viewGrades = new JButton("View posts and grades");
@@ -488,15 +487,6 @@ public class GUI extends JComponent{
 						}
 					});
 
-					logout.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent e) {
-							frame.dispose();
-							JOptionPane.showMessageDialog(frame, "Thank you for using our platform!",
-								   "Logout", JOptionPane.INFORMATION_MESSAGE);
-                            running = false;
-						}
-					});
-
 					viewGrades.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
 							viewPostsAndGrades();
@@ -700,12 +690,12 @@ public class GUI extends JComponent{
 
     public static void firstMenu() {
         frame.getContentPane().removeAll();
-        frame.setLayout(new GridLayout(3, 2));
+        frame.setLayout(new GridLayout(2, 2));
         frame.add(edit); frame.add(delete);
-        frame.add(viewCourses); frame.add(logout);
+        frame.add(viewCourses);
 
         if(sessionAuthority) {
-            frame.setLayout(new GridLayout(4, 2));
+            frame.setLayout(new GridLayout(3, 2));
             frame.add(newCourses);
             frame.add(gradePosts);
             frame.add(addBoard);
