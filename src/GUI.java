@@ -250,7 +250,7 @@ public class GUI extends JComponent{
 
 					dashboardBack.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							viewDiscussionPage();
+							viewDiscussionPage("DEFAULT");
 						}
 					});
 
@@ -285,7 +285,7 @@ public class GUI extends JComponent{
 										JOptionPane.showMessageDialog(null, "Your comment has been added.",
 												"Comment Addded", JOptionPane.INFORMATION_MESSAGE);
 										viewAllCourses(); //fixes view discussion page bug.
-										viewDiscussionPage();
+										viewDiscussionPage(currentBoard);
 									}
 								}
 							} while (repeat);
@@ -390,7 +390,7 @@ public class GUI extends JComponent{
 
 					selectBoard.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							viewDiscussionPage();
+							viewDiscussionPage("DEFAULT");
 						}
 					});
 
@@ -914,12 +914,17 @@ public class GUI extends JComponent{
 	}
 
 	//TODO show date and time with board title
-    public static void viewDiscussionPage() {
+    public static void viewDiscussionPage(String currentBoardID) {
         frame.getContentPane().removeAll();
 		frame.setLayout(new BorderLayout());
-        String boardID = (String)discussionBoardsCombo.getSelectedItem();
-        boardID = boardID.split(" - ID: ")[1];
-        currentBoard = boardID;
+		String boardID = "";
+		if (currentBoardID.equals("DEFAULT")) {
+			boardID = (String)discussionBoardsCombo.getSelectedItem();
+	        boardID = boardID.split(" - ID: ")[1];
+			currentBoard = boardID;
+		} else {
+			boardID = currentBoardID;
+		}
         String boardInfo = findBoardInfo(boardID, socket);
         int numberOfComments = Integer.parseInt(boardInfo.split(";")[0]);
         String topic = boardInfo.split(";")[1];
@@ -962,7 +967,7 @@ public class GUI extends JComponent{
                                 JOptionPane.showMessageDialog(null, "Your reply has been added.",
     									"Reply Added!", JOptionPane.INFORMATION_MESSAGE);
 								viewAllCourses(); //fixes view discussion page bug.
-                                viewDiscussionPage();
+                                viewDiscussionPage(currentBoard);
 							}
 						}
 					} while (repeat);
@@ -985,7 +990,7 @@ public class GUI extends JComponent{
 							JOptionPane.showMessageDialog(null, "Your vote has been added.",
 									"Vote Added!", JOptionPane.INFORMATION_MESSAGE);
 							viewAllCourses(); //fixes view discussion page bug.
-							viewDiscussionPage();
+							viewDiscussionPage(currentBoard);
 						}
 					} catch (IOException ex) {
 						//DO NOTHING
