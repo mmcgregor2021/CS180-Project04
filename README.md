@@ -7,9 +7,9 @@
 - Kris Leungwattanakij 
 
 ## How to Compile and Run the Project
-1) Compile and run the Server.java file in the command line interface of your choice on the computer you wish to host your server on. 
+1) Compile and run the Server.java file in a command line interface of your choice on the computer you wish to host your server on. 
 2) Open GUI.java in an editor of your choice and replace "localhost" on line 144 with the IP address of the computer running the server. 
-3) Compile and run the GUI.java file in the command line interface of your choice. (make sure that the computer this is running on is connected to the same network as the computer you are running your server on.
+3) Compile and run the GUI.java file in a command line interface of your choice. (make sure that the computer this is running on is connected to the same network as the computer you are running your server on.
 4) The text files (students.txt, teachers.txt, boards.txt, comments.txt, and counters.txt) will be generated during the first run.
 
 ## Project Submission
