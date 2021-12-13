@@ -891,7 +891,9 @@ public class GUI extends JComponent {
 
 	public static void updateGradeStudentPosts1() {
 		String[] listOfStudents = listAllStudents(socket);
-		if (listOfStudents != lastListOfStudents) {
+		String listOfStudentsString = Arrays.toString(listOfStudents);
+		String lastListOfStudentsString = Arrays.toString(lastListOfStudents);
+		if (!listOfStudentsString.equals(lastListOfStudentsString)) {
 			lastListOfStudents = listOfStudents;
 			studentIDs.removeAllItems();
 			for (String studentID: listOfStudents) {
