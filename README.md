@@ -16,6 +16,9 @@
 - Jainam Doshi: submitted report and video presentation on Brightspace
 - Kris Leungwattanakij: submitted Vocareum workspace
 
+## Testing
+Our testing documentation can be seen in the Test.md file in the repository.
+
 ## Descriptions of classes
 ### Server
 A multi-threaded server class which is able to process requests from multiple clients simultaneously.
