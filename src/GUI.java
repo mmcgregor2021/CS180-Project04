@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
  * @author Astrid Popovici, Grant McCord, Jainam Doshi, Kathryn McGregor, Kris Leungwattanakij
  * @version December 11, 2021
  */
-public class GUI extends JComponent{
+public class GUI extends JComponent {
     private static JFrame frame;
 
 	//button to go back to main menu
@@ -51,7 +51,7 @@ public class GUI extends JComponent{
     private static JTextField signUpPassword;
     private static JTextField logInUserID;
     private static JTextField logInPassword;
-    private static JLabel IDMessage2;
+    private static JLabel idMessage2;
 
     //Main menu buttons
     private static JButton edit = new JButton("Edit account");
@@ -174,13 +174,14 @@ public class GUI extends JComponent{
 							JTextField[] signUpfields = {signUpFirstName, signUpLastName, signUpPassword};
 							if (!areFieldsFull(signUpfields)) {
 								JOptionPane.showMessageDialog(null, "Please make sure there are no empty fields",
-										"Error", JOptionPane.ERROR_MESSAGE);
+										  "Error", JOptionPane.ERROR_MESSAGE);
 							} else {
 								String firstName = signUpFirstName.getText();
 								String lastName = signUpLastName.getText();
 								String password = signUpPassword.getText();
 								String role = (String)combo.getSelectedItem();
-								out.println("signup;" + signupID + ";" + password + ";" + role + ";" + firstName + ";" + lastName);
+								out.println("signup;" + signupID + ";" + password + ";" +
+                                       role + ";" + firstName + ";" + lastName);
 								out.flush();
 								sessionAuthority = combo.getSelectedItem().equals("Teacher");
 								firstMenu();
@@ -193,7 +194,7 @@ public class GUI extends JComponent{
 							JTextField[] logInfields = {logInUserID, logInPassword};
 							if (!areFieldsFull(logInfields)) {
 								JOptionPane.showMessageDialog(null, "Please make sure there are no empty fields",
-										"Error", JOptionPane.ERROR_MESSAGE);
+								       "Error", JOptionPane.ERROR_MESSAGE);
 							} else {
 								//checks to make sure entered ID is an integer
 								try {
@@ -208,8 +209,8 @@ public class GUI extends JComponent{
 										firstMenu();
 									}
 								} catch (NumberFormatException ex) {
-									JOptionPane.showMessageDialog(null, "Please make sure entered ID is an integer",
-											"Error", JOptionPane.ERROR_MESSAGE);
+									JOptionPane.showMessageDialog(null, "Please make sure entered" +
+                                           " ID is an integer", "Error", JOptionPane.ERROR_MESSAGE);
 								} catch (IOException ex) {
 									//DO NOTHING
 								}
@@ -244,7 +245,7 @@ public class GUI extends JComponent{
 							String payload = "deleteBoard;" + currentBoard;
 							sendRequest(payload, socket);
 							JOptionPane.showMessageDialog(null, "The discussion board has been deleted!",
-									"Board Deleted", JOptionPane.INFORMATION_MESSAGE);
+							       "Board Deleted", JOptionPane.INFORMATION_MESSAGE);
 							viewAllCourses();
 						}
 					});
@@ -278,11 +279,11 @@ public class GUI extends JComponent{
 							boolean repeat = false;
 							do {
 								repeat = false;
-                                Object[] options = {"Direct Text", "File Name"};
+                                Object[] inputOptions = {"Direct Text", "File Name"};
                                 int method = JOptionPane.showOptionDialog(frame,
                                        "How would you like to enter your comment?", "Add a comment",
                                               JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
-                                                     null, options, options[0]);
+                                                     null, inputOptions, inputOptions[0]);
                                 //direct text = 0
                                 //file name = 0
                                 String content = "";
@@ -312,7 +313,7 @@ public class GUI extends JComponent{
                                         fileContent = getTextFromFile(fileName);
                                         if (fileContent != null && fileContent.equals("")) {
                                             JOptionPane.showMessageDialog(null, "Your comment cannot be empty",
-               								       "Error", JOptionPane.ERROR_MESSAGE);
+               								                         "Error", JOptionPane.ERROR_MESSAGE);
                								repeat = true;
                                         } else {
                                             if (fileContent != null) {
@@ -327,7 +328,7 @@ public class GUI extends JComponent{
                                         }
                                     } catch (IOException ex) {
                                         JOptionPane.showMessageDialog(null, "File could not be found",
-           								       "Error", JOptionPane.ERROR_MESSAGE);
+           								                         "Error", JOptionPane.ERROR_MESSAGE);
                                         repeat = true;
                                     }
                                 }
@@ -341,12 +342,15 @@ public class GUI extends JComponent{
 							String password = passwordChange.getText();
 							String firstName = firstNameChange.getText();
 							String lastName = lastNameChange.getText();
-							String modificationPayload = "editAccount;" + password + ";" + firstName + ";" + lastName + ";" + sessionID;
+							String modificationPayload = "editAccount;" + password +
+                                   ";" + firstName + ";" + lastName + ";" + sessionID;
 							out.println(modificationPayload);
 							out.flush();
-							String infoMessage = "This is now your saved user information:\nPassword: " + password +
-								   "\nFirst Name: " + firstName + "\nLast Name: " + lastName;
-							JOptionPane.showMessageDialog(null, infoMessage, "Changes Made", JOptionPane.INFORMATION_MESSAGE);
+							String infoMessage = "This is now your saved user information:" +
+                                   "\nPassword: " + password + "\nFirst Name: " + firstName
+								          + "\nLast Name: " + lastName;
+							JOptionPane.showMessageDialog(null, infoMessage,
+                                   "Changes Made", JOptionPane.INFORMATION_MESSAGE);
 							firstMenu();
 						}
 					});
@@ -361,7 +365,7 @@ public class GUI extends JComponent{
 						public void actionPerformed(ActionEvent e) {
 							if (boardTopicField.getText().equals("")) {
 								JOptionPane.showMessageDialog(null, "Please make sure there are no empty fields",
-										"Error", JOptionPane.ERROR_MESSAGE);
+										  "Error", JOptionPane.ERROR_MESSAGE);
 							} else {
 								boolean boardCreationError = false;
 								String topic = "";
@@ -376,14 +380,15 @@ public class GUI extends JComponent{
 									} catch (IOException ex) {
 										boardCreationError = true;
 										JOptionPane.showMessageDialog(null, "Error reading file!",
-												"Error", JOptionPane.ERROR_MESSAGE);
+												  "Error", JOptionPane.ERROR_MESSAGE);
 									}
 								}
 								if (!boardCreationError) {
 									String payload = "createBoard;" + course + ";" + topic;
 									sendRequest(payload, socket);
 									JOptionPane.showMessageDialog(null, "The board with topic: " + topic +
-										   "\nhas been added to course: " + course, "Board Added", JOptionPane.INFORMATION_MESSAGE);
+										   "\nhas been added to course: " + course,
+                                                  "Board Added", JOptionPane.INFORMATION_MESSAGE);
 								}
 								boardTopicField.setText("");
 							}
@@ -392,10 +397,10 @@ public class GUI extends JComponent{
 
 					delete.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							int result = JOptionPane.showConfirmDialog(frame,"Are you sure you want to delete your account?", "Delete Account",
-									JOptionPane.YES_NO_OPTION,
-									JOptionPane.QUESTION_MESSAGE);
-							if(result == JOptionPane.NO_OPTION) {
+							int result = JOptionPane.showConfirmDialog(frame, "Are you sure you" +
+                                   " want to delete your account?", "Delete Account",
+                                          JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+							if (result == JOptionPane.NO_OPTION) {
 								firstMenu();
 							} else {
 								frame.dispose();
@@ -403,7 +408,8 @@ public class GUI extends JComponent{
 								out.println(deletionPayload);
 								out.flush();
 								JOptionPane.showMessageDialog(null, "Your account has been deleted. " +
-									   "Thank you for using our platform!", "Closing System", JOptionPane.INFORMATION_MESSAGE);
+									   "Thank you for using our platform!", "Closing System",
+                                              JOptionPane.INFORMATION_MESSAGE);
 							}
 						}
 					});
@@ -437,7 +443,7 @@ public class GUI extends JComponent{
 						}
 					});
 
-					methodChoice.addActionListener (new ActionListener () {
+					methodChoice.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
 							if (methodChoice.getSelectedItem().equals("Direct text")) {
 								chosenMethod.setText("Type in the initial first board topic: ");
@@ -460,26 +466,30 @@ public class GUI extends JComponent{
 							JTextField[] fields = {forumTopic, courseName};
 							if (!areFieldsFull(fields)) {
 								JOptionPane.showMessageDialog(null, "Please make sure there are no empty fields",
-										"Error", JOptionPane.ERROR_MESSAGE);
+										  "Error", JOptionPane.ERROR_MESSAGE);
 							} else {
 								String name = courseName.getText();
 								String topic = forumTopic.getText();
 								String method = (String)methodChoice.getSelectedItem();
 								if (method.equals("Direct text")) {
 									sendRequest("createCourse;" + name + ";" + topic, socket);
-									JOptionPane.showMessageDialog(frame, "The course: " + name + "\nand\nDiscussion Board: " + topic +
-										   "\nhave been successfully created", "Course Created", JOptionPane.INFORMATION_MESSAGE);
+									JOptionPane.showMessageDialog(frame, "The course: " +
+                                             name + "\nand\nDiscussion Board: " + topic +
+										            "\nhave been successfully created", "Course Created",
+                                                           JOptionPane.INFORMATION_MESSAGE);
 									firstMenu();
 								} else {
 									try {
 										topic = getTextFromFile(topic);
 										sendRequest("createCourse;" + name + ";" + topic, socket);
-										JOptionPane.showMessageDialog(frame, "The course: " + name + "\nand\nDiscussion Board: " + topic +
-											   "\nhave been successfully created", "Course Created", JOptionPane.INFORMATION_MESSAGE);
+										JOptionPane.showMessageDialog(frame, "The course: " +
+                                                 name + "\nand\nDiscussion Board: " + topic +
+											            "\nhave been successfully created", "Course Created",
+                                                               JOptionPane.INFORMATION_MESSAGE);
 										firstMenu();
 									} catch (IOException ex) {
 										JOptionPane.showMessageDialog(null, "Error reading file!",
-												"Error", JOptionPane.ERROR_MESSAGE);
+												  "Error", JOptionPane.ERROR_MESSAGE);
 									}
 
 								}
@@ -504,10 +514,11 @@ public class GUI extends JComponent{
 									String course = line.split(";")[0];
 									String topic = line.split(";")[1];
 									String post = line.split(";")[2];
-									String grade = line.split(";")[3];
+									String gradeAssigned = line.split(";")[3];
 									String content = "Course: " + course + "\nForum Topic: " + topic +
-										   "\nContent: " + post + "\nCurrent Grade: " + grade;
-									JOptionPane.showMessageDialog(null, content, "Post Content", JOptionPane.INFORMATION_MESSAGE);
+										   "\nContent: " + post + "\nCurrent Grade: " + gradeAssigned;
+									JOptionPane.showMessageDialog(null, content,
+                                             "Post Content", JOptionPane.INFORMATION_MESSAGE);
 								} catch (IOException ex) {
 									//DO NOTHING
 								}
@@ -555,17 +566,20 @@ public class GUI extends JComponent{
     							try {
     								gradeAssigned = Integer.parseInt(grade.getText());
     								if (gradeAssigned < 0 || gradeAssigned > 100) {
-    									JOptionPane.showMessageDialog(null, "Please enter an integer between 0 and 100 inclusive.",
-    											"Error", JOptionPane.ERROR_MESSAGE);
+    									JOptionPane.showMessageDialog(null, "Please enter an integer" +
+                                               " between 0 and 100 inclusive.", "Error",
+                                                      JOptionPane.ERROR_MESSAGE);
     								} else {
     									String payload = "gradeComment;" + commentID + ";" + gradeAssigned;
     									sendRequest(payload, socket);
-    									String confirmMessage = "The grade for comment ID: " + commentID + " has been set to: " + gradeAssigned;
-    									JOptionPane.showMessageDialog(null, confirmMessage, "Grade Set!", JOptionPane.INFORMATION_MESSAGE);
+    									String confirmMessage = "The grade for comment ID: " + commentID +
+                                               " has been set to: " + gradeAssigned;
+    									JOptionPane.showMessageDialog(null, confirmMessage,
+                                               "Grade Set!", JOptionPane.INFORMATION_MESSAGE);
     								}
     							} catch (Exception ex) {
     								JOptionPane.showMessageDialog(null, "Please enter a valid integer!",
-    										"Error", JOptionPane.ERROR_MESSAGE);
+    										  "Error", JOptionPane.ERROR_MESSAGE);
     							}
                             }
 							grade.setText("");
@@ -580,6 +594,11 @@ public class GUI extends JComponent{
         });
     }
 
+    /**
+     * Real-Time Update Thread Class
+     * @author Astrid Popovici, Grant McCord, Jainam Doshi, Kathryn McGregor, Kris Leungwattanakij
+     * @version December 11, 2021
+     */
     private static class UpdateListener implements Runnable {
 
         public UpdateListener() {
@@ -636,8 +655,10 @@ public class GUI extends JComponent{
         frame.setLayout(new GridLayout(2, 2));
         JLabel welcomeMessage1 = new JLabel("Welcome to our discussion board! ");
         JLabel welcomeMessage2 = new JLabel("Please Login or Sign up below.");
-        frame.add(welcomeMessage1);frame.add(welcomeMessage2);
-        frame.add(signUpButton);frame.add(logInButton);
+        frame.add(welcomeMessage1);
+        frame.add(welcomeMessage2);
+        frame.add(signUpButton);
+        frame.add(logInButton);
         frame.pack();
     }
 
@@ -650,9 +671,12 @@ public class GUI extends JComponent{
         JLabel pass = new JLabel("Enter your password: ");
         logInPassword = new JTextField(15);
 
-        frame.add(username);frame.add(logInUserID);
-        frame.add(pass);frame.add(logInPassword);
-        frame.add(firstBack);frame.add(logInContinue);
+        frame.add(username);
+        frame.add(logInUserID);
+        frame.add(pass);
+        frame.add(logInPassword);
+        frame.add(firstBack);
+        frame.add(logInContinue);
 
         frame.repaint();
         frame.pack();
@@ -662,12 +686,12 @@ public class GUI extends JComponent{
         frame.getContentPane().removeAll();
         frame.setLayout(new GridLayout(6, 2));
 
-        JLabel IDMessage1 = new JLabel("Your new ID is: ");
+        JLabel idMessage1 = new JLabel("Your new ID is: ");
         int requestedID = requestNewID(socket);
 
         sessionID = requestedID;
 
-        IDMessage2 = new JLabel(String.valueOf(requestedID));
+        idMessage2 = new JLabel(String.valueOf(requestedID));
         signupID = requestedID;
         JLabel passMessage = new JLabel("Please enter a password: ");
         signUpPassword = new JTextField(15);
@@ -675,14 +699,20 @@ public class GUI extends JComponent{
         signUpFirstName = new JTextField(15);
         JLabel lastMessage = new JLabel("Please enter your last name: ");
         signUpLastName = new JTextField(15);
-        JLabel studentTeacher = new JLabel ("I am a ");
+        JLabel studentTeacher = new JLabel("I am a ");
 
-        frame.add(IDMessage1); frame.add(IDMessage2);
-        frame.add(passMessage); frame.add(signUpPassword);
-        frame.add(firstMessage); frame.add(signUpFirstName);
-        frame.add(lastMessage); frame.add(signUpLastName);
-        frame.add(studentTeacher); frame.add(combo);
-        frame.add(firstBack); frame.add(signUpContinue);
+        frame.add(idMessage1);
+        frame.add(idMessage2);
+        frame.add(passMessage);
+        frame.add(signUpPassword);
+        frame.add(firstMessage);
+        frame.add(signUpFirstName);
+        frame.add(lastMessage);
+        frame.add(signUpLastName);
+        frame.add(studentTeacher);
+        frame.add(combo);
+        frame.add(firstBack);
+        frame.add(signUpContinue);
 
         frame.repaint();
         frame.pack();
@@ -691,10 +721,11 @@ public class GUI extends JComponent{
     public static void firstMenu() {
         frame.getContentPane().removeAll();
         frame.setLayout(new GridLayout(2, 2));
-        frame.add(edit); frame.add(delete);
+        frame.add(edit);
+        frame.add(delete);
         frame.add(viewCourses);
 
-        if(sessionAuthority) {
+        if (sessionAuthority) {
             frame.setLayout(new GridLayout(3, 2));
             frame.add(newCourses);
             frame.add(gradePosts);
@@ -735,11 +766,16 @@ public class GUI extends JComponent{
         JLabel last = new JLabel("Last Name: ");
         lastNameChange = new JTextField(lastName);
 
-        frame.add(message); frame.add(empty);
-        frame.add(pass); frame.add(passwordChange);
-        frame.add(first); frame.add(firstNameChange);
-        frame.add(last); frame.add(lastNameChange);
-        frame.add(mainBack); frame.add(processEdit);
+        frame.add(message);
+        frame.add(empty);
+        frame.add(pass);
+        frame.add(passwordChange);
+        frame.add(first);
+        frame.add(firstNameChange);
+        frame.add(last);
+        frame.add(lastNameChange);
+        frame.add(mainBack);
+        frame.add(processEdit);
 
         frame.repaint();
         frame.pack();
@@ -781,7 +817,7 @@ public class GUI extends JComponent{
 		currentPage = "viewBoards";
 		lastFetchedBoards = boards;
         frame.getContentPane().removeAll();
-        frame.setLayout(new GridLayout(3,2));
+        frame.setLayout(new GridLayout(3, 2));
         discussionBoardsCombo = new JComboBox<String>(boards);
         frame.add(coursesCombo);
         frame.add(selectCourse);
@@ -877,7 +913,7 @@ public class GUI extends JComponent{
     public static void gradeStudentPosts() {
         currentPage = "gradeStudentPosts1";
         frame.getContentPane().removeAll();
-        frame.setLayout(new GridLayout(4,2));
+        frame.setLayout(new GridLayout(4, 2));
 
 		grade.setText("Enter the grade here");
 		String[] listOfStudents = listAllStudents(socket);
@@ -925,9 +961,9 @@ public class GUI extends JComponent{
 		frame.setLayout(new BorderLayout());
 
 		String boardInfo = findBoardInfo(currentBoard, socket);
-		JLabel boardTitleLabel = new JLabel(boardInfo.split(";")[1]);
-		boardTitleLabel.setHorizontalAlignment(JLabel.CENTER);
-		boardTitleLabel.setFont(new Font("Calibri", Font.PLAIN, 20));
+		JLabel boardLabel = new JLabel(boardInfo.split(";")[1]);
+		boardLabel.setHorizontalAlignment(JLabel.CENTER);
+		boardLabel.setFont(new Font("Calibri", Font.PLAIN, 20));
 
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new GridLayout(1, 2));
@@ -941,7 +977,7 @@ public class GUI extends JComponent{
 
 		JPanel topPanel = new JPanel();
 		topPanel.setLayout(new GridLayout(2, 1));
-		topPanel.add(boardTitleLabel);
+		topPanel.add(boardLabel);
 		topPanel.add(buttonPanel);
 
 		JPanel mainPanel = new JPanel();
@@ -965,7 +1001,7 @@ public class GUI extends JComponent{
 		frame.add(scrollPane);
 
 		frame.pack();
-		frame.setSize(500,600);
+		frame.setSize(500, 600);
 	}
 
     public static void updateViewDiscussionPage() {
@@ -1019,10 +1055,11 @@ public class GUI extends JComponent{
 					Boolean repeat = false;
 					do {
 						repeat = false;
-						String reply = JOptionPane.showInputDialog(null, "Enter your reply:", "Add Reply", JOptionPane.QUESTION_MESSAGE);
+						String reply = JOptionPane.showInputDialog(null, "Enter your reply:",
+                                 "Add Reply", JOptionPane.QUESTION_MESSAGE);
 						if (reply != null && reply.equals("")) {
 							JOptionPane.showMessageDialog(null, "Your reply cannot be empty",
-									"Error", JOptionPane.ERROR_MESSAGE);
+									  "Error", JOptionPane.ERROR_MESSAGE);
 							repeat = true;
 						} else {
 							if (reply != null) {
@@ -1030,7 +1067,7 @@ public class GUI extends JComponent{
                                        ";" + sessionID + ";" + reply;
                                 sendRequest(replyPayload, socket);
                                 JOptionPane.showMessageDialog(null, "Your reply has been added.",
-    									"Reply Added!", JOptionPane.INFORMATION_MESSAGE);
+    									                       "Reply Added!", JOptionPane.INFORMATION_MESSAGE);
 								viewAllCourses(); //fixes view discussion page bug.
                                 viewDiscussionPage(currentBoard);
 							}
@@ -1050,10 +1087,10 @@ public class GUI extends JComponent{
 						String response = in.readLine();
 						if (response.equals("already voted")) {
 							JOptionPane.showMessageDialog(null, "You have already voted on this board!",
-									"Error", JOptionPane.ERROR_MESSAGE);
+									  "Error", JOptionPane.ERROR_MESSAGE);
 						} else {
 							JOptionPane.showMessageDialog(null, "Your vote has been added.",
-									"Vote Added!", JOptionPane.INFORMATION_MESSAGE);
+									  "Vote Added!", JOptionPane.INFORMATION_MESSAGE);
 							viewAllCourses(); //fixes view discussion page bug.
 							viewDiscussionPage(currentBoard);
 						}
@@ -1093,7 +1130,7 @@ public class GUI extends JComponent{
 
         frame.repaint();
         frame.pack();
-		frame.setSize(500,600);
+		frame.setSize(500, 600);
     }
 
     public static void updatePostsAndGrades() {
@@ -1133,7 +1170,7 @@ public class GUI extends JComponent{
 
         frame.pack();
 		frame.add(postsAndGrades, BorderLayout.CENTER);
-        frame.setSize(400,300);
+        frame.setSize(400, 300);
     }
 
     public static boolean compareBoardComments(ArrayList<Comment> comments1,
@@ -1153,10 +1190,7 @@ public class GUI extends JComponent{
             totalReplies2 += c.getRepliesToComment().size();
             totalVotes2 += c.getLikes();
         }
-        if (totalReplies1 != totalReplies2 || totalVotes1 != totalVotes2) {
-            return false;
-        }
-        return true;
+        return !(totalReplies1 != totalReplies2 || totalVotes1 != totalVotes2);
     }
 
 	public static String createReplyLabel(ArrayList<Comment> replies) {
@@ -1172,26 +1206,26 @@ public class GUI extends JComponent{
 		return label;
 	}
 
-    public static void signUp(Integer userID, String firstName, String lastName, String password, String role, Socket socket) {
+    public static void signUp(Integer userID, String firstName, String lastName,
+             String password, String role, Socket serverSocket) {
         try {
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter pw = new PrintWriter(serverSocket.getOutputStream(), true);
             String signUpPayload = "signup;" + userID + ";" + password + ";" + role + ";" + firstName + ";" + lastName;
-            out.println(signUpPayload);
-            out.flush();
+            pw.println(signUpPayload);
+            pw.flush();
         } catch (IOException e) {
             //DO NOTHING;
         }
     }
 
-    public static ArrayList<Comment> findCommentsByBoardID(String boardID, Socket socket) {
+    public static ArrayList<Comment> findCommentsByBoardID(String boardID, Socket serverSocket) {
         ArrayList<Comment> comments = new ArrayList<>();
         try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            BufferedReader bfr = new BufferedReader(new InputStreamReader(serverSocket.getInputStream()));
             String payload = "getComments;" + boardID;
-            sendRequest(payload, socket);
-            String commentArrayString = in.readLine();
-            String replyArrayString = in.readLine();
+            sendRequest(payload, serverSocket);
+            String commentArrayString = bfr.readLine();
+            String replyArrayString = bfr.readLine();
             if (!commentArrayString.equals("")) {
                 String[] commentArray = commentArrayString.split("/br/");
                 String[] replyArray = replyArrayString.split("/~/");
@@ -1227,48 +1261,48 @@ public class GUI extends JComponent{
         int ownerID = Integer.parseInt(replyInfo[2]);
         String content = replyInfo[3];
         int likes = Integer.parseInt(replyInfo[4]);
-        int grade = Integer.parseInt(replyInfo[5]);
+        int commentGrade = Integer.parseInt(replyInfo[5]);
         String dateAndTime = replyInfo[6];
         Comment reply = new Comment(parentID, id, ownerID, content,
-               likes, grade, dateAndTime);
+               likes, commentGrade, dateAndTime);
         return reply;
     }
 
-    public static String findBoardInfo(String boardID, Socket socket) {
+    public static String findBoardInfo(String boardID, Socket serverSocket) {
         String infoToReturn = "";
         try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            BufferedReader bfr = new BufferedReader(new InputStreamReader(serverSocket.getInputStream()));
             String payload = "boardInfo;" + boardID;
-            sendRequest(payload, socket);
-            infoToReturn = in.readLine();
+            sendRequest(payload, serverSocket);
+            infoToReturn = bfr.readLine();
         } catch (IOException e) {
             //DO NOTHING;
         }
         return infoToReturn;
     }
 
-    public static Integer requestNewID(Socket socket) {
+    public static Integer requestNewID(Socket serverSocket) {
         try {
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter pw = new PrintWriter(serverSocket.getOutputStream(), true);
+            BufferedReader bfr = new BufferedReader(new InputStreamReader(serverSocket.getInputStream()));
             //sending a request to the server for a new ID to be assigned
-            out.println("newID");
-            out.flush();
-            return Integer.parseInt(in.readLine());
+            pw.println("newID");
+            pw.flush();
+            return Integer.parseInt(bfr.readLine());
         } catch (IOException e) {
             //DO NOTHING;
         }
         return 0;
     }
 
-    public static Boolean logIn(String userID, String password, Socket socket) {
+    public static Boolean logIn(String userID, String password, Socket serverSocket) {
         try {
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter pw = new PrintWriter(serverSocket.getOutputStream());
+            BufferedReader bfr = new BufferedReader(new InputStreamReader(serverSocket.getInputStream()));
             String verificationPayload = "login;" + userID + ";" + password;
-            out.println(verificationPayload);
-            out.flush();
-            switch (Integer.parseInt(in.readLine())) {
+            pw.println(verificationPayload);
+            pw.flush();
+            switch (Integer.parseInt(bfr.readLine())) {
                 case 1:
                     JOptionPane.showMessageDialog(null, "The entered ID does not exist!",
                             "Error", JOptionPane.ERROR_MESSAGE);
@@ -1286,23 +1320,23 @@ public class GUI extends JComponent{
         return true;
     }
 
-    public static void sendRequest(String requestPayload, Socket socket) {
+    public static void sendRequest(String requestPayload, Socket serverSocket) {
         try {
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            out.println(requestPayload);
-            out.flush();
+            PrintWriter pw = new PrintWriter(serverSocket.getOutputStream(), true);
+            pw.println(requestPayload);
+            pw.flush();
         } catch (IOException e) {
             //DO NOTHING;
         }
     }
 
-	public static String[] findPostsByStudent(String studentID, Socket socket) {
+	public static String[] findPostsByStudent(String studentID, Socket serverSocket) {
 		String postsString = "";
 		try {
-			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			BufferedReader bfr = new BufferedReader(new InputStreamReader(serverSocket.getInputStream()));
 			String payload = "listAllPostsByStudent;" + studentID;
-			sendRequest(payload, socket);
-			postsString = in.readLine();
+			sendRequest(payload, serverSocket);
+			postsString = bfr.readLine();
             if (postsString.equals("|EMPTY|")) {
                 String[] returnArr = {"|EMPTY|"};
                 return returnArr;
@@ -1313,26 +1347,26 @@ public class GUI extends JComponent{
 		return postsString.split(";");
 	}
 
-	public static String[] findBoardsByCourse(String courseName, Socket socket) {
+	public static String[] findBoardsByCourse(String nameOfCourse, Socket serverSocket) {
 		String boardsString = "";
 		try {
-			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			String payload = "listAllBoards;" + courseName;
-			sendRequest(payload, socket);
-			boardsString = in.readLine();
+			BufferedReader bfr = new BufferedReader(new InputStreamReader(serverSocket.getInputStream()));
+			String payload = "listAllBoards;" + nameOfCourse;
+			sendRequest(payload, serverSocket);
+			boardsString = bfr.readLine();
 		} catch (IOException e) {
 			//DO NOTHING
 		}
 		return boardsString.split(";");
 	}
 
-	public static String[] listAllStudents(Socket socket) {
+	public static String[] listAllStudents(Socket serverSocket) {
 		String studentsString = "";
 		try {
-			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			BufferedReader bfr = new BufferedReader(new InputStreamReader(serverSocket.getInputStream()));
 			String payload = "listAllStudents";
-			sendRequest(payload, socket);
-			studentsString = in.readLine();
+			sendRequest(payload, serverSocket);
+			studentsString = bfr.readLine();
 		} catch (IOException e) {
 			//DO NOTHING
 		}
@@ -1340,8 +1374,8 @@ public class GUI extends JComponent{
 	}
 
     public static boolean areFieldsFull(JTextField[] fields) {
-        for(JTextField field: fields) {
-            if(((String)field.getText()).equals("")) {
+        for (JTextField field: fields) {
+            if (((String)field.getText()).equals("")) {
                 return false;
             }
         }

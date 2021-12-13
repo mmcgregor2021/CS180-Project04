@@ -13,7 +13,6 @@ public class Server {
     public static ArrayList<String> courses = populateCourses(boards);
     private static ArrayList<Teacher> teachers = readTeachers("teachers.txt");
     private static ArrayList<Student> students = readStudents("students.txt");
-    private HashMap<Integer, Person> users = populateHashMap();
     private static Integer[] counters = readCounters("counters.txt");
 
     public static void main(String[] args) {
@@ -39,6 +38,11 @@ public class Server {
         }
     }
 
+    /**
+     * Client Handler class for the Multi-threaded server
+     * @author Astrid Popovici, Grant McCord, Jainam Doshi, Kathryn McGregor, Kris Leungwattanakij
+     * @version December 11, 2021
+     */
     private static class ClientHandler implements Runnable {
         private final Socket clientSocket;
 
@@ -76,13 +80,15 @@ public class Server {
 								if (assignedRole.equals("Student")) {
 									//locking students ArrayList for modification
 									synchronized (students) {
-										students.add(new Student(assignedFirstName, assignedLastName, assignedPassword, assignedID));
+										students.add(new Student(assignedFirstName, assignedLastName,
+                                               assignedPassword, assignedID));
 										saveStudents(students, "students.txt");
 									}
 								} else {
 									//locking teachers ArrayList for modification
 									synchronized (teachers) {
-										teachers.add(new Teacher(assignedFirstName, assignedLastName, assignedPassword, assignedID));
+										teachers.add(new Teacher(assignedFirstName, assignedLastName,
+                                               assignedPassword, assignedID));
 										saveTeachers(teachers, "teachers.txt");
 									}
 								}
@@ -125,7 +131,6 @@ public class Server {
                                     saveCounters(counters, "counters.txt");
 								}
                                 break;
-                                //TODO create course
                             case "createCourse":
                                 String courseName = line.split(";")[1];
                                 String boardTopic = line.split(";")[2];
@@ -200,13 +205,17 @@ public class Server {
                                 //search through student and teacher arraylists for someone with the given userID
                                 for (Student s: students) {
                                     if(s.getID() == Integer.parseInt(theUserID)) {
-                                        out.println(s.getFirstName() + ";" + s.getLastName() + ";" + s.getPassword() + ";Student");
+                                        out.println(s.getFirstName() + ";" +
+                                               s.getLastName() + ";" +
+                                                      s.getPassword() + ";Student");
                                         out.flush();
                                     }
                                 }
                                 for (Teacher t: teachers) {
                                     if(t.getID() == Integer.parseInt(theUserID)) {
-                                        out.println(t.getFirstName() + ";" + t.getLastName() + ";" + t.getPassword() + ";Teacher");
+                                        out.println(t.getFirstName() + ";" +
+                                               t.getLastName() + ";" +
+                                                      t.getPassword() + ";Teacher");
                                         out.flush();
                                     }
                                 }
@@ -328,11 +337,13 @@ public class Server {
 										}
 									}
 								}
-								String contentToReturn = cCourse + ";" + cTopic + ";" + cContent + ";" + cGrade;
+								String contentToReturn = cCourse + ";" + cTopic +
+                                       ";" + cContent + ";" + cGrade;
 								out.println(contentToReturn);
 								out.flush();
 								break;
-                            case "voteComment": // adding a vote to specific comment through comment ID and sessionID of user
+                            // adding a vote to specific comment through comment ID and sessionID of user
+                            case "voteComment":
 								int voterID = Integer.parseInt(line.split(";")[1]);
 								String voteCommentID = line.split(";")[2];
 								String voteBoardID = line.split(";")[3];
@@ -500,9 +511,9 @@ public class Server {
         }
     }
 
-	public static ArrayList<Comment> sortComments(ArrayList<Comment> comments) {
+	public static ArrayList<Comment> sortComments(ArrayList<Comment> boardComments) {
 		boolean done = true;
-		ArrayList<Comment> currentBoardComments = comments;
+		ArrayList<Comment> currentBoardComments = boardComments;
 		ArrayList<Comment> sortedComments = currentBoardComments;
 		for (int x = 1; x < currentBoardComments.size(); x++) {
 			done = true;
@@ -521,10 +532,10 @@ public class Server {
 		return sortedComments;
 	}
 
-	public static String[] findBoardAndCourseName(ArrayList<Board> boards,
+	public static String[] findBoardAndCourseName(ArrayList<Board> boardList,
 	       String boardID) {
 		String[] boardAndCourseName = new String[2];
-		for (Board b: boards) {
+		for (Board b: boardList) {
 			if (b.getBoardID().equals(boardID)) {
 				boardAndCourseName[0] = b.getCourse();
 				boardAndCourseName[1] = b.getTopic();
@@ -554,21 +565,22 @@ public class Server {
         return dc;
     }
 
-    public static String getSessionVariable(String payload, ArrayList<Student> students, ArrayList<Teacher> teachers) {
+    public static String getSessionVariable(String payload,
+           ArrayList<Student> studentList, ArrayList<Teacher> teacherList) {
         Integer sentSessionID = Integer.parseInt(payload.split(";")[1]);
-        for (int i = 0; i < students.size(); i++) {
-            if (students.get(i).getID() == sentSessionID) {
-                String firstName = students.get(i).getFirstName();
-                String lastName = students.get(i).getLastName();
-                String password = students.get(i).getPassword();
+        for (int i = 0; i < studentList.size(); i++) {
+            if (studentList.get(i).getID() == sentSessionID) {
+                String firstName = studentList.get(i).getFirstName();
+                String lastName = studentList.get(i).getLastName();
+                String password = studentList.get(i).getPassword();
                 return firstName + ";" + lastName + ";" + password;
             }
         }
-        for (int i = 0; i < teachers.size(); i++) {
-            if (teachers.get(i).getID() == sentSessionID) {
-                String firstName = teachers.get(i).getFirstName();
-                String lastName = teachers.get(i).getLastName();
-                String password = teachers.get(i).getPassword();
+        for (int i = 0; i < teacherList.size(); i++) {
+            if (teacherList.get(i).getID() == sentSessionID) {
+                String firstName = teacherList.get(i).getFirstName();
+                String lastName = teacherList.get(i).getLastName();
+                String password = teacherList.get(i).getPassword();
                 return firstName + ";" + lastName + ";" + password;
             }
         }
@@ -577,19 +589,20 @@ public class Server {
 
     //takes the inputted id and password and checks to see if the login was successful
     //returns either 1, 2, or 3 based on the result of the login operation
-    public static int logIn(int id, String password, ArrayList<Student> students, ArrayList<Teacher> teachers) {
-        for (int i = 0; i < students.size(); i++) {
-            if (students.get(i).getID() == id) {
-                if (students.get(i).getPassword().equals(password)) {
+    public static int logIn(int id, String password,
+           ArrayList<Student> studentList, ArrayList<Teacher> teacherList) {
+        for (int i = 0; i < studentList.size(); i++) {
+            if (studentList.get(i).getID() == id) {
+                if (studentList.get(i).getPassword().equals(password)) {
                     return 3; //correct login
                 }
                 return 2; //wrong password
             }
         }
 
-        for (int j = 0; j < teachers.size(); j++) {
-            if (teachers.get(j).getID() == id) {
-                if (teachers.get(j).getPassword().equals(password)) {
+        for (int j = 0; j < teacherList.size(); j++) {
+            if (teacherList.get(j).getID() == id) {
+                if (teacherList.get(j).getPassword().equals(password)) {
                     return 3; //correct login
                 }
                 return 2; //wrong password
@@ -598,27 +611,12 @@ public class Server {
         return 1; //id does not exist
     }
 
-    public HashMap<Integer, Person> populateHashMap() {
-        HashMap<Integer, Person> users = new HashMap<>();
-        for (int i = 0; i < students.size(); i++) {
-            Student student = students.get(i);
-            Integer studentID = student.getID();
-            users.put(studentID, student);
-        }
-        for (int i = 0; i < teachers.size(); i++) {
-            Teacher teacher = teachers.get(i);
-            Integer teacherID = teacher.getID();
-            users.put(teacherID, teacher);
-        }
-        return users;
-    }
-
     //serializes the comment objects and stores them in a txt file
-    public static void saveComments(ArrayList<Comment> comments, String fileName) {
+    public static void saveComments(ArrayList<Comment> commentList, String fileName) {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
-            out.writeObject(comments.size());
-            for (int i = 0; i < comments.size(); i++) {
-                out.writeObject(comments.get(i));
+            out.writeObject(commentList.size());
+            for (int i = 0; i < commentList.size(); i++) {
+                out.writeObject(commentList.get(i));
             }
         } catch (Exception e) {
             //DO NOTHING
@@ -626,11 +624,11 @@ public class Server {
     }
 
     //serializes the board objects and stores them in a txt file
-    public static void saveBoards(ArrayList<Board> boards, String fileName) {
+    public static void saveBoards(ArrayList<Board> boardList, String fileName) {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
-            out.writeObject(boards.size());
-            for (int i = 0; i < boards.size(); i++) {
-                out.writeObject(boards.get(i));
+            out.writeObject(boardList.size());
+            for (int i = 0; i < boardList.size(); i++) {
+                out.writeObject(boardList.get(i));
             }
         } catch (Exception e) {
             //DO NOTHING
@@ -638,11 +636,11 @@ public class Server {
     }
 
     //serializes the student objects and stores them in a txt file
-    public static void saveStudents(ArrayList<Student> students, String fileName) {
+    public static void saveStudents(ArrayList<Student> studentList, String fileName) {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
-            out.writeObject(students.size());
-            for (int i = 0; i < students.size(); i++) {
-                out.writeObject(students.get(i));
+            out.writeObject(studentList.size());
+            for (int i = 0; i < studentList.size(); i++) {
+                out.writeObject(studentList.get(i));
             }
         } catch (Exception e) {
             //DO NOTHING
@@ -650,11 +648,11 @@ public class Server {
     }
 
     //serializes the teacher objects and stores them in a txt file
-    public static void saveTeachers(ArrayList<Teacher> teachers, String fileName) {
+    public static void saveTeachers(ArrayList<Teacher> teacherList, String fileName) {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
-            out.writeObject(teachers.size());
-            for (int i = 0; i < teachers.size(); i++) {
-                out.writeObject(teachers.get(i));
+            out.writeObject(teacherList.size());
+            for (int i = 0; i < teacherList.size(); i++) {
+                out.writeObject(teacherList.get(i));
             }
         } catch (Exception e) {
             //DO NOTHING
@@ -663,70 +661,70 @@ public class Server {
 
     //deserializes comment objects from the txt file and returns an arraylist of the board objects
     public static ArrayList<Comment> readComments(String fileName) {
-        ArrayList<Comment> comments = new ArrayList<>();
+        ArrayList<Comment> commentList = new ArrayList<>();
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
             int count = (int) in.readObject();
             for (int i = 0; i < count; i++) {
                 Comment comment = (Comment) in.readObject();
-                comments.add(comment);
+                commentList.add(comment);
             }
         } catch (Exception e) {
             //DO NOTHING
         }
-        return comments;
+        return commentList;
     }
 
     //deserializes board objects from the txt file and returns an arraylist of the board objects
     public static ArrayList<Board> readBoards(String fileName) {
-        ArrayList<Board> boards = new ArrayList<>();
+        ArrayList<Board> boardList = new ArrayList<>();
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
             int count = (int) in.readObject();
             for (int i = 0; i < count; i++) {
                 Board board = (Board) in.readObject();
-                boards.add(board);
+                boardList.add(board);
             }
         } catch (Exception e) {
             //DO NOTHING
         }
-        return boards;
+        return boardList;
     }
 
     //deserializes student objects from the txt file and returns an arraylist of the student objects
     public static ArrayList<Student> readStudents(String fileName) {
-        ArrayList<Student> students = new ArrayList<>();
+        ArrayList<Student> studentList = new ArrayList<>();
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
             int count = (int) in.readObject();
             for (int i = 0; i < count; i++) {
                 Student student = (Student) in.readObject();
-                students.add(student);
+                studentList.add(student);
             }
         } catch (Exception e) {
             //DO NOTHING
         }
-        return students;
+        return studentList;
     }
 
     //deserializes teacher objects from the txt file and returns an arraylist of the teacher objects
     public static ArrayList<Teacher> readTeachers(String fileName) {
-        ArrayList<Teacher> teachers = new ArrayList<>();
+        ArrayList<Teacher> teacherList = new ArrayList<>();
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
             int count = (int) in.readObject();
             for (int i = 0; i < count; i++) {
                 Teacher teacher = (Teacher) in.readObject();
-                teachers.add(teacher);
+                teacherList.add(teacher);
             }
         } catch (Exception e) {
             //DO NOTHING
         }
-        return teachers;
+        return teacherList;
     }
 
     //saves all three counters to one line separated by ';' to a txt file
-    public static void saveCounters(Integer[] counters, String fileName) {
+    public static void saveCounters(Integer[] counterList, String fileName) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(fileName))) {
-			Integer personCounter = counters[0];
-			Integer boardCounter = counters[1];
-			Integer commentCounter = counters[2];
+			Integer personCounter = counterList[0];
+			Integer boardCounter = counterList[1];
+			Integer commentCounter = counterList[2];
             pw.println(personCounter + ";" + boardCounter + ";" + commentCounter);
         } catch (Exception e) {
             //DO NOTHING
@@ -752,15 +750,15 @@ public class Server {
     }
 
 	//returns an arraylist of every unique course in String format
-	public static ArrayList<String> populateCourses(ArrayList<Board> boards) {
-		ArrayList<String> courses = new ArrayList<>();
-		for (int i = 0; i < boards.size(); i++) {
-			Board board = boards.get(i);
-			if (!courses.contains(board.getCourse())) {
-				courses.add(board.getCourse());
+	public static ArrayList<String> populateCourses(ArrayList<Board> boardList) {
+		ArrayList<String> courseList = new ArrayList<>();
+		for (int i = 0; i < boardList.size(); i++) {
+			Board board = boardList.get(i);
+			if (!courseList.contains(board.getCourse())) {
+				courseList.add(board.getCourse());
 			}
 		}
-		return courses;
+		return courseList;
 	}
 
 }
