@@ -951,10 +951,8 @@ public class GUI extends JComponent{
     public static void updateViewDiscussionPage() {
         ArrayList<Comment> boardComments = findCommentsByBoardID(currentBoard, socket);
         boolean comparisonResults = compareBoardComments(boardComments, lastFetchedBoardComments);
-        System.out.println(comparisonResults); //DELETE
         if (!comparisonResults) {
-            System.out.println("UPDATING"); //DELETE
-            //viewDiscussionPage(currentBoard);
+            viewDiscussionPage(currentBoard);
         }
     }
 
@@ -1165,39 +1163,30 @@ public class GUI extends JComponent{
         }
     }
 
-	public static int getNumComments(String boardID, Socket socket) {
-		int size = 0;
-		try {
-			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			String payload = "getComments;" + boardID;
-	        sendRequest(payload, socket);
-			size = Integer.parseInt(in.readLine());
-		} catch (IOException e) {
-			//DO NOTHING;
-		}
-		return size;
-	}
-
     public static ArrayList<Comment> findCommentsByBoardID(String boardID, Socket socket) {
         ArrayList<Comment> comments = new ArrayList<>();
         try {
-			int size = getNumComments(boardID, socket);
-			if (size != 0) {
-				BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-				for (int i = 0; i < size; i++) {
-                    String commentInfo = in.readLine();
-					int	replySize = Integer.parseInt(in.readLine());
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            String payload = "getComments;" + boardID;
+            sendRequest(payload, socket);
+            String commentArrayString = in.readLine();
+            String replyArrayString = in.readLine();
+            if (!commentArrayString.equals("")) {
+                String[] commentArray = commentArrayString.split("/br/");
+                String[] replyArray = replyArrayString.split("/~/");
+                for (int i = 0; i < commentArray.length; i++) {
                     ArrayList<Comment> replies = new ArrayList<>();
-                    if (replySize != 0) {
-                        for (int r = 0; r < replySize; r++) {
-                            String replyInfo = in.readLine();
-							replies.add(constructReply(replyInfo));
+                    boolean passed = (!replyArray[i].contains("[EMPTY"));
+                    if (passed) {
+                        String[] repliesToComment = replyArray[i].split("/br/");
+                        for (String replyInfo: repliesToComment) {
+                            replies.add(constructReply(replyInfo));
                         }
                     }
+                    String commentInfo = commentArray[i];
                     comments.add(constructComment(commentInfo, replies));
                 }
-                return comments;
-			}
+            }
         } catch (IOException e) {
             //DO NOTHING;
         }

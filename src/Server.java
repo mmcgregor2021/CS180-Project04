@@ -421,26 +421,37 @@ public class Server {
 								out.flush();
 								break;
                             case "getComments":
-                                ArrayList<Comment> commentsToReturn = new ArrayList<>();
                                 selectedBoardID = line.split(";")[1];
+                                String commentArrayString = "";
+                                String replyArrayString = "";
 								for (Comment c: comments) {
                                     if (c.getParentID().equals(selectedBoardID)) {
-                                        commentsToReturn.add(c);
+                                        String replyString = "";
+                                        commentArrayString += deconstructComment(c) + "/br/";
+                                        if (c.getRepliesToComment().size() == 0) {
+                                            replyString = "[EMPTY]";
+                                        } else {
+                                            for (Comment r: c.getRepliesToComment()) {
+                                                replyString += deconstructComment(r) + "/br/";
+                                            }
+                                            replyString = replyString.substring(0,
+                                                   replyString.length() - 4);
+                                        }
+                                        replyArrayString += replyString + "/~/";
                                     }
                                 }
-                                out.println(commentsToReturn.size());
+                                if (!commentArrayString.equals("")) {
+                                    commentArrayString = commentArrayString.substring(0,
+                                           commentArrayString.length() - 4);
+                                }
+                                if (!replyArrayString.equals("")) {
+                                    replyArrayString = replyArrayString.substring(0,
+                                           replyArrayString.length() - 4);
+                                }
+                                out.println(commentArrayString);
                                 out.flush();
-                                for (Comment c: commentsToReturn) {
-									out.println(deconstructComment(c));
-									out.flush();
-                                    out.println(c.getRepliesToComment().size()); //potential delete
-                                    out.flush(); //potential delete
-									String commentReplyLabel = "<html>";
-                                    for (Comment r: c.getRepliesToComment()) {
-                                        out.println(deconstructComment(r));
-                                        out.flush();
-                                    }
-                                }
+                                out.println(replyArrayString);
+                                out.flush();
                                 break;
 							case "getPostsAndGrades":
 								postsToReturn = "<html>";
