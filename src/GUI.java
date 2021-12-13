@@ -24,6 +24,7 @@ public class GUI extends JComponent{
 	private static String[] lastListOfStudents;
 	private static String lastIDToGrade = "";
 	private static String[] lastSelectedStudentPosts;
+    private static ArrayList<Comment> lastFetchedBoardComments = new ArrayList<>();
 	//kris
 
     //Variables for opening page
@@ -553,8 +554,10 @@ public class GUI extends JComponent{
             try {
                 while (running) {
                     TimeUnit.SECONDS.sleep(5);
-                    //TODO finish this
                     switch (currentPage) {
+                        case "viewDiscussionPage":
+                            updateViewDiscussionPage();
+                            break;
                         case "viewAllCourses":
                             updateAddBoard(); //addBoard and viewAllCourse use the same combobox
                             break;
@@ -945,8 +948,19 @@ public class GUI extends JComponent{
 		frame.setSize(500,600);
 	}
 
+    public static void updateViewDiscussionPage() {
+        ArrayList<Comment> boardComments = findCommentsByBoardID(currentBoard, socket);
+        boolean comparisonResults = compareBoardComments(boardComments, lastFetchedBoardComments);
+        System.out.println(comparisonResults); //DELETE
+        if (!comparisonResults) {
+            System.out.println("UPDATING"); //DELETE
+            //viewDiscussionPage(currentBoard);
+        }
+    }
+
 	//TODO show date and time with board title
     public static void viewDiscussionPage(String currentBoardID) {
+        currentPage = "viewDiscussionPage";
         frame.getContentPane().removeAll();
 		frame.setLayout(new BorderLayout());
 		String boardID = "";
@@ -962,7 +976,7 @@ public class GUI extends JComponent{
         String topic = boardInfo.split(";")[1];
         boardTitleLabel.setText(topic);
         ArrayList<Comment> boardComments = findCommentsByBoardID(boardID, socket);
-
+        lastFetchedBoardComments = boardComments;
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(4 * numberOfComments, 1));
         for (Comment c: boardComments) {
@@ -1101,6 +1115,29 @@ public class GUI extends JComponent{
         frame.pack();
 		frame.add(postsAndGrades, BorderLayout.CENTER);
         frame.setSize(400,300);
+    }
+
+    public static boolean compareBoardComments(ArrayList<Comment> comments1,
+           ArrayList<Comment> comments2) {
+        if (comments1.size() != comments2.size()) {
+            return false;
+        }
+        int totalReplies1 = 0;
+        int totalVotes1 = 0;
+        for (Comment c: comments1) {
+            totalReplies1 += c.getRepliesToComment().size();
+            totalVotes1 += c.getLikes();
+        }
+        int totalReplies2 = 0;
+        int totalVotes2 = 0;
+        for (Comment c: comments2) {
+            totalReplies2 += c.getRepliesToComment().size();
+            totalVotes2 += c.getLikes();
+        }
+        if (totalReplies1 != totalReplies2 || totalVotes1 != totalVotes2) {
+            return false;
+        }
+        return true;
     }
 
 	public static String createReplyLabel(ArrayList<Comment> replies) {
