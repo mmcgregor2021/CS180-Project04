@@ -275,23 +275,59 @@ public class GUI extends JComponent{
 							boolean repeat = false;
 							do {
 								repeat = false;
-								String content = JOptionPane.showInputDialog(null, "Type in your comment: ",
-									   "Add a comment", JOptionPane.QUESTION_MESSAGE);
-								if (content != null && content.equals("")) {
-									JOptionPane.showMessageDialog(null, "Your reply cannot be empty",
-											"Error", JOptionPane.ERROR_MESSAGE);
-									repeat = true;
-								} else {
-									if (content != null) {
-										String payload = "createComment;" + currentBoard +
-											   ";" + sessionID + ";" + content;
-										sendRequest(payload, socket);
-										JOptionPane.showMessageDialog(null, "Your comment has been added.",
-												"Comment Addded", JOptionPane.INFORMATION_MESSAGE);
-										viewAllCourses(); //fixes view discussion page bug.
-										viewDiscussionPage(currentBoard);
-									}
-								}
+                                Object[] options = {"Direct Text", "File Name"};
+                                int method = JOptionPane.showOptionDialog(frame,
+                                       "How would you like to enter your comment?", "Add a comment",
+                                              JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
+                                                     null, options, options[0]);
+                                //direct text = 0
+                                //file name = 0
+                                String content = "";
+                                if (method == 0) {
+                                    content = JOptionPane.showInputDialog(null, "Type in your comment: ",
+    									   "Add a comment", JOptionPane.QUESTION_MESSAGE);
+                                    if (content != null && content.equals("")) {
+           								JOptionPane.showMessageDialog(null, "Your comment cannot be empty",
+           								       "Error", JOptionPane.ERROR_MESSAGE);
+           								repeat = true;
+           							}
+                                    if (content != null) {
+                                        String payload = "createComment;" + currentBoard +
+                                               ";" + sessionID + ";" + content;
+                                        sendRequest(payload, socket);
+                                        JOptionPane.showMessageDialog(null, "Your comment has been added.",
+                                                "Comment Addded", JOptionPane.INFORMATION_MESSAGE);
+                                        viewAllCourses(); //fixes view discussion page bug.
+                                        viewDiscussionPage(currentBoard);
+                                    }
+                                } else if (method == 1) {
+                                    String fileContent = "";
+                                    try {
+                                        String fileName = JOptionPane.showInputDialog(null,
+                                               "Enter your file name: ", "Add a comment",
+                                                      JOptionPane.QUESTION_MESSAGE);
+                                        fileContent = getTextFromFile(fileName);
+                                        if (fileContent != null && fileContent.equals("")) {
+                                            JOptionPane.showMessageDialog(null, "Your comment cannot be empty",
+               								       "Error", JOptionPane.ERROR_MESSAGE);
+               								repeat = true;
+                                        } else {
+                                            if (fileContent != null) {
+                                                String payload = "createComment;" + currentBoard +
+                                                       ";" + sessionID + ";" + content;
+                                                sendRequest(payload, socket);
+                                                JOptionPane.showMessageDialog(null, "Your comment has been added.",
+                                                        "Comment Addded", JOptionPane.INFORMATION_MESSAGE);
+                                                viewAllCourses(); //fixes view discussion page bug.
+                                                viewDiscussionPage(currentBoard);
+                                            }
+                                        }
+                                    } catch (IOException ex) {
+                                        JOptionPane.showMessageDialog(null, "File could not be found",
+           								       "Error", JOptionPane.ERROR_MESSAGE);
+                                        repeat = true;
+                                    }
+                                }
 							} while (repeat);
 						}
 					});
@@ -577,10 +613,11 @@ public class GUI extends JComponent{
                             updatePostsAndGrades();
                             break;
                         case "gradeStudentPosts1":
-                            //updateGradeStudentPosts1();
+                            updateGradeStudentPosts1();
                             break;
 						case "gradeStudentPosts2":
-							//updateGradeStudentPosts2();
+                            updateGradeStudentPosts1();
+							updateGradeStudentPosts2();
 							break;
 						case "addBoard":
 							updateAddBoard();
@@ -822,21 +859,6 @@ public class GUI extends JComponent{
         frame.pack();
     }
 
-    public static void updateStudentPosts() {
-        //TODO fix bugs
-        studentIDs.removeAllItems();
-        String[] students = listAllStudents(socket);
-        for (String s: students) {
-            studentIDs.addItem(s);
-        }
-        String idToGrade = (String)studentIDs.getSelectedItem();
-        String[] postsOfStudent = findPostsByStudent(idToGrade, socket);
-        studentPosts.removeAllItems();
-        for (String s: postsOfStudent) {
-            studentPosts.addItem(s);
-        }
-    }
-
 	public static void updateGradeStudentPosts1() {
 		String[] listOfStudents = listAllStudents(socket);
 		if (listOfStudents != lastListOfStudents) {
@@ -960,7 +982,6 @@ public class GUI extends JComponent{
         }
     }
 
-	//TODO show date and time with board title
     public static void viewDiscussionPage(String currentBoardID) {
         currentPage = "viewDiscussionPage";
         frame.getContentPane().removeAll();
@@ -976,6 +997,8 @@ public class GUI extends JComponent{
         String boardInfo = findBoardInfo(boardID, socket);
         int numberOfComments = Integer.parseInt(boardInfo.split(";")[0]);
         String topic = boardInfo.split(";")[1];
+        String dateAndTime = boardInfo.split(";")[2];
+        topic = "<html>" + topic + "<br/>" + dateAndTime + "</html>";
         boardTitleLabel.setText(topic);
         ArrayList<Comment> boardComments = findCommentsByBoardID(boardID, socket);
         lastFetchedBoardComments = boardComments;

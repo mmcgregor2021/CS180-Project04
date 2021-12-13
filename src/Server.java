@@ -388,7 +388,8 @@ public class Server {
                                 selectedBoardID = line.split(";")[1];
                                 for (Board b: boards) {
                                     if (b.getBoardID().equals(selectedBoardID)) {
-                                        String infoToReturn = b.getComments().size() + ";" + b.getTopic();
+                                        String infoToReturn = b.getComments().size() +
+                                               ";" + b.getTopic() + ";" + b.getDateAndTime();
                                         out.println(infoToReturn);
                                         out.flush();
                                         break;
