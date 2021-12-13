@@ -147,7 +147,7 @@ Test Procedures for Project 5
   
   Test 13: User runs the program without the server running
   
-  Expected Result: A JOptionPane opens telling the user they are trying to run the program without being connected to the server.]
+  Expected Result: A JOptionPane opens telling the user that a connection cannot be established with the server and the GUI terminates.
   
   Test Status: Passed 
   
