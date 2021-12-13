@@ -21,6 +21,9 @@ public class GUI extends JComponent{
 	private static String[] lastFetchedBoards;
 	private static String lastSelectedCourse = "";
 	private static String lastDashboardText = "";
+	private static String[] lastListOfStudents;
+	private static String lastIDToGrade = "";
+	private static String[] lastSelectedStudentPosts;
 	//kris
 
     //Variables for opening page
@@ -483,8 +486,10 @@ public class GUI extends JComponent{
 
 					selectStudent.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
+							currentPage = "gradeStudentPosts2";
 							String idToGrade = (String)studentIDs.getSelectedItem();
 							idToGrade = idToGrade.split("ID: ")[1];
+							lastIDToGrade = idToGrade;
 							String[] postsOfStudent = findPostsByStudent(idToGrade, socket);
 							if (postsOfStudent[0].equals("|EMPTY|")) {
 								JOptionPane.showMessageDialog(null, "This student has not posted anything yet!",
@@ -563,9 +568,13 @@ public class GUI extends JComponent{
                         case "viewPostsAndGrades":
                             updatePostsAndGrades();
                             break;
-                        case "gradeStudentPosts":
-                            //updateStudentPosts();
+                        case "gradeStudentPosts1":
+                            updateGradeStudentPosts1();
                             break;
+						case "gradeStudentPosts2":
+							updateGradeStudentPosts1();
+							updateGradeStudentPosts2();
+							break;
 						case "addBoard":
 							updateAddBoard();
 							break;
@@ -821,13 +830,36 @@ public class GUI extends JComponent{
         }
     }
 
+	public static void updateGradeStudentPosts1() {
+		String[] listOfStudents = listAllStudents(socket);
+		if (listOfStudents != lastListOfStudents) {
+			lastListOfStudents = listOfStudents;
+			studentIDs.removeAllItems();
+			for (String studentID: listOfStudents) {
+				studentIDs.addItem(studentID);
+			}
+		}
+	}
+
+	public static void updateGradeStudentPosts2() {
+		String[] postsOfStudent = findPostsByStudent(lastIDToGrade, socket);
+		if (postsOfStudent != lastSelectedStudentPosts) {
+			studentPosts.removeAllItems();
+			for (String s: postsOfStudent) {
+				studentPosts.addItem(s);
+			}
+		}
+	}
+
     public static void gradeStudentPosts() {
-        currentPage = "gradeStudentPosts";
+        currentPage = "gradeStudentPosts1";
         frame.getContentPane().removeAll();
         frame.setLayout(new GridLayout(4,2));
 
 		grade.setText("Enter the grade here");
-		studentIDs = new JComboBox<String>(listAllStudents(socket));
+		String[] listOfStudents = listAllStudents(socket);
+		lastListOfStudents = listOfStudents;
+		studentIDs = new JComboBox<String>(listOfStudents);
         frame.add(studentIDs);
         frame.add(selectStudent);
         frame.add(studentPosts);
