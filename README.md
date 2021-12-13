@@ -1,4 +1,4 @@
-# CS180 Project 4 - Group 41
+# CS180 Project 5 - Group 41
 ## Group Members
 - Astrid Popovici
 - Grant McCord
@@ -7,10 +7,13 @@
 - Kris Leungwattanakij 
 
 ## How to Compile and Run the Project
-Compile and run the Control.java file in the command line interface of your choice.  The text files (students.txt, teachers.txt, boards.txt, comments.txt, and counters.txt) will be generated during the first run.
+1) Compile and run the Server.java file in the command line interface of your choice on the computer you wish to host your server on. 
+2) Open GUI.java in an editor of your choice and replace "localhost" on line 144 with the IP address of the computer running the server. 
+3) Compile and run the GUI.java file in the command line interface of your choice. (make sure that the computer this is running on is connected to the same network as the computer you are running your server on.
+4) The text files (students.txt, teachers.txt, boards.txt, comments.txt, and counters.txt) will be generated during the first run.
 
 ## Project Submission
-- Jainam Doshi: submitted report on Brightspace
+- Jainam Doshi: submitted report and video presentation on Brightspace
 - Kris Leungwattanakij: submitted Vocareum workspace
 
 ## Descriptions of classes
@@ -37,21 +40,8 @@ Represents a discussion board.  Has a field of type ArrayList<Comment>.  Tested 
 Represents a reply to a discussion board, or a comment on a reply.  Tested in the SimpleTester class.
 - Implements Java's Serializable interface
 
-### Control
-Handles control flow for the project.  This allows the user to interact with the classes and files using the command line interface.  We tested this class manually, and using the test cases in the TestCases class.  Instantiates objects of type:
-- Student
-- Teacher
-- Board
-- Comment
-
 ### SimpleTester
 Tests some functionality of the Board, Comment and LogInTest classes using print statements.
 
 ### AccountTester
 Tests the getter and setter methods in both the Student and Teacher classes.
- 
-### LogInTest
-Implements methods used to sign up, log in, and edit and delete accounts.  Tested in the SimpleTester class.
-  
-### TestCases
-JUnitTests for certain parts of Control--signing up, editing an account, deleting an account, and logging out.
