@@ -304,7 +304,11 @@ public class Server {
 											postsToReturn += c.getCommentID() + ";";
 										}
 									}
-									postsToReturn = postsToReturn.substring(0, postsToReturn.length() - 1);
+                                    if (postsToReturn.equals("")) {
+                                        postsToReturn = "|EMPTY|";
+                                    } else {
+                                        postsToReturn = postsToReturn.substring(0, postsToReturn.length() - 1);
+                                    }
 								}
 								out.println(postsToReturn);
 								out.flush();

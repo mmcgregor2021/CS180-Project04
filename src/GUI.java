@@ -495,6 +495,9 @@ public class GUI extends JComponent{
 							if (postsOfStudent[0].equals("|EMPTY|")) {
 								JOptionPane.showMessageDialog(null, "This student has not posted anything yet!",
 									   "Error", JOptionPane.ERROR_MESSAGE);
+                                grade.setVisible(false);
+                                enterGrade.setVisible(false);
+                                studentPosts.removeAllItems();
 							} else {
 								studentPosts.removeAllItems();
 								for (String s: postsOfStudent) {
@@ -517,22 +520,24 @@ public class GUI extends JComponent{
 					enterGrade.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
 							String commentID = (String)studentPosts.getSelectedItem();
-							Integer gradeAssigned = 0;
-							try {
-								gradeAssigned = Integer.parseInt(grade.getText());
-								if (gradeAssigned < 0 || gradeAssigned > 100) {
-									JOptionPane.showMessageDialog(null, "Please enter an integer between 0 and 100 inclusive.",
-											"Error", JOptionPane.ERROR_MESSAGE);
-								} else {
-									String payload = "gradeComment;" + commentID + ";" + gradeAssigned;
-									sendRequest(payload, socket);
-									String confirmMessage = "The grade for comment ID: " + commentID + " has been set to: " + gradeAssigned;
-									JOptionPane.showMessageDialog(null, confirmMessage, "Grade Set!", JOptionPane.INFORMATION_MESSAGE);
-								}
-							} catch (Exception ex) {
-								JOptionPane.showMessageDialog(null, "Please enter a valid integer!",
-										"Error", JOptionPane.ERROR_MESSAGE);
-							}
+                            if (commentID != null || !commentID.equals("")) {
+                                Integer gradeAssigned = 0;
+    							try {
+    								gradeAssigned = Integer.parseInt(grade.getText());
+    								if (gradeAssigned < 0 || gradeAssigned > 100) {
+    									JOptionPane.showMessageDialog(null, "Please enter an integer between 0 and 100 inclusive.",
+    											"Error", JOptionPane.ERROR_MESSAGE);
+    								} else {
+    									String payload = "gradeComment;" + commentID + ";" + gradeAssigned;
+    									sendRequest(payload, socket);
+    									String confirmMessage = "The grade for comment ID: " + commentID + " has been set to: " + gradeAssigned;
+    									JOptionPane.showMessageDialog(null, confirmMessage, "Grade Set!", JOptionPane.INFORMATION_MESSAGE);
+    								}
+    							} catch (Exception ex) {
+    								JOptionPane.showMessageDialog(null, "Please enter a valid integer!",
+    										"Error", JOptionPane.ERROR_MESSAGE);
+    							}
+                            }
 							grade.setText("");
 						}
 					});
@@ -572,11 +577,10 @@ public class GUI extends JComponent{
                             updatePostsAndGrades();
                             break;
                         case "gradeStudentPosts1":
-                            updateGradeStudentPosts1();
+                            //updateGradeStudentPosts1();
                             break;
 						case "gradeStudentPosts2":
-							updateGradeStudentPosts1();
-							updateGradeStudentPosts2();
+							//updateGradeStudentPosts2();
 							break;
 						case "addBoard":
 							updateAddBoard();
@@ -1282,6 +1286,10 @@ public class GUI extends JComponent{
 			String payload = "listAllPostsByStudent;" + studentID;
 			sendRequest(payload, socket);
 			postsString = in.readLine();
+            if (postsString.equals("|EMPTY|")) {
+                String[] returnArr = {"|EMPTY|"};
+                return returnArr;
+            }
 		} catch (IOException e) {
 			//DO NOTHING
 		}
