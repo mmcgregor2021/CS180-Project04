@@ -596,8 +596,8 @@ public class GUI extends JComponent {
 
     /**
      * Real-Time Update Thread Class
-     * @author Astrid Popovici, Grant McCord, Jainam Doshi, Kathryn McGregor, Kris Leungwattanakij
-     * @version December 11, 2021
+     * @author Kris Leungwattanakij
+     * @version December 12, 2021
      */
     private static class UpdateListener implements Runnable {
 
